@@ -239,6 +239,13 @@
     </div>
     <input type="range" id="heightSlider" class="heightSlider"
            min="165" max="195" step="5" value="185">
+      <div class="slider-row">
+    <div class="slider-label">
+      <span>Поворот человека</span>
+      <b id="rotationValue">0°</b>
+    </div>
+    <input type="range" id="rotationSlider" class="heightSlider"
+           min="0" max="360" step="15" value="0">
   </div>
 
   <div class="divider"></div>
@@ -455,6 +462,7 @@ const SNAP_RADIUS = 0.05;   // 5 см
 /* ---------- Человечек ---------- */
 let humanMode = false;
 let humanHeight = 185;
+let humanRotation = 0;
 const humanGroup = new THREE.Group();
 humanGroup.visible = false;
 scene.add(humanGroup);
@@ -560,6 +568,10 @@ function makeHumanFigure(heightCm) {
 
   humanGroup.add(makeHeightLabel(heightCm, targetH));
   humanGroup.userData.topY = targetH;
+
+  // Применяем текущий угол поворота
+  humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
+
 }
 
 /* ---------- Подпись с ростом ---------- */
@@ -1230,7 +1242,15 @@ heightSlider.addEventListener('input', (e) => {
   const cm = parseInt(e.target.value, 10);
   setHumanHeight(cm);
 });
+/* ---------- Ползунок поворота человечка ---------- */
+const rotationSlider = document.getElementById('rotationSlider');
+const rotationValue  = document.getElementById('rotationValue');
 
+rotationSlider.addEventListener('input', (e) => {
+  humanRotation = parseInt(e.target.value, 10);
+  rotationValue.textContent = humanRotation + '°';
+  humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
+});
 /* ---------- Сброс ---------- */
 document.getElementById('btnReset').addEventListener('click', () => {
   for (const k in elementVisible) elementVisible[k] = true;
@@ -1247,7 +1267,11 @@ document.getElementById('btnReset').addEventListener('click', () => {
 
   if (rulerMode) setRulerMode(false);
   if (humanMode) setHumanMode(false);
-  humanGroup.visible = false;
+   humanGroup.visible = false;
+  humanRotation = 0;
+  rotationSlider.value = 0;
+  rotationValue.textContent = '0°';
+  humanGroup.rotation.y = 0;
 
   const bg = '#0f1116';
   document.getElementById('bgColor').value = bg;

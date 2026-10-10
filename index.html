@@ -228,7 +228,7 @@
   </div>
 
   <div class="row">
-    <button class="btn" id="btnHuman" title="Человечек"><span class="ico">🧍</span> Человечек</button>
+    <button class="btn" id="btnHuman" title="Человечек (H)"><span class="ico">🧍</span> Человечек</button>
     <button class="btn" id="btnHumanRemove" title="Убрать человечка"><span class="ico">✕</span> Убрать</button>
   </div>
 
@@ -274,7 +274,7 @@
 </div>
 
 <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
-<div class="mode-hint" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
+<div class="mode-hint ruler" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
 <div class="mode-hint human" id="humanHint">🧍 Тапните по ступени, чтобы поставить человечка</div>
 <div class="toast" id="toast"></div>
 
@@ -294,6 +294,7 @@ import * as THREE from 'three';
 import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
 import { ColladaLoader }  from 'three/addons/loaders/ColladaLoader.js';
 import { GLTFLoader }     from 'three/addons/loaders/GLTFLoader.js';
+
 /* ═══════════════════════════════════════════════════════════════
    ★ ЗДЕСЬ МЕНЯЕТЕ ИМЯ МОДЕЛИ ★
    ═══════════════════════════════════════════════════════════════ */
@@ -301,6 +302,9 @@ const MODEL_FILE = 'Korobitsyno.dae';
 
 /* Единицы. Модель в метрах → 1.0. В мм → 0.001. В см → 0.01. */
 const UNIT_SCALE = 1.0;
+
+/* Имя файла с человечком */
+const HUMAN_FILE = 'human.glb';
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ---------- DOM ---------- */
@@ -436,9 +440,9 @@ const raycaster = new THREE.Raycaster();
 const pointer   = new THREE.Vector2();
 
 /* Все вершины модели — для привязки */
-const allVertices = [];   // массив Vector3 (world coords)
+const allVertices = [];
 
-/* Подсветка — кружок, который следует за мышью */
+/* Подсветка найденной точки */
 const snapDotGeo = new THREE.SphereGeometry(0.05, 16, 16);
 const snapDotMat = new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.85 });
 const snapDot = new THREE.Mesh(snapDotGeo, snapDotMat);
@@ -446,99 +450,102 @@ snapDot.visible = false;
 snapDot.renderOrder = 1000;
 scene.add(snapDot);
 
-const SNAP_RADIUS = 0.05;   // 5 см в метрах
+const SNAP_RADIUS = 0.05;   // 5 см
 
 /* ---------- Человечек ---------- */
 let humanMode = false;
-let humanHeight = 185;      // в см
+let humanHeight = 185;
 const humanGroup = new THREE.Group();
 humanGroup.visible = false;
 scene.add(humanGroup);
 
-const humanBodyMat = new THREE.MeshStandardMaterial({
-  color: 0x31d0aa, roughness: 0.55, metalness: 0.05,
-  emissive: 0x0a3a2e, emissiveIntensity: 0.25
-});
-const humanHeadMat = new THREE.MeshStandardMaterial({
-  color: 0x4be0bc, roughness: 0.5, metalness: 0.05,
-  emissive: 0x0a3a2e, emissiveIntensity: 0.25
-});
-
-/* ---------- Загрузка готовой модели человека (human.glb) ---------- */
-let humanTemplate = null;       // загруженный шаблон
-let humanTemplateHeight = 1.8;  // исходная высота модели (в метрах) — определим автоматически
-const humanLoader = new GLTFLoader();
+/* ---------- Загрузка human.glb ---------- */
+let humanTemplate = null;
+let humanTemplateHeight = 1.8;
 let humanLoading = false;
 
-humanLoader.load('human.glb', (gltf) => {
-  humanTemplate = gltf.scene;
+const humanLoader = new GLTFLoader();
+humanLoader.load(
+  HUMAN_FILE,
+  (gltf) => {
+    humanTemplate = gltf.scene;
 
-  // Считаем исходную высоту модели
-  const box = new THREE.Box3().setFromObject(humanTemplate);
-  const size = box.getSize(new THREE.Vector3());
-  humanTemplateHeight = size.y > 0.01 ? size.y : 1.8;
+    const box = new THREE.Box3().setFromObject(humanTemplate);
+    const size = box.getSize(new THREE.Vector3());
+    humanTemplateHeight = size.y > 0.001 ? size.y : 1.8;
 
-  // Красим материал в оранжевый (можно убрать — будет цвет оригинала)
-  humanTemplate.traverse((obj) => {
-    if (obj.isMesh) {
-      obj.castShadow = true;
-      obj.receiveShadow = true;
-      if (obj.material) {
-        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-        mats.forEach((m) => {
-          if (m.color) {
-            m.color.setHex(0xff9f43);
+    humanTemplate.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+        if (obj.material) {
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach((m) => {
+            if (m.color) {
+              m.color.setHex(0xff9f43);
+            }
             m.emissive = new THREE.Color(0x3d2408);
             m.emissiveIntensity = 0.15;
-          }
-          m.needsUpdate = true;
-        });
+            m.needsUpdate = true;
+          });
+        }
       }
+    });
+
+    console.log('%c✔ ' + HUMAN_FILE + ' загружен. Исходная высота: ' + humanTemplateHeight.toFixed(2) + ' м',
+                'color:#31d0aa;font-weight:bold');
+    humanLoading = false;
+
+    if (humanGroup.visible) {
+      makeHumanFigure(humanHeight);
     }
-  });
-
-  console.log('%c✔ human.glb загружен. Исходная высота: ' + humanTemplateHeight.toFixed(2) + ' м',
-              'color:#31d0aa;font-weight:bold');
-
-  // Если человечек уже стоит на ступени — обновим его высоту
-  if (humanGroup.visible) {
-    makeHumanFigure(humanHeight);
+  },
+  (xhr) => {
+    if (xhr.total) {
+      const p = Math.round((xhr.loaded / xhr.total) * 100);
+      console.log('Загрузка ' + HUMAN_FILE + ': ' + p + '%');
+    }
+  },
+  (err) => {
+    console.warn('Не удалось загрузить ' + HUMAN_FILE + ':', err);
+    humanLoading = false;
   }
-}, undefined, (err) => {
-  console.warn('Не удалось загрузить human.glb:', err);
-});
+);
 
+/* ---------- Функция установки роста ---------- */
+function setHumanHeight(cm) {
+  humanHeight = cm;
+  heightValue.textContent = cm + ' см';
+  makeHumanFigure(cm);
+}
+
+/* ---------- Построение человечка ---------- */
 function makeHumanFigure(heightCm) {
-  // Очищаем группу
   while (humanGroup.children.length) {
     const c = humanGroup.children.pop();
     if (c.geometry) c.geometry.dispose();
   }
 
+  const targetH = (heightCm / 100) * UNIT_SCALE;
+
   if (!humanTemplate) {
-    // Модель ещё не загружена — покажем простой временный «столбик»
-    // (чтобы не было пустоты, если пользователь быстро нажал)
-    const h = (heightCm / 100) * UNIT_SCALE;
+    // Пока .glb не загружен — показываем простой «столбик»
     const tempMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.5 });
-    const tempGeo = new THREE.CylinderGeometry(h * 0.08, h * 0.08, h, 12);
+    const tempGeo = new THREE.CylinderGeometry(targetH * 0.08, targetH * 0.08, targetH, 12);
     const tempMesh = new THREE.Mesh(tempGeo, tempMat);
-    tempMesh.position.y = h / 2;
+    tempMesh.position.y = targetH / 2;
     tempMesh.castShadow = true;
     humanGroup.add(tempMesh);
-    humanGroup.userData.topY = h;
+    humanGroup.userData.topY = targetH;
     return;
   }
 
-  // Клонируем шаблон (чтобы можно было иметь независимую копию)
   const clone = humanTemplate.clone(true);
 
-  // Целевая высота в единицах модели
-  const targetH = (heightCm / 100) * UNIT_SCALE;
-  // Масштаб = target / исходная высота модели
   const scale = targetH / humanTemplateHeight;
   clone.scale.setScalar(scale);
+  clone.updateMatrixWorld(true);
 
-  // Опускаем модель так, чтобы её низ (ноги) был на Y=0
   const box = new THREE.Box3().setFromObject(clone);
   clone.position.y = -box.min.y;
 
@@ -551,12 +558,55 @@ function makeHumanFigure(heightCm) {
 
   humanGroup.add(clone);
 
-  // Подпись роста рядом с головой
-  const topY = targetH;
-  humanGroup.add(makeHeightLabel(heightCm, topY));
+  humanGroup.add(makeHeightLabel(heightCm, targetH));
+  humanGroup.userData.topY = targetH;
+}
 
-  // Запоминаем высоту макушки (для будущего — замеров от макушки до потолка)
-  humanGroup.userData.topY = topY;
+/* ---------- Подпись с ростом ---------- */
+function makeHeightLabel(text, yPos) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = 2;
+  const W = 200, H = 60;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#31d0aa';
+  ctx.lineWidth = 2;
+  const r = 12;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(W - r, 0);
+  ctx.quadraticCurveTo(W, 0, W, r);
+  ctx.lineTo(W, H - r);
+  ctx.quadraticCurveTo(W, H, W - r, H);
+  ctx.lineTo(r, H);
+  ctx.quadraticCurveTo(0, H, 0, H - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#4be0bc';
+  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text + ' см', W / 2, H / 2 + 1);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+  const mat = new THREE.SpriteMaterial({
+    map: tex, depthTest: false, depthWrite: false, transparent: true
+  });
+  const sprite = new THREE.Sprite(mat);
+  sprite.position.set(0, yPos + 0.15, 0);
+  sprite.scale.set(0.55, 0.165, 1);
+  return sprite;
 }
 
 /* ---------- Классификация материалов ---------- */
@@ -594,13 +644,69 @@ manager.setURLModifier((url) => {
   return url;
 });
 
-/* ---------- Загрузка ---------- */
+/* ---------- Прогресс загрузки модели ---------- */
 function showProgress(v) {
   if (v <= 0 || v >= 100) { progress.classList.remove('show'); return; }
   progress.classList.add('show');
   progressBar.style.width = v + '%';
 }
 
+function setLoading(show, text) {
+  if (text) loadingTxt.textContent = text;
+  loadingEl.classList.toggle('show', show);
+}
+
+/* ---------- Toast ---------- */
+let toastTimer = null;
+function showToast(msg, ok = false) {
+  toastEl.textContent = msg;
+  toastEl.classList.toggle('ok', ok);
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
+}
+
+/* ---------- Формат чисел ---------- */
+const fmtInt = (n) => new Intl.NumberFormat('ru-RU').format(n);
+function fmtNum(v) {
+  const a = Math.abs(v);
+  if (a === 0) return '0';
+  if (a >= 100) return v.toFixed(0);
+  if (a >= 1) return v.toFixed(2);
+  if (a >= 0.01) return v.toFixed(3);
+  return v.toExponential(2);
+}
+
+/* ---------- Утилита: dispose ---------- */
+function disposeObject(root) {
+  const textures = new Set();
+  root.traverse((obj) => {
+    if (obj.geometry) obj.geometry.dispose();
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    mats.forEach((m) => {
+      if (!m) return;
+      for (const key in m) { const v = m[key]; if (v && v.isTexture) textures.add(v); }
+      m.dispose();
+    });
+  });
+  textures.forEach(t => t.dispose());
+}
+
+/* ---------- Привязка к ближайшей вершине ---------- */
+function findNearestVertex(point, radius) {
+  let bestDist = radius;
+  let bestVert = null;
+  for (let i = 0; i < allVertices.length; i++) {
+    const d = point.distanceTo(allVertices[i]);
+    if (d < bestDist) {
+      bestDist = d;
+      bestVert = allVertices[i];
+    }
+  }
+  return bestVert;
+}/* ═══════════════════════════════════════════════════════════════
+   ЗАГРУЗКА МОДЕЛИ .dae
+   ═══════════════════════════════════════════════════════════════ */
 function handleFiles(fileList) {
   const files = Array.from(fileList || []);
   if (!files.length) return;
@@ -693,7 +799,7 @@ function loadCollada(url, fileName) {
       model.position.sub(center);
       model.updateMatrixWorld(true);
 
-      // Собираем все вершины для привязки (world coords, после центрирования)
+      // Собираем вершины для привязки линейки
       const v = new THREE.Vector3();
       const seenPos = new Set();
       model.traverse((obj) => {
@@ -704,7 +810,6 @@ function loadCollada(url, fileName) {
         obj.updateMatrixWorld();
         for (let i = 0; i < pos.count; i++) {
           v.fromBufferAttribute(pos, i).applyMatrix4(obj.matrixWorld);
-          // Округляем координаты, чтобы убрать дубликаты (3 знака после запятой)
           const key = v.x.toFixed(3) + '|' + v.y.toFixed(3) + '|' + v.z.toFixed(3);
           if (!seenPos.has(key)) {
             seenPos.add(key);
@@ -743,7 +848,7 @@ function loadCollada(url, fileName) {
 
       applyElementVisibility();
       applyGlassWalls();
-      setHumanHeight(humanHeight);   // перерисуем человечка в новом масштабе
+      setHumanHeight(humanHeight);
 
       ui.file.textContent   = fileName;
       ui.meshes.textContent = fmtInt(meshCount);
@@ -846,60 +951,6 @@ function fitCamera() {
   controls.update();
 }
 
-/* ---------- Утилиты ---------- */
-function disposeObject(root) {
-  const textures = new Set();
-  root.traverse((obj) => {
-    if (obj.geometry) obj.geometry.dispose();
-    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-    mats.forEach((m) => {
-      if (!m) return;
-      for (const key in m) { const v = m[key]; if (v && v.isTexture) textures.add(v); }
-      m.dispose();
-    });
-  });
-  textures.forEach(t => t.dispose());
-}
-
-const fmtInt = (n) => new Intl.NumberFormat('ru-RU').format(n);
-function fmtNum(v) {
-  const a = Math.abs(v);
-  if (a === 0) return '0';
-  if (a >= 100) return v.toFixed(0);
-  if (a >= 1) return v.toFixed(2);
-  if (a >= 0.01) return v.toFixed(3);
-  return v.toExponential(2);
-}
-
-let toastTimer = null;
-function showToast(msg, ok = false) {
-  toastEl.textContent = msg;
-  toastEl.classList.toggle('ok', ok);
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
-}
-function setLoading(show, text) {
-  if (text) loadingTxt.textContent = text;
-  loadingEl.classList.toggle('show', show);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ПРИВЯЗКА К БЛИЖАЙШЕЙ ВЕРШИНЕ
-   ═══════════════════════════════════════════════════════════════ */
-function findNearestVertex(point, radius) {
-  let bestDist = radius;
-  let bestVert = null;
-  for (let i = 0; i < allVertices.length; i++) {
-    const d = point.distanceTo(allVertices[i]);
-    if (d < bestDist) {
-      bestDist = d;
-      bestVert = allVertices[i];
-    }
-  }
-  return bestVert;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    ЛИНЕЙКА
    ═══════════════════════════════════════════════════════════════ */
@@ -908,10 +959,7 @@ function setRulerMode(on) {
   document.getElementById('btnRuler').classList.toggle('ruler-on', on);
   canvas.classList.toggle('ruler-mode', on);
   rulerHint.classList.toggle('show', on);
-
-  // Режимы взаимоисключающие
   if (on && humanMode) setHumanMode(false);
-
   if (!on) {
     if (rulerPoints.length === 1) rulerPoints = [];
     snapDot.visible = false;
@@ -1005,7 +1053,6 @@ function handleRulerTap(clientX, clientY) {
   if (!hits.length) return;
 
   let point = hits[0].point.clone();
-  // Привязка к ближайшей вершине
   const nearVert = findNearestVertex(point, SNAP_RADIUS);
   if (nearVert) point = nearVert.clone();
 
@@ -1015,7 +1062,6 @@ function handleRulerTap(clientX, clientY) {
   if (rulerPoints.length === 2) {
     const p1 = rulerPoints[0];
     const p2 = rulerPoints[1];
-
     addMeasureLine(p1, p2);
 
     const dist = p1.distanceTo(p2);
@@ -1029,7 +1075,6 @@ function handleRulerTap(clientX, clientY) {
   }
 }
 
-/* Подсветка при наведении (только ПК) */
 function handleRulerHover(clientX, clientY) {
   if (!rulerMode || !currentModel) { snapDot.visible = false; return; }
   const rect = canvas.getBoundingClientRect();
@@ -1045,15 +1090,14 @@ function handleRulerHover(clientX, clientY) {
   if (nearVert) {
     snapDot.position.copy(nearVert);
     snapDot.visible = true;
+    snapDotMat.color.setHex(0xffd166);
+    snapDotMat.opacity = 0.85;
   } else {
     snapDot.position.copy(point);
     snapDot.visible = true;
     snapDotMat.color.setHex(0xffffff);
     snapDotMat.opacity = 0.4;
-    return;
   }
-  snapDotMat.color.setHex(0xffd166);
-  snapDotMat.opacity = 0.85;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1064,12 +1108,9 @@ function setHumanMode(on) {
   document.getElementById('btnHuman').classList.toggle('human-on', on);
   canvas.classList.toggle('human-mode', on);
   humanHint.classList.toggle('show', on);
-
   if (on && rulerMode) setRulerMode(false);
-  if (!on) {
-    // просто выключаем режим, человечек остаётся на месте
-  }
 }
+
 function placeHuman(clientX, clientY) {
   if (!currentModel) return;
   const rect = canvas.getBoundingClientRect();
@@ -1085,7 +1126,7 @@ function placeHuman(clientX, clientY) {
   humanGroup.visible = true;
 }
 
-/* ---------- Обработчики мыши / тача ---------- */
+/* ---------- Указатель мыши / тача ---------- */
 let pointerDown = false;
 let downX = 0, downY = 0;
 
@@ -1100,7 +1141,6 @@ canvas.addEventListener('pointerup', (e) => {
   pointerDown = false;
   const dx = Math.abs(e.clientX - downX);
   const dy = Math.abs(e.clientY - downY);
-  // считаем тапом, если сдвиг меньше 6 пикселей
   if (dx < 6 && dy < 6) {
     if (rulerMode) {
       handleRulerTap(e.clientX, e.clientY);
@@ -1169,7 +1209,6 @@ document.getElementById('btnGlass').addEventListener('click', (e) => {
 document.getElementById('btnRuler').addEventListener('click', () => {
   setRulerMode(!rulerMode);
 });
-
 document.getElementById('btnRulerClear').addEventListener('click', () => {
   clearRuler();
   showToast('Замеры очищены', true);
@@ -1182,13 +1221,11 @@ document.getElementById('btnHuman').addEventListener('click', () => {
     showToast('Тапните по ступени, чтобы поставить человечка', true);
   }
 });
-
 document.getElementById('btnHumanRemove').addEventListener('click', () => {
   humanGroup.visible = false;
   setHumanMode(false);
   showToast('Человечек убран', true);
 });
-
 heightSlider.addEventListener('input', (e) => {
   const cm = parseInt(e.target.value, 10);
   setHumanHeight(cm);
@@ -1232,7 +1269,6 @@ document.getElementById('btnShot').addEventListener('click', () => {
 document.getElementById('btnShare').addEventListener('click', async () => {
   const url = location.href.split('#')[0].split('?')[0];
   const title = document.title || '3D Viewer';
-
   if (navigator.share) {
     try {
       await navigator.share({ title, text: 'Посмотрите 3D-модель', url });
@@ -1284,7 +1320,7 @@ function resize() {
 }
 window.addEventListener('resize', resize);
 
-/* ---------- Цикл ---------- */
+/* ---------- Цикл рендеринга ---------- */
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);

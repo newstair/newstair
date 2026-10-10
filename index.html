@@ -293,7 +293,7 @@
 import * as THREE from 'three';
 import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
 import { ColladaLoader }  from 'three/addons/loaders/ColladaLoader.js';
-
+import { GLTFLoader }     from 'three/addons/loaders/GLTFLoader.js';
 /* ═══════════════════════════════════════════════════════════════
    ★ ЗДЕСЬ МЕНЯЕТЕ ИМЯ МОДЕЛИ ★
    ═══════════════════════════════════════════════════════════════ */
@@ -464,219 +464,99 @@ const humanHeadMat = new THREE.MeshStandardMaterial({
   emissive: 0x0a3a2e, emissiveIntensity: 0.25
 });
 
+/* ---------- Загрузка готовой модели человека (human.glb) ---------- */
+let humanTemplate = null;       // загруженный шаблон
+let humanTemplateHeight = 1.8;  // исходная высота модели (в метрах) — определим автоматически
+const humanLoader = new GLTFLoader();
+let humanLoading = false;
+
+humanLoader.load('human.glb', (gltf) => {
+  humanTemplate = gltf.scene;
+
+  // Считаем исходную высоту модели
+  const box = new THREE.Box3().setFromObject(humanTemplate);
+  const size = box.getSize(new THREE.Vector3());
+  humanTemplateHeight = size.y > 0.01 ? size.y : 1.8;
+
+  // Красим материал в оранжевый (можно убрать — будет цвет оригинала)
+  humanTemplate.traverse((obj) => {
+    if (obj.isMesh) {
+      obj.castShadow = true;
+      obj.receiveShadow = true;
+      if (obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach((m) => {
+          if (m.color) {
+            m.color.setHex(0xff9f43);
+            m.emissive = new THREE.Color(0x3d2408);
+            m.emissiveIntensity = 0.15;
+          }
+          m.needsUpdate = true;
+        });
+      }
+    }
+  });
+
+  console.log('%c✔ human.glb загружен. Исходная высота: ' + humanTemplateHeight.toFixed(2) + ' м',
+              'color:#31d0aa;font-weight:bold');
+
+  // Если человечек уже стоит на ступени — обновим его высоту
+  if (humanGroup.visible) {
+    makeHumanFigure(humanHeight);
+  }
+}, undefined, (err) => {
+  console.warn('Не удалось загрузить human.glb:', err);
+});
+
 function makeHumanFigure(heightCm) {
-  // Очищаем
+  // Очищаем группу
   while (humanGroup.children.length) {
     const c = humanGroup.children.pop();
     if (c.geometry) c.geometry.dispose();
   }
 
-  // Модель в метрах, рост в см → метры
-  const h = (heightCm / 100) * UNIT_SCALE;
+  if (!humanTemplate) {
+    // Модель ещё не загружена — покажем простой временный «столбик»
+    // (чтобы не было пустоты, если пользователь быстро нажал)
+    const h = (heightCm / 100) * UNIT_SCALE;
+    const tempMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.5 });
+    const tempGeo = new THREE.CylinderGeometry(h * 0.08, h * 0.08, h, 12);
+    const tempMesh = new THREE.Mesh(tempGeo, tempMat);
+    tempMesh.position.y = h / 2;
+    tempMesh.castShadow = true;
+    humanGroup.add(tempMesh);
+    humanGroup.userData.topY = h;
+    return;
+  }
 
-  // Пропорции человеческого тела (относительно роста)
-  const headH    = h * 0.13;   // голова
-  const neckH    = h * 0.025;  // шея
-  const torsoH   = h * 0.32;   // туловище
-  const pelvisH  = h * 0.06;   // таз
-  const legH     = h * 0.47;   // ноги
-  const armH     = h * 0.30;   // руки
-  const bodyR    = h * 0.075;  // радиус тела
+  // Клонируем шаблон (чтобы можно было иметь независимую копию)
+  const clone = humanTemplate.clone(true);
 
-  // Материал — гладкий, с лёгким блеском
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: 0xff9f43,
-    roughness: 0.45,
-    metalness: 0.08,
-    emissive: 0x3d2408,
-    emissiveIntensity: 0.18
+  // Целевая высота в единицах модели
+  const targetH = (heightCm / 100) * UNIT_SCALE;
+  // Масштаб = target / исходная высота модели
+  const scale = targetH / humanTemplateHeight;
+  clone.scale.setScalar(scale);
+
+  // Опускаем модель так, чтобы её низ (ноги) был на Y=0
+  const box = new THREE.Box3().setFromObject(clone);
+  clone.position.y = -box.min.y;
+
+  clone.traverse((obj) => {
+    if (obj.isMesh) {
+      obj.castShadow = true;
+      obj.receiveShadow = true;
+    }
   });
-  const headMat = new THREE.MeshStandardMaterial({
-    color: 0xffb066,
-    roughness: 0.4,
-    metalness: 0.08,
-    emissive: 0x3d2408,
-    emissiveIntensity: 0.18
-  });
 
-  /* ---------- НОГИ ---------- */
-  // Верхняя часть (бедро) и нижняя (голень), с коленом
-  const thighH = legH * 0.5;
-  const shinH  = legH * 0.5;
-  const legR   = h * 0.038;
+  humanGroup.add(clone);
 
-  const thighGeo = new THREE.CapsuleGeometry(legR, thighH, 8, 16);
-  const shinGeo  = new THREE.CapsuleGeometry(legR * 0.85, shinH, 8, 16);
-
-  const legX = bodyR * 0.55;
-
-  // Левая нога
-  const thighL = new THREE.Mesh(thighGeo, bodyMat);
-  thighL.position.set(-legX, thighH / 2 + shinH * 0.95, 0);
-  thighL.castShadow = true;
-  humanGroup.add(thighL);
-
-  const shinL = new THREE.Mesh(shinGeo, bodyMat);
-  shinL.position.set(-legX, shinH / 2, 0);
-  shinL.castShadow = true;
-  humanGroup.add(shinL);
-
-  // Правая нога
-  const thighR = new THREE.Mesh(thighGeo, bodyMat);
-  thighR.position.set(legX, thighH / 2 + shinH * 0.95, 0);
-  thighR.castShadow = true;
-  humanGroup.add(thighR);
-
-  const shinR = new THREE.Mesh(shinGeo, bodyMat);
-  shinR.position.set(legX, shinH / 2, 0);
-  shinR.castShadow = true;
-  humanGroup.add(shinR);
-
-  // Стопы — плоские блоки
-  const footGeo = new THREE.BoxGeometry(h * 0.05, h * 0.022, h * 0.11);
-  const footL = new THREE.Mesh(footGeo, bodyMat);
-  footL.position.set(-legX, h * 0.011, h * 0.025);
-  footL.castShadow = true;
-  humanGroup.add(footL);
-  const footR = new THREE.Mesh(footGeo, bodyMat);
-  footR.position.set(legX, h * 0.011, h * 0.025);
-  footR.castShadow = true;
-  humanGroup.add(footR);
-
-  /* ---------- ТАЗ ---------- */
-  const pelvisGeo = new THREE.SphereGeometry(bodyR * 0.95, 24, 16);
-  const pelvis = new THREE.Mesh(pelvisGeo, bodyMat);
-  pelvis.scale.set(1, 0.55, 0.85);
-  pelvis.position.set(0, legH + pelvisH * 0.35, 0);
-  pelvis.castShadow = true;
-  humanGroup.add(pelvis);
-
-  /* ---------- ТУЛОВИЩЕ ---------- */
-  const torsoGeo = new THREE.CapsuleGeometry(bodyR * 0.9, torsoH, 12, 24);
-  const torso = new THREE.Mesh(torsoGeo, bodyMat);
-  torso.scale.set(1, 1, 0.8);
-  torso.position.set(0, legH + pelvisH * 0.7 + torsoH / 2 + bodyR * 0.3, 0);
-  torso.castShadow = true;
-  humanGroup.add(torso);
-
-  /* ---------- ПЛЕЧИ ---------- */
-  const shoulderY = legH + pelvisH * 0.7 + torsoH + bodyR * 0.6;
-  const shoulderGeo = new THREE.SphereGeometry(bodyR * 0.95, 24, 16);
-  const shoulders = new THREE.Mesh(shoulderGeo, bodyMat);
-  shoulders.scale.set(1.4, 0.55, 0.9);
-  shoulders.position.set(0, shoulderY, 0);
-  shoulders.castShadow = true;
-  humanGroup.add(shoulders);
-
-  /* ---------- РУКИ ---------- */
-  const upperArmH = armH * 0.5;
-  const lowerArmH = armH * 0.45;
-  const armR_ = h * 0.028;
-
-  const upperArmGeo = new THREE.CapsuleGeometry(armR_, upperArmH, 8, 16);
-  const lowerArmGeo = new THREE.CapsuleGeometry(armR_ * 0.85, lowerArmH, 8, 16);
-
-  const armX = bodyR * 1.25;
-
-  // Левая рука
-  const upL = new THREE.Mesh(upperArmGeo, bodyMat);
-  upL.position.set(-armX, shoulderY - upperArmH / 2 + h * 0.01, 0);
-  upL.rotation.z = 0.1;
-  upL.castShadow = true;
-  humanGroup.add(upL);
-
-  const lowL = new THREE.Mesh(lowerArmGeo, bodyMat);
-  lowL.position.set(-armX - h * 0.008, shoulderY - upperArmH - lowerArmH / 2 + h * 0.02, 0);
-  lowL.rotation.z = 0.08;
-  lowL.castShadow = true;
-  humanGroup.add(lowL);
-
-  // Правая рука
-  const upR = new THREE.Mesh(upperArmGeo, bodyMat);
-  upR.position.set(armX, shoulderY - upperArmH / 2 + h * 0.01, 0);
-  upR.rotation.z = -0.1;
-  upR.castShadow = true;
-  humanGroup.add(upR);
-
-  const lowR = new THREE.Mesh(lowerArmGeo, bodyMat);
-  lowR.position.set(armX + h * 0.008, shoulderY - upperArmH - lowerArmH / 2 + h * 0.02, 0);
-  lowR.rotation.z = -0.08;
-  lowR.castShadow = true;
-  humanGroup.add(lowR);
-
-  /* ---------- ШЕЯ ---------- */
-  const neckGeo = new THREE.CapsuleGeometry(h * 0.022, neckH, 6, 12);
-  const neck = new THREE.Mesh(neckGeo, bodyMat);
-  neck.position.set(0, shoulderY + neckH / 2 + h * 0.005, 0);
-  neck.castShadow = true;
-  humanGroup.add(neck);
-
-  /* ---------- ГОЛОВА ---------- */
-  const headR = headH / 2;
-  const headGeo = new THREE.SphereGeometry(headR, 32, 24);
-  const head = new THREE.Mesh(headGeo, headMat);
-  head.scale.set(0.88, 1.05, 0.95);
-  head.position.set(0, shoulderY + neckH + headR * 1.05, 0);
-  head.castShadow = true;
-  humanGroup.add(head);
-
-  /* ---------- ПОДПИСЬ РОСТА ---------- */
-  const topY = shoulderY + neckH + headR * 2.15;
+  // Подпись роста рядом с головой
+  const topY = targetH;
   humanGroup.add(makeHeightLabel(heightCm, topY));
 
-  // Общая высота макушки — используется при постановке на ступень
+  // Запоминаем высоту макушки (для будущего — замеров от макушки до потолка)
   humanGroup.userData.topY = topY;
-}
-function makeHeightLabel(text, yPos) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  const dpr = 2;
-  const W = 200, H = 60;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  ctx.scale(dpr, dpr);
-
-  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
-  ctx.strokeStyle = '#31d0aa';
-  ctx.lineWidth = 2;
-  const r = 12;
-  ctx.beginPath();
-  ctx.moveTo(r, 0);
-  ctx.lineTo(W - r, 0);
-  ctx.quadraticCurveTo(W, 0, W, r);
-  ctx.lineTo(W, H - r);
-  ctx.quadraticCurveTo(W, H, W - r, H);
-  ctx.lineTo(r, H);
-  ctx.quadraticCurveTo(0, H, 0, H - r);
-  ctx.lineTo(0, r);
-  ctx.quadraticCurveTo(0, 0, r, 0);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = '#4be0bc';
-  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text + ' см', W / 2, H / 2 + 1);
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-  const mat = new THREE.SpriteMaterial({
-    map: tex, depthTest: false, depthWrite: false, transparent: true
-  });
-  const sprite = new THREE.Sprite(mat);
-  sprite.position.set(0, yPos + 0.15, 0);
-  sprite.scale.set(0.55, 0.165, 1);
-  return sprite;
-}
-
-function setHumanHeight(cm) {
-  humanHeight = cm;
-  heightValue.textContent = cm + ' см';
-  makeHumanFigure(cm);
 }
 
 /* ---------- Классификация материалов ---------- */

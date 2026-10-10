@@ -19,6 +19,7 @@
   #canvas{display:block;width:100%;height:100%;outline:none;cursor:grab;touch-action:none;}
   #canvas:active{cursor:grabbing;}
   #canvas.ruler-mode{cursor:crosshair;}
+  #canvas.human-mode{cursor:pointer;}
 
   .brand{position:fixed;top:18px;left:18px;display:flex;align-items:center;gap:12px;
     padding:10px 16px 10px 12px;background:var(--panel);border:1px solid var(--border);
@@ -30,7 +31,7 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{position:fixed;top:18px;right:18px;width:260px;padding:14px;
+  .panel{position:fixed;top:18px;right:18px;width:270px;padding:14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
@@ -57,6 +58,9 @@
   .btn.ruler-on{background:linear-gradient(135deg,#ff9f43,#ff7043);
     border-color:transparent;color:#fff;
     box-shadow:0 6px 18px rgba(255,112,67,.35);}
+  .btn.human-on{background:linear-gradient(135deg,#31d0aa,#1e9e80);
+    border-color:transparent;color:#fff;
+    box-shadow:0 6px 18px rgba(49,208,170,.35);}
   .btn .ico{font-size:13px;line-height:1;}
   .divider{height:1px;background:var(--border);margin:3px 0;}
   .color-row{display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -66,6 +70,30 @@
     padding:0;border:none;border-radius:7px;background:transparent;cursor:pointer;overflow:hidden;}
   input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
   input[type="color"]::-webkit-color-swatch{border:1px solid var(--border-str);border-radius:7px;}
+
+  .slider-row{display:flex;flex-direction:column;gap:6px;
+    padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+    border-radius:10px;}
+  .slider-label{display:flex;justify-content:space-between;align-items:center;
+    font-size:11px;color:var(--muted);}
+  .slider-label b{color:var(--accent-2);font-size:13px;font-weight:700;}
+  input[type="range"].heightSlider{
+    -webkit-appearance:none;appearance:none;width:100%;height:6px;
+    background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;
+  }
+  input[type="range"].heightSlider::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:22px;height:22px;border-radius:50%;
+    background:linear-gradient(135deg,#31d0aa,#1e9e80);
+    border:2px solid #0f1116;cursor:pointer;
+    box-shadow:0 2px 8px rgba(49,208,170,.5);
+  }
+  input[type="range"].heightSlider::-moz-range-thumb{
+    width:22px;height:22px;border-radius:50%;
+    background:linear-gradient(135deg,#31d0aa,#1e9e80);
+    border:2px solid #0f1116;cursor:pointer;
+    box-shadow:0 2px 8px rgba(49,208,170,.5);
+  }
 
   .panel-toggle{position:fixed;top:18px;right:18px;width:44px;height:44px;
     display:none;align-items:center;justify-content:center;
@@ -115,12 +143,14 @@
   .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
     transition:width .15s ease;}
 
-  .ruler-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
-    padding:10px 18px;background:linear-gradient(135deg,#ff9f43,#ff7043);
-    color:#fff;border-radius:12px;font-size:13px;font-weight:600;
-    z-index:75;opacity:0;pointer-events:none;transition:opacity .25s;
+  .mode-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
+    padding:10px 18px;color:#fff;border-radius:12px;font-size:13px;font-weight:600;
+    z-index:75;opacity:0;pointer-events:none;transition:opacity .25s;}
+  .mode-hint.show{opacity:1;}
+  .mode-hint.ruler{background:linear-gradient(135deg,#ff9f43,#ff7043);
     box-shadow:0 8px 24px rgba(255,112,67,.4);}
-  .ruler-hint.show{opacity:1;}
+  .mode-hint.human{background:linear-gradient(135deg,#31d0aa,#1e9e80);
+    box-shadow:0 8px 24px rgba(49,208,170,.4);}
 
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}
@@ -138,8 +168,9 @@
     .panel-title{flex:1 1 100%;margin-top:0;font-size:9px;}
     .divider{flex:1 1 100%;}
     .color-row{flex:1 1 100%;}
+    .slider-row{flex:1 1 100%;}
     .info{display:none;}
-    .ruler-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
+    .mode-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
   }
 </style>
 </head>
@@ -192,8 +223,22 @@
   <div class="panel-title">Инструменты</div>
 
   <div class="row">
-    <button class="btn" id="btnRuler" title="Линейка"><span class="ico">📏</span> Линейка</button>
+    <button class="btn" id="btnRuler" title="Линейка (M)"><span class="ico">📏</span> Линейка</button>
     <button class="btn" id="btnRulerClear" title="Очистить замеры"><span class="ico">✕</span> Очистить</button>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="btnHuman" title="Человечек"><span class="ico">🧍</span> Человечек</button>
+    <button class="btn" id="btnHumanRemove" title="Убрать человечка"><span class="ico">✕</span> Убрать</button>
+  </div>
+
+  <div class="slider-row">
+    <div class="slider-label">
+      <span>Рост человека</span>
+      <b id="heightValue">185 см</b>
+    </div>
+    <input type="range" id="heightSlider" class="heightSlider"
+           min="165" max="195" step="5" value="185">
   </div>
 
   <div class="divider"></div>
@@ -229,7 +274,8 @@
 </div>
 
 <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
-<div class="ruler-hint" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
+<div class="mode-hint" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
+<div class="mode-hint human" id="humanHint">🧍 Тапните по ступени, чтобы поставить человечка</div>
 <div class="toast" id="toast"></div>
 
 <input type="file" id="fileInput" multiple
@@ -243,9 +289,7 @@
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   }
 }
-</script>
-
-<script type="module">
+</script><script type="module">
 import * as THREE from 'three';
 import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
 import { ColladaLoader }  from 'three/addons/loaders/ColladaLoader.js';
@@ -255,8 +299,7 @@ import { ColladaLoader }  from 'three/addons/loaders/ColladaLoader.js';
    ═══════════════════════════════════════════════════════════════ */
 const MODEL_FILE = 'Korobitsyno.dae';
 
-/* Единицы измерения. Если модель в метрах — оставьте 1.0.
-   Если в миллиметрах — 0.001. В сантиметрах — 0.01. */
+/* Единицы. Модель в метрах → 1.0. В мм → 0.001. В см → 0.01. */
 const UNIT_SCALE = 1.0;
 /* ═══════════════════════════════════════════════════════════════ */
 
@@ -272,6 +315,9 @@ const fileInput   = document.getElementById('fileInput');
 const progress    = document.getElementById('progress');
 const progressBar = document.getElementById('progressBar');
 const rulerHint   = document.getElementById('rulerHint');
+const humanHint   = document.getElementById('humanHint');
+const heightSlider= document.getElementById('heightSlider');
+const heightValue = document.getElementById('heightValue');
 
 const ui = {
   file:   document.getElementById('iFile'),
@@ -385,12 +431,181 @@ scene.add(rulerGroup);
 const rulerLineMat = new THREE.LineBasicMaterial({ color: 0xff7043 });
 const rulerDotMat  = new THREE.MeshBasicMaterial({ color: 0xff9f43 });
 const rulerDotGeo  = new THREE.SphereGeometry(0.03, 12, 12);
-const rulerDotGeoNorm = new THREE.SphereGeometry(0.03, 12, 12);
 
 const raycaster = new THREE.Raycaster();
 const pointer   = new THREE.Vector2();
 
-/* ---------- Классификация ---------- */
+/* Все вершины модели — для привязки */
+const allVertices = [];   // массив Vector3 (world coords)
+
+/* Подсветка — кружок, который следует за мышью */
+const snapDotGeo = new THREE.SphereGeometry(0.05, 16, 16);
+const snapDotMat = new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.85 });
+const snapDot = new THREE.Mesh(snapDotGeo, snapDotMat);
+snapDot.visible = false;
+snapDot.renderOrder = 1000;
+scene.add(snapDot);
+
+const SNAP_RADIUS = 0.05;   // 5 см в метрах
+
+/* ---------- Человечек ---------- */
+let humanMode = false;
+let humanHeight = 185;      // в см
+const humanGroup = new THREE.Group();
+humanGroup.visible = false;
+scene.add(humanGroup);
+
+const humanBodyMat = new THREE.MeshStandardMaterial({
+  color: 0x31d0aa, roughness: 0.55, metalness: 0.05,
+  emissive: 0x0a3a2e, emissiveIntensity: 0.25
+});
+const humanHeadMat = new THREE.MeshStandardMaterial({
+  color: 0x4be0bc, roughness: 0.5, metalness: 0.05,
+  emissive: 0x0a3a2e, emissiveIntensity: 0.25
+});
+
+function makeHumanFigure(heightCm) {
+  // Очищаем
+  while (humanGroup.children.length) {
+    const c = humanGroup.children.pop();
+    if (c.geometry) c.geometry.dispose();
+  }
+
+  // Модель в метрах, рост в см → метры
+  const h = (heightCm / 100) * UNIT_SCALE;
+  // Пропорции: голова ~1/7.5 роста
+  const headR   = h * 0.065;
+  const neckH   = h * 0.025;
+  const torsoH  = h * 0.30;
+  const pelvisH = h * 0.06;
+  const legH    = h * 0.47;
+  const armH    = h * 0.32;
+  const bodyR   = h * 0.085;
+
+  // Ноги (2 цилиндра)
+  const legR = h * 0.035;
+  const legGeo = new THREE.CylinderGeometry(legR, legR * 1.15, legH, 16);
+  const legL = new THREE.Mesh(legGeo, humanBodyMat);
+  legL.position.set(-bodyR * 0.55, legH / 2, 0);
+  legL.castShadow = true;
+  humanGroup.add(legL);
+  const legR_ = new THREE.Mesh(legGeo, humanBodyMat);
+  legR_.position.set(bodyR * 0.55, legH / 2, 0);
+  legR_.castShadow = true;
+  humanGroup.add(legR_);
+
+  // Таз
+  const pelvisGeo = new THREE.SphereGeometry(bodyR * 0.95, 20, 14);
+  const pelvis = new THREE.Mesh(pelvisGeo, humanBodyMat);
+  pelvis.scale.y = 0.6;
+  pelvis.position.set(0, legH + pelvisH * 0.4, 0);
+  pelvis.castShadow = true;
+  humanGroup.add(pelvis);
+
+  // Туловище
+  const torsoGeo = new THREE.CylinderGeometry(bodyR * 0.95, bodyR * 1.05, torsoH, 20);
+  const torso = new THREE.Mesh(torsoGeo, humanBodyMat);
+  torso.position.set(0, legH + pelvisH * 0.8 + torsoH / 2, 0);
+  torso.castShadow = true;
+  humanGroup.add(torso);
+
+  // Плечи
+  const shoulderGeo = new THREE.SphereGeometry(bodyR * 1.05, 20, 14);
+  const shoulders = new THREE.Mesh(shoulderGeo, humanBodyMat);
+  shoulders.scale.set(1.3, 0.55, 1);
+  const shoulderY = legH + pelvisH * 0.8 + torsoH;
+  shoulders.position.set(0, shoulderY, 0);
+  shoulders.castShadow = true;
+  humanGroup.add(shoulders);
+
+  // Руки (2 цилиндра)
+  const armR = h * 0.025;
+  const armGeo = new THREE.CylinderGeometry(armR, armR * 0.9, armH, 12);
+  const armL = new THREE.Mesh(armGeo, humanBodyMat);
+  armL.position.set(-bodyR * 1.35, shoulderY - armH / 2 + h * 0.02, 0);
+  armL.rotation.z = 0.12;
+  armL.castShadow = true;
+  humanGroup.add(armL);
+  const armR_ = new THREE.Mesh(armGeo, humanBodyMat);
+  armR_.position.set(bodyR * 1.35, shoulderY - armH / 2 + h * 0.02, 0);
+  armR_.rotation.z = -0.12;
+  armR_.castShadow = true;
+  humanGroup.add(armR_);
+
+  // Шея
+  const neckGeo = new THREE.CylinderGeometry(h * 0.022, h * 0.024, neckH, 12);
+  const neck = new THREE.Mesh(neckGeo, humanBodyMat);
+  neck.position.set(0, shoulderY + neckH / 2 + h * 0.005, 0);
+  neck.castShadow = true;
+  humanGroup.add(neck);
+
+  // Голова
+  const headGeo = new THREE.SphereGeometry(headR, 24, 18);
+  const head = new THREE.Mesh(headGeo, humanHeadMat);
+  head.position.set(0, shoulderY + neckH + headR, 0);
+  head.castShadow = true;
+  humanGroup.add(head);
+
+  // Подпись с ростом — рядом с головой
+  humanGroup.add(makeHeightLabel(heightCm, shoulderY + neckH + headR * 2.2));
+
+  // Обновляем глобальную высоту макушки (для позиционирования на ступени)
+  humanGroup.userData.topY = shoulderY + neckH + headR * 2;
+}
+
+function makeHeightLabel(text, yPos) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = 2;
+  const W = 200, H = 60;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#31d0aa';
+  ctx.lineWidth = 2;
+  const r = 12;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(W - r, 0);
+  ctx.quadraticCurveTo(W, 0, W, r);
+  ctx.lineTo(W, H - r);
+  ctx.quadraticCurveTo(W, H, W - r, H);
+  ctx.lineTo(r, H);
+  ctx.quadraticCurveTo(0, H, 0, H - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#4be0bc';
+  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text + ' см', W / 2, H / 2 + 1);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+  const mat = new THREE.SpriteMaterial({
+    map: tex, depthTest: false, depthWrite: false, transparent: true
+  });
+  const sprite = new THREE.Sprite(mat);
+  sprite.position.set(0, yPos + 0.15, 0);
+  sprite.scale.set(0.55, 0.165, 1);
+  return sprite;
+}
+
+function setHumanHeight(cm) {
+  humanHeight = cm;
+  heightValue.textContent = cm + ' см';
+  makeHumanFigure(cm);
+}
+
+/* ---------- Классификация материалов ---------- */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
@@ -423,7 +638,9 @@ manager.setURLModifier((url) => {
   if (fileMap.has(base))  return fileMap.get(base);
   if (fileMap.has(decoded.toLowerCase())) return fileMap.get(decoded.toLowerCase());
   return url;
-});/* ---------- Загрузка ---------- */
+});
+
+/* ---------- Загрузка ---------- */
 function showProgress(v) {
   if (v <= 0 || v >= 100) { progress.classList.remove('show'); return; }
   progress.classList.add('show');
@@ -458,6 +675,7 @@ function loadCollada(url, fileName) {
 
   for (const k in elementGroups) elementGroups[k] = [];
   clearRuler();
+  allVertices.length = 0;
 
   const loader = new ColladaLoader(manager);
   loader.load(url,
@@ -521,6 +739,27 @@ function loadCollada(url, fileName) {
       model.position.sub(center);
       model.updateMatrixWorld(true);
 
+      // Собираем все вершины для привязки (world coords, после центрирования)
+      const v = new THREE.Vector3();
+      const seenPos = new Set();
+      model.traverse((obj) => {
+        if (!obj.isMesh && !obj.isSkinnedMesh) return;
+        const g = obj.geometry;
+        if (!g || !g.attributes || !g.attributes.position) return;
+        const pos = g.attributes.position;
+        obj.updateMatrixWorld();
+        for (let i = 0; i < pos.count; i++) {
+          v.fromBufferAttribute(pos, i).applyMatrix4(obj.matrixWorld);
+          // Округляем координаты, чтобы убрать дубликаты (3 знака после запятой)
+          const key = v.x.toFixed(3) + '|' + v.y.toFixed(3) + '|' + v.z.toFixed(3);
+          if (!seenPos.has(key)) {
+            seenPos.add(key);
+            allVertices.push(v.clone());
+          }
+        }
+      });
+      console.log('Вершин для привязки:', allVertices.length);
+
       const sphere = new THREE.Box3().setFromObject(model).getBoundingSphere(new THREE.Sphere());
       const r = Math.max(sphere.radius, 0.0001);
 
@@ -550,6 +789,7 @@ function loadCollada(url, fileName) {
 
       applyElementVisibility();
       applyGlassWalls();
+      setHumanHeight(humanHeight);   // перерисуем человечка в новом масштабе
 
       ui.file.textContent   = fileName;
       ui.meshes.textContent = fmtInt(meshCount);
@@ -691,6 +931,22 @@ function setLoading(show, text) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   ПРИВЯЗКА К БЛИЖАЙШЕЙ ВЕРШИНЕ
+   ═══════════════════════════════════════════════════════════════ */
+function findNearestVertex(point, radius) {
+  let bestDist = radius;
+  let bestVert = null;
+  for (let i = 0; i < allVertices.length; i++) {
+    const d = point.distanceTo(allVertices[i]);
+    if (d < bestDist) {
+      bestDist = d;
+      bestVert = allVertices[i];
+    }
+  }
+  return bestVert;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    ЛИНЕЙКА
    ═══════════════════════════════════════════════════════════════ */
 function setRulerMode(on) {
@@ -698,8 +954,14 @@ function setRulerMode(on) {
   document.getElementById('btnRuler').classList.toggle('ruler-on', on);
   canvas.classList.toggle('ruler-mode', on);
   rulerHint.classList.toggle('show', on);
-  controls.enabled = !on;
-  if (!on && rulerPoints.length === 1) rulerPoints = [];
+
+  // Режимы взаимоисключающие
+  if (on && humanMode) setHumanMode(false);
+
+  if (!on) {
+    if (rulerPoints.length === 1) rulerPoints = [];
+    snapDot.visible = false;
+  }
 }
 
 function clearRuler() {
@@ -723,7 +985,6 @@ function makeLabelSprite(text) {
   canvas.height = H * dpr;
   ctx.scale(dpr, dpr);
 
-  // Фон
   ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
   ctx.strokeStyle = '#ff7043';
   ctx.lineWidth = 2;
@@ -742,7 +1003,6 @@ function makeLabelSprite(text) {
   ctx.fill();
   ctx.stroke();
 
-  // Текст
   ctx.fillStyle = '#ff9f43';
   ctx.font = '700 26px Inter, Segoe UI, sans-serif';
   ctx.textAlign = 'center';
@@ -754,10 +1014,7 @@ function makeLabelSprite(text) {
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
   const mat = new THREE.SpriteMaterial({
-    map: tex,
-    depthTest: false,
-    depthWrite: false,
-    transparent: true
+    map: tex, depthTest: false, depthWrite: false, transparent: true
   });
   const sprite = new THREE.Sprite(mat);
   sprite.scale.set(0.7, 0.2, 1);
@@ -769,7 +1026,6 @@ function addMeasurePoint(point) {
   dot.position.copy(point);
   dot.renderOrder = 999;
   rulerGroup.add(dot);
-  return dot;
 }
 
 function addMeasureLine(p1, p2) {
@@ -780,15 +1036,8 @@ function addMeasureLine(p1, p2) {
 }
 
 function formatDistance(distance) {
-  // distance — в единицах модели. Умножаем на UNIT_SCALE → метры.
   const meters = distance * UNIT_SCALE;
-  if (meters < 0.01) {
-    return (meters * 1000).toFixed(0) + ' мм';
-  }
-  if (meters < 1) {
-    return (meters * 100).toFixed(1) + ' см';
-  }
-  return meters.toFixed(2) + ' м';
+  return (meters * 1000).toFixed(0) + ' мм';
 }
 
 function handleRulerTap(clientX, clientY) {
@@ -801,7 +1050,11 @@ function handleRulerTap(clientX, clientY) {
   const hits = raycaster.intersectObject(currentModel, true);
   if (!hits.length) return;
 
-  const point = hits[0].point.clone();
+  let point = hits[0].point.clone();
+  // Привязка к ближайшей вершине
+  const nearVert = findNearestVertex(point, SNAP_RADIUS);
+  if (nearVert) point = nearVert.clone();
+
   rulerPoints.push(point);
   addMeasurePoint(point);
 
@@ -822,193 +1075,57 @@ function handleRulerTap(clientX, clientY) {
   }
 }
 
-// Обработчик клика на canvas (только в режиме линейки)
-let rulerPointerDown = false;
-let rulerDownX = 0, rulerDownY = 0;
+/* Подсветка при наведении (только ПК) */
+function handleRulerHover(clientX, clientY) {
+  if (!rulerMode || !currentModel) { snapDot.visible = false; return; }
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
 
-canvas.addEventListener('pointerdown', (e) => {
-  if (!rulerMode) return;
-  rulerPointerDown = true;
-  rulerDownX = e.clientX;
-  rulerDownY = e.clientY;
-});
+  const hits = raycaster.intersectObject(currentModel, true);
+  if (!hits.length) { snapDot.visible = false; return; }
 
-canvas.addEventListener('pointerup', (e) => {
-  if (!rulerMode || !rulerPointerDown) return;
-  rulerPointerDown = false;
-  const dx = Math.abs(e.clientX - rulerDownX);
-  const dy = Math.abs(e.clientY - rulerDownY);
-  // Считаем это тапом, если сдвиг меньше 6 пикселей
-  if (dx < 6 && dy < 6) {
-    handleRulerTap(e.clientX, e.clientY);
+  const point = hits[0].point.clone();
+  const nearVert = findNearestVertex(point, SNAP_RADIUS);
+  if (nearVert) {
+    snapDot.position.copy(nearVert);
+    snapDot.visible = true;
+  } else {
+    snapDot.position.copy(point);
+    snapDot.visible = true;
+    snapDotMat.color.setHex(0xffffff);
+    snapDotMat.opacity = 0.4;
+    return;
   }
-});
-
-/* ---------- Инициализация панели ---------- */
-if (isMobile()) {
-  panelEl.classList.remove('hidden');
-  panelEl.classList.remove('open');
-} else {
-  panelEl.classList.remove('hidden');
+  snapDotMat.color.setHex(0xffd166);
+  snapDotMat.opacity = 0.85;
 }
 
-panelToggle.addEventListener('click', () => {
-  const isOpen = panelEl.classList.toggle('open');
-  panelToggle.classList.toggle('active', isOpen);
-});
+/* ═══════════════════════════════════════════════════════════════
+   ЧЕЛОВЕЧЕК
+   ═══════════════════════════════════════════════════════════════ */
+function setHumanMode(on) {
+  humanMode = on;
+  document.getElementById('btnHuman').classList.toggle('human-on', on);
+  canvas.classList.toggle('human-mode', on);
+  humanHint.classList.toggle('show', on);
 
-/* ---------- Кнопки ---------- */
-document.getElementById('btnOpen').addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
-document.getElementById('btnFit').addEventListener('click', fitCamera);
-
-document.getElementById('btnRotate').addEventListener('click', (e) => {
-  controls.autoRotate = !controls.autoRotate;
-  e.currentTarget.classList.toggle('active', controls.autoRotate);
-});
-
-function bindElementButton(id, key) {
-  const btn = document.getElementById(id);
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    elementVisible[key] = !elementVisible[key];
-    btn.classList.toggle('active', elementVisible[key]);
-    applyElementVisibility();
-  });
+  if (on && rulerMode) setRulerMode(false);
+  if (!on) {
+    // просто выключаем режим, человечек остаётся на месте
+  }
 }
 
-bindElementButton('el_treads',    'treads');
-bindElementButton('el_risers',    'risers');
-bindElementButton('el_stringers', 'stringers');
-bindElementButton('el_railing',   'railing');
-bindElementButton('el_wall',      'wall');
-bindElementButton('el_opening',   'opening');
-bindElementButton('el_floor',     'floor');
+function placeHuman(clientX, clientY) {
+  if (!currentModel) return;
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
 
-document.getElementById('btnGlass').addEventListener('click', (e) => {
-  glassWalls = !glassWalls;
-  e.currentTarget.classList.toggle('active', glassWalls);
-  applyGlassWalls();
-});
+  const hits = raycaster.intersectObject(currentModel, true);
+  if (!hits.length) return;
 
-/* ---------- Кнопки линейки ---------- */
-document.getElementById('btnRuler').addEventListener('click', () => {
-  setRulerMode(!rulerMode);
-});
-
-document.getElementById('btnRulerClear').addEventListener('click', () => {
-  clearRuler();
-  showToast('Замеры очищены', true);
-});
-
-/* ---------- Сброс ---------- */
-document.getElementById('btnReset').addEventListener('click', () => {
-  for (const k in elementVisible) elementVisible[k] = true;
-  for (const k in elementVisible) {
-    const btn = document.getElementById('el_' + k);
-    if (btn) btn.classList.add('active');
-  }
-  glassWalls = true;
-  document.getElementById('btnGlass').classList.add('active');
-  controls.autoRotate = false;
-  document.getElementById('btnRotate').classList.remove('active');
-  applyElementVisibility();
-  applyGlassWalls();
-
-  // Выключаем линейку
-  if (rulerMode) setRulerMode(false);
-
-  const bg = '#0f1116';
-  document.getElementById('bgColor').value = bg;
-  scene.background.set(bg);
-  if (currentModel) fitCamera();
-});
-
-document.getElementById('btnShot').addEventListener('click', () => {
-  renderer.render(scene, camera);
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = `view-${Date.now()}.png`;
-  a.click();
-  showToast('Снимок сохранён', true);
-});
-
-/* ---------- Поделиться ---------- */
-document.getElementById('btnShare').addEventListener('click', async () => {
-  const url = location.href.split('#')[0].split('?')[0];
-  const title = document.title || '3D Viewer';
-
-  if (navigator.share) {
-    try {
-      await navigator.share({ title, text: 'Посмотрите 3D-модель', url });
-      return;
-    } catch (e) {
-      if (e && e.name === 'AbortError') return;
-    }
-  }
-  try {
-    await navigator.clipboard.writeText(url);
-    showToast('Ссылка скопирована в буфер обмена', true);
-  } catch {
-    prompt('Скопируйте ссылку вручную:', url);
-  }
-});
-
-document.getElementById('bgColor').addEventListener('input', (e) => {
-  scene.background.set(e.target.value);
-});
-
-/* ---------- Drag & Drop ---------- */
-let dragDepth = 0;
-window.addEventListener('dragenter', (e) => { e.preventDefault(); dragDepth++; });
-window.addEventListener('dragover', (e) => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; });
-window.addEventListener('dragleave', (e) => { e.preventDefault(); dragDepth = Math.max(0, dragDepth - 1); });
-window.addEventListener('drop', (e) => {
-  e.preventDefault(); dragDepth = 0;
-  if (e.dataTransfer && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-});
-
-/* ---------- Горячие клавиши ---------- */
-window.addEventListener('keydown', (e) => {
-  const tag = (e.target.tagName || '').toLowerCase();
-  if (tag === 'input' || tag === 'textarea') return;
-  switch (e.key.toLowerCase()) {
-    case 'f': document.getElementById('btnFit').click(); break;
-    case 'r': document.getElementById('btnRotate').click(); break;
-    case 'm': document.getElementById('btnRuler').click(); break;
-  }
-});
-
-/* ---------- Ресайз ---------- */
-function resize() {
-  const w = window.innerWidth, h = window.innerHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-}
-window.addEventListener('resize', resize);
-
-/* ---------- Цикл ---------- */
-const clock = new THREE.Clock();
-function animate() {
-  requestAnimationFrame(animate);
-  const dt = clock.getDelta();
-  if (currentMixer) currentMixer.update(dt);
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-/* ---------- Старт ---------- */
-resize();
-animate();
-
-if (MODEL_FILE) {
-  loadCollada(MODEL_FILE, MODEL_FILE);
-}
-
-console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
-console.log('Модель:', MODEL_FILE);
-console.log('Линейка: клавиша M или кнопка 📏 в панели');
-</script>
-</body>
-</html>
+  const point = hits[0].point.clone();
+  // Ставим человечка

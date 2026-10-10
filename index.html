@@ -56,7 +56,6 @@
     border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(91,140,255,.3);}
   .btn.primary:hover{filter:brightness(1.08);}
   .btn.active{background:rgba(91,140,255,.22);border-color:rgba(91,140,255,.55);color:#b9cdff;}
-  .btn.dim{opacity:.45;}
   .btn .ico{font-size:13px;line-height:1;}
   .divider{height:1px;background:var(--border);margin:3px 0;}
   .color-row{display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -185,8 +184,10 @@
 
   <div class="row">
     <button class="btn" id="btnShot"><span class="ico">📷</span> Снимок</button>
-    <button class="btn" id="btnReset"><span class="ico">↺</span> Сброс</button>
+    <button class="btn" id="btnShare"><span class="ico">🔗</span> Поделиться</button>
   </div>
+
+  <button class="btn" id="btnReset"><span class="ico">↺</span> Сброс</button>
 
   <label class="color-row">
     <span>Цвет фона</span>
@@ -226,7 +227,6 @@
   }
 }
 </script>
-
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
@@ -337,15 +337,9 @@ let currentMixer = null;
 let objectUrls   = [];
 const fileMap    = new Map();
 
-/* Группы элементов — сюда складываем меши по категориям */
 const elementGroups = {
-  treads:    [],  // TREAD
-  risers:    [],  // RISER
-  stringers: [],  // STRING
-  railing:   [],  // HANDRAIL, BALUSTER, POST, BOTTOMRAIL
-  wall:      [],  // BEGIN_WALL
-  opening:   [],  // BEGIN_OPENING
-  floor:     [],  // parkett, ash
+  treads: [], risers: [], stringers: [], railing: [],
+  wall: [], opening: [], floor: [],
 };
 
 const elementVisible = {
@@ -353,14 +347,13 @@ const elementVisible = {
   wall: true, opening: true, floor: true,
 };
 
-let glassWalls = true;   // прозрачные стены — включено по умолчанию
+let glassWalls = true;
 
-/* Настройки прозрачности */
-const WALL_OPACITY   = 0.15;  // глухая стена — почти невидима
-const WINDOW_OPACITY = 0.55;  // окно в стене — видно раму
-const OPENING_OPACITY = 0.2;  // проём
+const WALL_OPACITY    = 0.15;
+const WINDOW_OPACITY  = 0.55;
+const OPENING_OPACITY = 0.2;
 
-/* ---------- Классификация меша по материалу ---------- */
+/* ---------- Классификация меша ---------- */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
@@ -379,7 +372,6 @@ function classifyMaterial(matName) {
   return null;
 }
 
-/* Проверка: текстура — это «окно»? */
 function isWindowTexture(matName) {
   if (!matName) return false;
   return matName.toLowerCase().includes('window');
@@ -406,7 +398,6 @@ function showProgress(v) {
 function handleFiles(fileList) {
   const files = Array.from(fileList || []);
   if (!files.length) return;
-
   const daeFile = files.find(f => /\.(dae|xml)$/i.test(f.name));
   if (!daeFile) { showToast('Не найден файл формата .dae'); return; }
 
@@ -421,7 +412,6 @@ function handleFiles(fileList) {
     fileMap.set(f.name.toLowerCase(), url);
     if (f.webkitRelativePath) fileMap.set(f.webkitRelativePath.toLowerCase(), url);
   }
-
   const daeUrl = URL.createObjectURL(daeFile);
   objectUrls.push(daeUrl);
   loadCollada(daeUrl, daeFile.name);
@@ -431,16 +421,13 @@ function loadCollada(url, fileName) {
   setLoading(true, `Загрузка «${fileName}»…`);
   showProgress(5);
 
-  // Сброс групп
   for (const k in elementGroups) elementGroups[k] = [];
 
   const loader = new ColladaLoader(manager);
-
   loader.load(url,
     (collada) => {
       setLoading(false);
       showProgress(0);
-
       const model = collada.scene;
       if (!model) { showToast('Файл не содержит сцены'); return; }
 
@@ -481,16 +468,11 @@ function loadCollada(url, fileName) {
           m.needsUpdate = true;
         });
 
-        // Классификация: по имени материала
         const matName = mats[0] && mats[0].name ? mats[0].name : '';
         const group = classifyMaterial(matName);
         if (group) {
           elementGroups[group].push(obj);
-
-          // Для стен: окно — плотнее, глухая часть — прозрачнее
-          if (group === 'wall' && isWindowTexture(matName)) {
-            obj.userData.isWindow = true;
-          }
+          if (group === 'wall' && isWindowTexture(matName)) obj.userData.isWindow = true;
         }
       });
 
@@ -530,7 +512,6 @@ function loadCollada(url, fileName) {
       currentModel = model;
       scene.add(currentModel);
 
-      // Применяем текущее состояние (все элементы включены, стены прозрачные)
       applyElementVisibility();
       applyGlassWalls();
 
@@ -567,7 +548,7 @@ function loadCollada(url, fileName) {
   );
 }
 
-/* ---------- Применение видимости элементов ---------- */
+/* ---------- Видимость элементов ---------- */
 function applyElementVisibility() {
   for (const key in elementGroups) {
     const visible = elementVisible[key];
@@ -575,13 +556,8 @@ function applyElementVisibility() {
   }
 }
 
-/* ---------- Применение прозрачности стен ---------- */
 function applyGlassWalls() {
-  const wallMeshes = elementGroups.wall;
-  const openingMeshes = elementGroups.opening;
-
-  // Стены
-  wallMeshes.forEach((obj) => {
+  elementGroups.wall.forEach((obj) => {
     const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
     const isWin = obj.userData.isWindow;
     mats.forEach((m) => {
@@ -599,8 +575,7 @@ function applyGlassWalls() {
     });
   });
 
-  // Проёмы — по тому же принципу
-  openingMeshes.forEach((obj) => {
+  elementGroups.opening.forEach((obj) => {
     const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
     mats.forEach((m) => {
       if (!m) return;
@@ -618,7 +593,7 @@ function applyGlassWalls() {
   });
 }
 
-/* ---------- Камера ---------- */
+/* ---------- Камера (увеличенная на телефоне) ---------- */
 function fitCamera() {
   if (!currentModel) return;
   const box = new THREE.Box3().setFromObject(currentModel);
@@ -626,7 +601,9 @@ function fitCamera() {
   const radius = Math.max(sphere.radius, 0.0001);
 
   const fovRad = THREE.MathUtils.degToRad(camera.fov);
-  const dist = (radius / Math.sin(fovRad / 2)) * 1.18;
+  // На телефоне — крупнее, на ПК — обычный отступ
+  const zoomFactor = isMobile() ? 0.78 : 1.18;
+  const dist = (radius / Math.sin(fovRad / 2)) * zoomFactor;
   const dir = new THREE.Vector3(1, 0.62, 1).normalize();
 
   camera.position.copy(sphere.center).addScaledVector(dir, dist);
@@ -691,7 +668,7 @@ panelToggle.addEventListener('click', () => {
   panelToggle.classList.toggle('active', isOpen);
 });
 
-/* ---------- Кнопки общего управления ---------- */
+/* ---------- Кнопки ---------- */
 document.getElementById('btnOpen').addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
 document.getElementById('btnFit').addEventListener('click', fitCamera);
@@ -701,7 +678,6 @@ document.getElementById('btnRotate').addEventListener('click', (e) => {
   e.currentTarget.classList.toggle('active', controls.autoRotate);
 });
 
-/* ---------- Кнопки элементов ---------- */
 function bindElementButton(id, key) {
   const btn = document.getElementById(id);
   if (!btn) return;
@@ -720,19 +696,16 @@ bindElementButton('el_wall',      'wall');
 bindElementButton('el_opening',   'opening');
 bindElementButton('el_floor',     'floor');
 
-/* ---------- Кнопка «Прозрачные стены» ---------- */
 document.getElementById('btnGlass').addEventListener('click', (e) => {
   glassWalls = !glassWalls;
   e.currentTarget.classList.toggle('active', glassWalls);
   applyGlassWalls();
 });
 
-/* ---------- Сброс ---------- */
 document.getElementById('btnReset').addEventListener('click', () => {
   for (const k in elementVisible) elementVisible[k] = true;
   for (const k in elementVisible) {
-    const btnId = 'el_' + k;
-    const btn = document.getElementById(btnId);
+    const btn = document.getElementById('el_' + k);
     if (btn) btn.classList.add('active');
   }
   glassWalls = true;
@@ -748,7 +721,6 @@ document.getElementById('btnReset').addEventListener('click', () => {
   if (currentModel) fitCamera();
 });
 
-/* ---------- Снимок ---------- */
 document.getElementById('btnShot').addEventListener('click', () => {
   renderer.render(scene, camera);
   const a = document.createElement('a');
@@ -758,7 +730,27 @@ document.getElementById('btnShot').addEventListener('click', () => {
   showToast('Снимок сохранён', true);
 });
 
-/* ---------- Цвет фона ---------- */
+/* ---------- Поделиться ---------- */
+document.getElementById('btnShare').addEventListener('click', async () => {
+  const url = location.href.split('#')[0].split('?')[0];
+  const title = document.title || '3D Viewer';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text: 'Посмотрите 3D-модель', url });
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Ссылка скопирована в буфер обмена', true);
+  } catch {
+    prompt('Скопируйте ссылку вручную:', url);
+  }
+});
+
 document.getElementById('bgColor').addEventListener('input', (e) => {
   scene.background.set(e.target.value);
 });

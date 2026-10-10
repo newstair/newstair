@@ -18,6 +18,7 @@
     background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;}
   #canvas{display:block;width:100%;height:100%;outline:none;cursor:grab;touch-action:none;}
   #canvas:active{cursor:grabbing;}
+  #canvas.ruler-mode{cursor:crosshair;}
 
   .brand{position:fixed;top:18px;left:18px;display:flex;align-items:center;gap:12px;
     padding:10px 16px 10px 12px;background:var(--panel);border:1px solid var(--border);
@@ -29,15 +30,12 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{
-    position:fixed;top:18px;right:18px;width:260px;padding:14px;
-    background:var(--panel);border:1px solid var(--border);
-    border-radius:var(--radius);
+  .panel{position:fixed;top:18px;right:18px;width:260px;padding:14px;
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
     max-height:calc(100vh - 36px);overflow-y:auto;
-    transition:transform .25s ease, opacity .25s ease;
-  }
+    transition:transform .25s ease, opacity .25s ease;}
   .panel::-webkit-scrollbar{width:6px;}
   .panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
   .panel.hidden{transform:translateX(calc(100% + 30px));opacity:0;pointer-events:none;}
@@ -56,6 +54,9 @@
     border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(91,140,255,.3);}
   .btn.primary:hover{filter:brightness(1.08);}
   .btn.active{background:rgba(91,140,255,.22);border-color:rgba(91,140,255,.55);color:#b9cdff;}
+  .btn.ruler-on{background:linear-gradient(135deg,#ff9f43,#ff7043);
+    border-color:transparent;color:#fff;
+    box-shadow:0 6px 18px rgba(255,112,67,.35);}
   .btn .ico{font-size:13px;line-height:1;}
   .divider{height:1px;background:var(--border);margin:3px 0;}
   .color-row{display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -114,6 +115,13 @@
   .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
     transition:width .15s ease;}
 
+  .ruler-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
+    padding:10px 18px;background:linear-gradient(135deg,#ff9f43,#ff7043);
+    color:#fff;border-radius:12px;font-size:13px;font-weight:600;
+    z-index:75;opacity:0;pointer-events:none;transition:opacity .25s;
+    box-shadow:0 8px 24px rgba(255,112,67,.4);}
+  .ruler-hint.show{opacity:1;}
+
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}
     .brand h1{font-size:12px;} .brand p{display:none;}
@@ -131,6 +139,7 @@
     .divider{flex:1 1 100%;}
     .color-row{flex:1 1 100%;}
     .info{display:none;}
+    .ruler-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
   }
 </style>
 </head>
@@ -180,6 +189,13 @@
     <button class="btn active" id="btnGlass" title="Прозрачные стены"><span class="ico">◇</span> Стекло</button>
   </div>
 
+  <div class="panel-title">Инструменты</div>
+
+  <div class="row">
+    <button class="btn" id="btnRuler" title="Линейка"><span class="ico">📏</span> Линейка</button>
+    <button class="btn" id="btnRulerClear" title="Очистить замеры"><span class="ico">✕</span> Очистить</button>
+  </div>
+
   <div class="divider"></div>
 
   <div class="row">
@@ -213,6 +229,7 @@
 </div>
 
 <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div class="ruler-hint" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
 <div class="toast" id="toast"></div>
 
 <input type="file" id="fileInput" multiple
@@ -227,6 +244,7 @@
   }
 }
 </script>
+
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
@@ -236,6 +254,10 @@ import { ColladaLoader }  from 'three/addons/loaders/ColladaLoader.js';
    ★ ЗДЕСЬ МЕНЯЕТЕ ИМЯ МОДЕЛИ ★
    ═══════════════════════════════════════════════════════════════ */
 const MODEL_FILE = 'Korobitsyno.dae';
+
+/* Единицы измерения. Если модель в метрах — оставьте 1.0.
+   Если в миллиметрах — 0.001. В сантиметрах — 0.01. */
+const UNIT_SCALE = 1.0;
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ---------- DOM ---------- */
@@ -249,6 +271,7 @@ const panelToggle = document.getElementById('panelToggle');
 const fileInput   = document.getElementById('fileInput');
 const progress    = document.getElementById('progress');
 const progressBar = document.getElementById('progressBar');
+const rulerHint   = document.getElementById('rulerHint');
 
 const ui = {
   file:   document.getElementById('iFile'),
@@ -311,7 +334,7 @@ const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
 rimLight.position.set(0, -6, -4);
 scene.add(rimLight);
 
-/* ---------- Сетка (выключена по умолчанию) ---------- */
+/* ---------- Сетка ---------- */
 let gridHelper = null;
 let gridVisible = false;
 
@@ -353,7 +376,21 @@ const WALL_OPACITY    = 0.15;
 const WINDOW_OPACITY  = 0.55;
 const OPENING_OPACITY = 0.2;
 
-/* ---------- Классификация меша ---------- */
+/* ---------- Линейка ---------- */
+let rulerMode = false;
+let rulerPoints = [];
+const rulerGroup = new THREE.Group();
+scene.add(rulerGroup);
+
+const rulerLineMat = new THREE.LineBasicMaterial({ color: 0xff7043 });
+const rulerDotMat  = new THREE.MeshBasicMaterial({ color: 0xff9f43 });
+const rulerDotGeo  = new THREE.SphereGeometry(0.03, 12, 12);
+const rulerDotGeoNorm = new THREE.SphereGeometry(0.03, 12, 12);
+
+const raycaster = new THREE.Raycaster();
+const pointer   = new THREE.Vector2();
+
+/* ---------- Классификация ---------- */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
@@ -386,9 +423,7 @@ manager.setURLModifier((url) => {
   if (fileMap.has(base))  return fileMap.get(base);
   if (fileMap.has(decoded.toLowerCase())) return fileMap.get(decoded.toLowerCase());
   return url;
-});
-
-/* ---------- Загрузка ---------- */
+});/* ---------- Загрузка ---------- */
 function showProgress(v) {
   if (v <= 0 || v >= 100) { progress.classList.remove('show'); return; }
   progress.classList.add('show');
@@ -422,6 +457,7 @@ function loadCollada(url, fileName) {
   showProgress(5);
 
   for (const k in elementGroups) elementGroups[k] = [];
+  clearRuler();
 
   const loader = new ColladaLoader(manager);
   loader.load(url,
@@ -593,7 +629,7 @@ function applyGlassWalls() {
   });
 }
 
-/* ---------- Камера (увеличенная на телефоне) ---------- */
+/* ---------- Камера ---------- */
 function fitCamera() {
   if (!currentModel) return;
   const box = new THREE.Box3().setFromObject(currentModel);
@@ -601,7 +637,6 @@ function fitCamera() {
   const radius = Math.max(sphere.radius, 0.0001);
 
   const fovRad = THREE.MathUtils.degToRad(camera.fov);
-  // На телефоне — крупнее, на ПК — обычный отступ
   const zoomFactor = isMobile() ? 0.78 : 1.18;
   const dist = (radius / Math.sin(fovRad / 2)) * zoomFactor;
   const dir = new THREE.Vector3(1, 0.62, 1).normalize();
@@ -655,6 +690,160 @@ function setLoading(show, text) {
   loadingEl.classList.toggle('show', show);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   ЛИНЕЙКА
+   ═══════════════════════════════════════════════════════════════ */
+function setRulerMode(on) {
+  rulerMode = on;
+  document.getElementById('btnRuler').classList.toggle('ruler-on', on);
+  canvas.classList.toggle('ruler-mode', on);
+  rulerHint.classList.toggle('show', on);
+  controls.enabled = !on;
+  if (!on && rulerPoints.length === 1) rulerPoints = [];
+}
+
+function clearRuler() {
+  rulerPoints = [];
+  while (rulerGroup.children.length) {
+    const c = rulerGroup.children.pop();
+    if (c.geometry) c.geometry.dispose();
+    if (c.material) {
+      if (c.material.map) c.material.map.dispose();
+      c.material.dispose();
+    }
+  }
+}
+
+function makeLabelSprite(text) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = 2;
+  const W = 240, H = 70;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  // Фон
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#ff7043';
+  ctx.lineWidth = 2;
+  const r = 14;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(W - r, 0);
+  ctx.quadraticCurveTo(W, 0, W, r);
+  ctx.lineTo(W, H - r);
+  ctx.quadraticCurveTo(W, H, W - r, H);
+  ctx.lineTo(r, H);
+  ctx.quadraticCurveTo(0, H, 0, H - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Текст
+  ctx.fillStyle = '#ff9f43';
+  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, W / 2, H / 2 + 1);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    depthTest: false,
+    depthWrite: false,
+    transparent: true
+  });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(0.7, 0.2, 1);
+  return sprite;
+}
+
+function addMeasurePoint(point) {
+  const dot = new THREE.Mesh(rulerDotGeo, rulerDotMat);
+  dot.position.copy(point);
+  dot.renderOrder = 999;
+  rulerGroup.add(dot);
+  return dot;
+}
+
+function addMeasureLine(p1, p2) {
+  const geo = new THREE.BufferGeometry().setFromPoints([p1.clone(), p2.clone()]);
+  const line = new THREE.Line(geo, rulerLineMat);
+  line.renderOrder = 998;
+  rulerGroup.add(line);
+}
+
+function formatDistance(distance) {
+  // distance — в единицах модели. Умножаем на UNIT_SCALE → метры.
+  const meters = distance * UNIT_SCALE;
+  if (meters < 0.01) {
+    return (meters * 1000).toFixed(0) + ' мм';
+  }
+  if (meters < 1) {
+    return (meters * 100).toFixed(1) + ' см';
+  }
+  return meters.toFixed(2) + ' м';
+}
+
+function handleRulerTap(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+
+  if (!currentModel) return;
+  const hits = raycaster.intersectObject(currentModel, true);
+  if (!hits.length) return;
+
+  const point = hits[0].point.clone();
+  rulerPoints.push(point);
+  addMeasurePoint(point);
+
+  if (rulerPoints.length === 2) {
+    const p1 = rulerPoints[0];
+    const p2 = rulerPoints[1];
+
+    addMeasureLine(p1, p2);
+
+    const dist = p1.distanceTo(p2);
+    const labelText = formatDistance(dist);
+    const sprite = makeLabelSprite(labelText);
+    const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+    sprite.position.copy(mid);
+    rulerGroup.add(sprite);
+
+    rulerPoints = [];
+  }
+}
+
+// Обработчик клика на canvas (только в режиме линейки)
+let rulerPointerDown = false;
+let rulerDownX = 0, rulerDownY = 0;
+
+canvas.addEventListener('pointerdown', (e) => {
+  if (!rulerMode) return;
+  rulerPointerDown = true;
+  rulerDownX = e.clientX;
+  rulerDownY = e.clientY;
+});
+
+canvas.addEventListener('pointerup', (e) => {
+  if (!rulerMode || !rulerPointerDown) return;
+  rulerPointerDown = false;
+  const dx = Math.abs(e.clientX - rulerDownX);
+  const dy = Math.abs(e.clientY - rulerDownY);
+  // Считаем это тапом, если сдвиг меньше 6 пикселей
+  if (dx < 6 && dy < 6) {
+    handleRulerTap(e.clientX, e.clientY);
+  }
+});
+
 /* ---------- Инициализация панели ---------- */
 if (isMobile()) {
   panelEl.classList.remove('hidden');
@@ -702,6 +891,17 @@ document.getElementById('btnGlass').addEventListener('click', (e) => {
   applyGlassWalls();
 });
 
+/* ---------- Кнопки линейки ---------- */
+document.getElementById('btnRuler').addEventListener('click', () => {
+  setRulerMode(!rulerMode);
+});
+
+document.getElementById('btnRulerClear').addEventListener('click', () => {
+  clearRuler();
+  showToast('Замеры очищены', true);
+});
+
+/* ---------- Сброс ---------- */
 document.getElementById('btnReset').addEventListener('click', () => {
   for (const k in elementVisible) elementVisible[k] = true;
   for (const k in elementVisible) {
@@ -714,6 +914,9 @@ document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('btnRotate').classList.remove('active');
   applyElementVisibility();
   applyGlassWalls();
+
+  // Выключаем линейку
+  if (rulerMode) setRulerMode(false);
 
   const bg = '#0f1116';
   document.getElementById('bgColor').value = bg;
@@ -772,6 +975,7 @@ window.addEventListener('keydown', (e) => {
   switch (e.key.toLowerCase()) {
     case 'f': document.getElementById('btnFit').click(); break;
     case 'r': document.getElementById('btnRotate').click(); break;
+    case 'm': document.getElementById('btnRuler').click(); break;
   }
 });
 
@@ -804,6 +1008,7 @@ if (MODEL_FILE) {
 
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
+console.log('Линейка: клавиша M или кнопка 📏 в панели');
 </script>
 </body>
 </html>

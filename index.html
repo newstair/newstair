@@ -1116,7 +1116,6 @@ function setHumanMode(on) {
     // просто выключаем режим, человечек остаётся на месте
   }
 }
-
 function placeHuman(clientX, clientY) {
   if (!currentModel) return;
   const rect = canvas.getBoundingClientRect();
@@ -1128,4 +1127,230 @@ function placeHuman(clientX, clientY) {
   if (!hits.length) return;
 
   const point = hits[0].point.clone();
-  // Ставим человечка
+  humanGroup.position.copy(point);
+  humanGroup.visible = true;
+}
+
+/* ---------- Обработчики мыши / тача ---------- */
+let pointerDown = false;
+let downX = 0, downY = 0;
+
+canvas.addEventListener('pointerdown', (e) => {
+  pointerDown = true;
+  downX = e.clientX;
+  downY = e.clientY;
+});
+
+canvas.addEventListener('pointerup', (e) => {
+  if (!pointerDown) return;
+  pointerDown = false;
+  const dx = Math.abs(e.clientX - downX);
+  const dy = Math.abs(e.clientY - downY);
+  // считаем тапом, если сдвиг меньше 6 пикселей
+  if (dx < 6 && dy < 6) {
+    if (rulerMode) {
+      handleRulerTap(e.clientX, e.clientY);
+    } else if (humanMode) {
+      placeHuman(e.clientX, e.clientY);
+    }
+  }
+});
+
+canvas.addEventListener('pointermove', (e) => {
+  if (rulerMode) handleRulerHover(e.clientX, e.clientY);
+});
+
+canvas.addEventListener('pointerleave', () => {
+  snapDot.visible = false;
+});
+
+/* ---------- Инициализация панели ---------- */
+if (isMobile()) {
+  panelEl.classList.remove('hidden');
+  panelEl.classList.remove('open');
+} else {
+  panelEl.classList.remove('hidden');
+}
+
+panelToggle.addEventListener('click', () => {
+  const isOpen = panelEl.classList.toggle('open');
+  panelToggle.classList.toggle('active', isOpen);
+});
+
+/* ---------- Кнопки ---------- */
+document.getElementById('btnOpen').addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
+document.getElementById('btnFit').addEventListener('click', fitCamera);
+
+document.getElementById('btnRotate').addEventListener('click', (e) => {
+  controls.autoRotate = !controls.autoRotate;
+  e.currentTarget.classList.toggle('active', controls.autoRotate);
+});
+
+function bindElementButton(id, key) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    elementVisible[key] = !elementVisible[key];
+    btn.classList.toggle('active', elementVisible[key]);
+    applyElementVisibility();
+  });
+}
+
+bindElementButton('el_treads',    'treads');
+bindElementButton('el_risers',    'risers');
+bindElementButton('el_stringers', 'stringers');
+bindElementButton('el_railing',   'railing');
+bindElementButton('el_wall',      'wall');
+bindElementButton('el_opening',   'opening');
+bindElementButton('el_floor',     'floor');
+
+document.getElementById('btnGlass').addEventListener('click', (e) => {
+  glassWalls = !glassWalls;
+  e.currentTarget.classList.toggle('active', glassWalls);
+  applyGlassWalls();
+});
+
+/* ---------- Линейка ---------- */
+document.getElementById('btnRuler').addEventListener('click', () => {
+  setRulerMode(!rulerMode);
+});
+
+document.getElementById('btnRulerClear').addEventListener('click', () => {
+  clearRuler();
+  showToast('Замеры очищены', true);
+});
+
+/* ---------- Человечек ---------- */
+document.getElementById('btnHuman').addEventListener('click', () => {
+  setHumanMode(!humanMode);
+  if (humanMode && !humanGroup.visible && currentModel) {
+    showToast('Тапните по ступени, чтобы поставить человечка', true);
+  }
+});
+
+document.getElementById('btnHumanRemove').addEventListener('click', () => {
+  humanGroup.visible = false;
+  setHumanMode(false);
+  showToast('Человечек убран', true);
+});
+
+heightSlider.addEventListener('input', (e) => {
+  const cm = parseInt(e.target.value, 10);
+  setHumanHeight(cm);
+});
+
+/* ---------- Сброс ---------- */
+document.getElementById('btnReset').addEventListener('click', () => {
+  for (const k in elementVisible) elementVisible[k] = true;
+  for (const k in elementVisible) {
+    const btn = document.getElementById('el_' + k);
+    if (btn) btn.classList.add('active');
+  }
+  glassWalls = true;
+  document.getElementById('btnGlass').classList.add('active');
+  controls.autoRotate = false;
+  document.getElementById('btnRotate').classList.remove('active');
+  applyElementVisibility();
+  applyGlassWalls();
+
+  if (rulerMode) setRulerMode(false);
+  if (humanMode) setHumanMode(false);
+  humanGroup.visible = false;
+
+  const bg = '#0f1116';
+  document.getElementById('bgColor').value = bg;
+  scene.background.set(bg);
+  if (currentModel) fitCamera();
+});
+
+/* ---------- Снимок ---------- */
+document.getElementById('btnShot').addEventListener('click', () => {
+  renderer.render(scene, camera);
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = `view-${Date.now()}.png`;
+  a.click();
+  showToast('Снимок сохранён', true);
+});
+
+/* ---------- Поделиться ---------- */
+document.getElementById('btnShare').addEventListener('click', async () => {
+  const url = location.href.split('#')[0].split('?')[0];
+  const title = document.title || '3D Viewer';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text: 'Посмотрите 3D-модель', url });
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Ссылка скопирована в буфер обмена', true);
+  } catch {
+    prompt('Скопируйте ссылку вручную:', url);
+  }
+});
+
+document.getElementById('bgColor').addEventListener('input', (e) => {
+  scene.background.set(e.target.value);
+});
+
+/* ---------- Drag & Drop ---------- */
+let dragDepth = 0;
+window.addEventListener('dragenter', (e) => { e.preventDefault(); dragDepth++; });
+window.addEventListener('dragover', (e) => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; });
+window.addEventListener('dragleave', (e) => { e.preventDefault(); dragDepth = Math.max(0, dragDepth - 1); });
+window.addEventListener('drop', (e) => {
+  e.preventDefault(); dragDepth = 0;
+  if (e.dataTransfer && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+});
+
+/* ---------- Горячие клавиши ---------- */
+window.addEventListener('keydown', (e) => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea') return;
+  switch (e.key.toLowerCase()) {
+    case 'f': document.getElementById('btnFit').click(); break;
+    case 'r': document.getElementById('btnRotate').click(); break;
+    case 'm': document.getElementById('btnRuler').click(); break;
+    case 'h': document.getElementById('btnHuman').click(); break;
+  }
+});
+
+/* ---------- Ресайз ---------- */
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+
+/* ---------- Цикл ---------- */
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  if (currentMixer) currentMixer.update(dt);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+/* ---------- Старт ---------- */
+resize();
+animate();
+
+if (MODEL_FILE) {
+  loadCollada(MODEL_FILE, MODEL_FILE);
+}
+
+console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
+console.log('Модель:', MODEL_FILE);
+console.log('Линейка — M. Человечек — H.');
+</script>
+</body>
+</html>

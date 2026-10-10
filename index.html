@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Viewer — диагностика 2</title>
+<title>3D Viewer — диагностика 3</title>
 <style>
   :root{--bg:#0f1116;--panel:rgba(22,25,33,.82);--border:rgba(255,255,255,.09);
     --text:#e9edf5;--muted:#8b95a8;--accent:#5b8cff;--accent-2:#31d0aa;--radius:14px;}
@@ -25,7 +25,7 @@
 <canvas id="canvas"></canvas>
 <header class="brand">
   <div class="logo">◈</div>
-  <div><h1>Диагностика 2</h1><p>Меши, узлы и материалы</p></div>
+  <div><h1>Диагностика 3</h1><p>Геометрия мешей и текстуры</p></div>
 </header>
 
 <script type="importmap">
@@ -69,10 +69,12 @@ loader.load(MODEL_FILE, (collada) => {
   const model = collada.scene;
   scene.add(model);
 
-  // Центрируем и ставим камеру
+  // Центрируем модель и ставим камеру
+  model.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   model.position.sub(center);
+  model.updateMatrixWorld(true);
 
   const sphere = new THREE.Box3().setFromObject(model).getBoundingSphere(new THREE.Sphere());
   const r = Math.max(sphere.radius, 0.0001);
@@ -84,84 +86,78 @@ loader.load(MODEL_FILE, (collada) => {
   controls.target.set(0, 0, 0);
 
   // ═══════════════════════════════════════════════════════════
-  // Собираем данные
+  // СОБИРАЕМ ДАННЫЕ ПО КАЖДОМУ МЕШУ
   // ═══════════════════════════════════════════════════════════
-  const nodes = [];
-  const meshes = [];
-  const materialMap = new Map(); // materialName → { count, examples[] }
+  const rows = [];
+  let idx = 0;
 
   model.traverse((obj) => {
-    // Узлы (любые объекты с непустым именем)
-    if (obj.name) {
-      nodes.push({ name: obj.name, type: obj.type });
-    }
+    if (!obj.isMesh && !obj.isSkinnedMesh) return;
+    idx++;
 
-    // Меши
-    if (obj.isMesh || obj.isSkinnedMesh) {
-      const parentName = obj.parent && obj.parent.name ? obj.parent.name : '(без имени)';
-      let geo = obj.geometry;
-      let verts = geo && geo.attributes.position ? geo.attributes.position.count : 0;
-      let tris = 0;
-      if (geo) {
-        tris = geo.index ? geo.index.count / 3 : verts / 3;
-      }
+    const geo = obj.geometry;
+    const verts = geo && geo.attributes.position ? geo.attributes.position.count : 0;
+    const tris  = geo ? Math.round((geo.index ? geo.index.count / 3 : verts / 3)) : 0;
 
-      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-      const matNames = mats.map(m => m && m.name ? m.name : '(без имени)');
-      const matIds = mats.map(m => m && m.uuid ? m.uuid.slice(0, 6) : '?');
+    // Bbox меша в мировых координатах
+    const mbox = new THREE.Box3().setFromObject(obj);
+    const msize = mbox.getSize(new THREE.Vector3());
+    const mcenter = mbox.getCenter(new THREE.Vector3());
 
-      meshes.push({
-        mesh: obj.name || '(без имени)',
-        parent: parentName,
-        verts: verts,
-        tris: Math.round(tris),
-        materials: matNames.join(', ')
-      });
+    // Материал и его текстуры
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const matNames = [];
+    const texNames = [];
 
-      // Считаем материалы
-      mats.forEach((m) => {
-        if (!m) return;
-        const key = m.name || '(без имени)';
-        if (!materialMap.has(key)) {
-          materialMap.set(key, { count: 0, examples: [], color: m.color ? '#' + m.color.getHexString() : '—' });
-        }
-        const rec = materialMap.get(key);
-        rec.count++;
-        if (rec.examples.length < 5) {
-          rec.examples.push(obj.name || '(без имени)');
+    mats.forEach((m) => {
+      if (!m) return;
+      matNames.push(m.name || '(без имени)');
+
+      // Собираем имена текстур из всех слотов
+      ['map','emissiveMap','specularMap','normalMap','aoMap','alphaMap','bumpMap'].forEach((slot) => {
+        const t = m[slot];
+        if (t && t.isTexture) {
+          const src = t.source && t.source.data;
+          const fname = (src && src.currentSrc) ? src.currentSrc.split('/').pop()
+                       : (t.name || (t.image && t.image.src) ? String(t.image.src).split('/').pop() : '(текстура)');
+          texNames.push(fname);
         }
       });
-    }
+    });
+
+    rows.push({
+      '#': idx,
+      material: matNames.join(', '),
+      textures: [...new Set(texNames)].join(', ') || '—',
+      'X': msize.x.toFixed(2),
+      'Y': msize.y.toFixed(2),
+      'Z': msize.z.toFixed(2),
+      'Y(центр)': mcenter.y.toFixed(2),
+      verts: verts,
+      tris: tris
+    });
   });
 
   // ═══════════════════════════════════════════════════════════
   // ВЫВОД В КОНСОЛЬ
   // ═══════════════════════════════════════════════════════════
+  console.log('%c═══════════════════════════════════════', 'color:#5b8cff');
+  console.log('%c ДИАГНОСТИКА 3 — ГЕОМЕТРИЯ МЕШЕЙ', 'color:#5b8cff;font-weight:bold;font-size:14px');
+  console.log('%c═══════════════════════════════════════', 'color:#5b8cff');
+  console.log('Всего мешей: ' + rows.length);
+  console.log('Общий bbox: ' +
+    box.getSize(new THREE.Vector3()).x.toFixed(2) + ' × ' +
+    box.getSize(new THREE.Vector3()).y.toFixed(2) + ' × ' +
+    box.getSize(new THREE.Vector3()).z.toFixed(2));
+  console.log('');
+  console.log('%c─── ГЕОМЕТРИЯ МЕШЕЙ ───', 'color:#31d0aa;font-weight:bold');
+  console.log('Колонки: X/Y/Z — размеры меша; Y(центр) — высота центра; verts/tris — вершины/треугольники.');
+  console.table(rows);
 
   console.log('%c═══════════════════════════════════════', 'color:#5b8cff');
-  console.log('%c ДИАГНОСТИКА 2 — МЕШИ, УЗЛЫ, МАТЕРИАЛЫ', 'color:#5b8cff;font-weight:bold;font-size:14px');
-  console.log('%c═══════════════════════════════════════', 'color:#5b8cff');
+  console.log('%c Скопируйте таблицу и пришлите мне.', 'color:#31d0aa');
+  console.log('%c Полезно: отсортируйте по Y(центр) — сверху будет потолок, снизу — пол.', 'color:#8b95a8');
 
-  console.log('%c─── 1. УЗЛЫ (' + nodes.length + ') ───', 'color:#31d0aa;font-weight:bold');
-  console.table(nodes);
-
-  console.log('%c─── 2. МЕШИ (' + meshes.length + ') ───', 'color:#31d0aa;font-weight:bold');
-  console.table(meshes);
-
-  console.log('%c─── 3. МАТЕРИАЛЫ (' + materialMap.size + ') ───', 'color:#31d0aa;font-weight:bold');
-  const matTable = [];
-  materialMap.forEach((rec, name) => {
-    matTable.push({
-      material: name,
-      color: rec.color,
-      meshCount: rec.count,
-      examples: rec.examples.join(', ')
-    });
-  });
-  console.table(matTable);
-
-  console.log('%c═══════════════════════════════════════', 'color:#5b8cff');
-  console.log('%c Скопируйте все три таблицы и пришлите мне.', 'color:#31d0aa');
 }, undefined, (err) => {
   console.error('Ошибка загрузки:', err);
 });
@@ -181,7 +177,7 @@ resize();
   renderer.render(scene, camera);
 })();
 
-console.log('%c◈ Диагностика 2 запущена', 'color:#5b8cff;font-weight:bold');
+console.log('%c◈ Диагностика 3 запущена', 'color:#5b8cff;font-weight:bold');
 </script>
 </body>
 </html>

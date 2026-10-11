@@ -31,7 +31,7 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{position:fixed;top:18px;right:18px;width:270px;padding:14px;
+  .panel{position:fixed;top:18px;right:18px;width:280px;padding:14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
@@ -45,7 +45,7 @@
   .panel-title:first-child{margin-top:0;}
   .row{display:flex;gap:8px;} .row > .btn{flex:1;}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:9px 10px;font-family:inherit;font-size:12px;font-weight:550;color:var(--text);
+    padding:9px 8px;font-family:inherit;font-size:12px;font-weight:550;color:var(--text);
     background:rgba(255,255,255,.055);border:1px solid var(--border);border-radius:10px;
     cursor:pointer;transition:background .16s,border-color .16s,transform .1s,color .16s;
     white-space:nowrap;-webkit-user-select:none;user-select:none;}
@@ -207,7 +207,12 @@
 
   <div class="row">
     <button class="btn active" id="el_stringers" title="Тетивы"><span class="ico">🏗</span> Тетивы</button>
-    <button class="btn active" id="el_railing" title="Ограждение"><span class="ico">🛡</span> Огражд.</button>
+    <button class="btn active" id="el_handrail" title="Поручень и подбалясная планка"><span class="ico">➖</span> Поручень</button>
+  </div>
+
+  <div class="row">
+    <button class="btn active" id="el_baluster" title="Балясины"><span class="ico">🪜</span> Балясины</button>
+    <button class="btn active" id="el_posts" title="Столбы"><span class="ico">🏛</span> Столбы</button>
   </div>
 
   <div class="row">
@@ -239,7 +244,9 @@
     </div>
     <input type="range" id="heightSlider" class="heightSlider"
            min="165" max="195" step="5" value="185">
-      <div class="slider-row">
+  </div>
+
+  <div class="slider-row">
     <div class="slider-label">
       <span>Поворот человека</span>
       <b id="rotationValue">0°</b>
@@ -417,13 +424,22 @@ let currentMixer = null;
 let objectUrls   = [];
 const fileMap    = new Map();
 
+/* Группы элементов: обновлённые, с разделением ограждения */
 const elementGroups = {
-  treads: [], risers: [], stringers: [], railing: [],
-  wall: [], opening: [], floor: [],
+  treads:    [],   // TREAD
+  risers:    [],   // RISER
+  stringers: [],   // STRING
+  handrail:  [],   // HANDRAIL + BOTTOMRAIL (поручень + подбалясная планка)
+  baluster:  [],   // BALUSTER (балясины)
+  posts:     [],   // POST (столбы)
+  wall:      [],   // BEGIN_WALL
+  opening:   [],   // BEGIN_OPENING
+  floor:     [],   // parkett / ash / OBJECT3D
 };
 
 const elementVisible = {
-  treads: true, risers: true, stringers: true, railing: true,
+  treads: true, risers: true, stringers: true,
+  handrail: true, baluster: true, posts: true,
   wall: true, opening: true, floor: true,
 };
 
@@ -470,7 +486,6 @@ scene.add(humanGroup);
 /* ---------- Загрузка human.glb ---------- */
 let humanTemplate = null;
 let humanTemplateHeight = 1.8;
-let humanLoading = false;
 
 const humanLoader = new GLTFLoader();
 humanLoader.load(
@@ -489,9 +504,7 @@ humanLoader.load(
         if (obj.material) {
           const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
           mats.forEach((m) => {
-            if (m.color) {
-              m.color.setHex(0xff9f43);
-            }
+            if (m.color) m.color.setHex(0xff9f43);
             m.emissive = new THREE.Color(0x3d2408);
             m.emissiveIntensity = 0.15;
             m.needsUpdate = true;
@@ -502,11 +515,8 @@ humanLoader.load(
 
     console.log('%c✔ ' + HUMAN_FILE + ' загружен. Исходная высота: ' + humanTemplateHeight.toFixed(2) + ' м',
                 'color:#31d0aa;font-weight:bold');
-    humanLoading = false;
 
-    if (humanGroup.visible) {
-      makeHumanFigure(humanHeight);
-    }
+    if (humanGroup.visible) makeHumanFigure(humanHeight);
   },
   (xhr) => {
     if (xhr.total) {
@@ -516,11 +526,10 @@ humanLoader.load(
   },
   (err) => {
     console.warn('Не удалось загрузить ' + HUMAN_FILE + ':', err);
-    humanLoading = false;
   }
 );
 
-/* ---------- Функция установки роста ---------- */
+/* ---------- Установка роста ---------- */
 function setHumanHeight(cm) {
   humanHeight = cm;
   heightValue.textContent = cm + ' см';
@@ -537,7 +546,6 @@ function makeHumanFigure(heightCm) {
   const targetH = (heightCm / 100) * UNIT_SCALE;
 
   if (!humanTemplate) {
-    // Пока .glb не загружен — показываем простой «столбик»
     const tempMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.5 });
     const tempGeo = new THREE.CylinderGeometry(targetH * 0.08, targetH * 0.08, targetH, 12);
     const tempMesh = new THREE.Mesh(tempGeo, tempMat);
@@ -569,12 +577,10 @@ function makeHumanFigure(heightCm) {
   humanGroup.add(makeHeightLabel(heightCm, targetH));
   humanGroup.userData.topY = targetH;
 
-  // Применяем текущий угол поворота
   humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
-
 }
 
-/* ---------- Подпись с ростом ---------- */
+/* ---------- Подпись роста ---------- */
 function makeHeightLabel(text, yPos) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -621,17 +627,22 @@ function makeHeightLabel(text, yPos) {
   return sprite;
 }
 
-/* ---------- Классификация материалов ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   КЛАССИФИКАЦИЯ МАТЕРИАЛОВ
+   Поручень = HANDRAIL + BOTTOMRAIL
+   Балясины = BALUSTER
+   Столбы = POST
+   ═══════════════════════════════════════════════════════════════ */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
   if (n.includes('TREAD'))         return 'treads';
   if (n.includes('RISER'))         return 'risers';
   if (n.includes('STRING'))        return 'stringers';
-  if (n.includes('HANDRAIL'))      return 'railing';
-  if (n.includes('BALUSTER'))      return 'railing';
-  if (n.includes('POST'))          return 'railing';
-  if (n.includes('BOTTOMRAIL'))    return 'railing';
+  if (n.includes('HANDRAIL'))      return 'handrail';
+  if (n.includes('BOTTOMRAIL'))    return 'handrail';
+  if (n.includes('BALUSTER'))      return 'baluster';
+  if (n.includes('POST'))          return 'posts';
   if (n.includes('BEGIN_WALL'))    return 'wall';
   if (n.includes('BEGIN_OPENING')) return 'opening';
   if (n.includes('PARKETT'))       return 'floor';
@@ -656,13 +667,12 @@ manager.setURLModifier((url) => {
   return url;
 });
 
-/* ---------- Прогресс загрузки модели ---------- */
+/* ---------- Прогресс ---------- */
 function showProgress(v) {
   if (v <= 0 || v >= 100) { progress.classList.remove('show'); return; }
   progress.classList.add('show');
   progressBar.style.width = v + '%';
 }
-
 function setLoading(show, text) {
   if (text) loadingTxt.textContent = text;
   loadingEl.classList.toggle('show', show);
@@ -689,7 +699,7 @@ function fmtNum(v) {
   return v.toExponential(2);
 }
 
-/* ---------- Утилита: dispose ---------- */
+/* ---------- Dispose ---------- */
 function disposeObject(root) {
   const textures = new Set();
   root.traverse((obj) => {
@@ -811,7 +821,7 @@ function loadCollada(url, fileName) {
       model.position.sub(center);
       model.updateMatrixWorld(true);
 
-      // Собираем вершины для привязки линейки
+      // Собираем вершины для привязки
       const v = new THREE.Vector3();
       const seenPos = new Set();
       model.traverse((obj) => {
@@ -1138,7 +1148,7 @@ function placeHuman(clientX, clientY) {
   humanGroup.visible = true;
 }
 
-/* ---------- Указатель мыши / тача ---------- */
+/* ---------- Указатель ---------- */
 let pointerDown = false;
 let downX = 0, downY = 0;
 
@@ -1170,7 +1180,7 @@ canvas.addEventListener('pointerleave', () => {
   snapDot.visible = false;
 });
 
-/* ---------- Инициализация панели ---------- */
+/* ---------- Панель ---------- */
 if (isMobile()) {
   panelEl.classList.remove('hidden');
   panelEl.classList.remove('open');
@@ -1206,7 +1216,9 @@ function bindElementButton(id, key) {
 bindElementButton('el_treads',    'treads');
 bindElementButton('el_risers',    'risers');
 bindElementButton('el_stringers', 'stringers');
-bindElementButton('el_railing',   'railing');
+bindElementButton('el_handrail',  'handrail');
+bindElementButton('el_baluster',  'baluster');
+bindElementButton('el_posts',     'posts');
 bindElementButton('el_wall',      'wall');
 bindElementButton('el_opening',   'opening');
 bindElementButton('el_floor',     'floor');
@@ -1242,15 +1254,15 @@ heightSlider.addEventListener('input', (e) => {
   const cm = parseInt(e.target.value, 10);
   setHumanHeight(cm);
 });
-/* ---------- Ползунок поворота человечка ---------- */
+
 const rotationSlider = document.getElementById('rotationSlider');
 const rotationValue  = document.getElementById('rotationValue');
-
 rotationSlider.addEventListener('input', (e) => {
   humanRotation = parseInt(e.target.value, 10);
   rotationValue.textContent = humanRotation + '°';
   humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
 });
+
 /* ---------- Сброс ---------- */
 document.getElementById('btnReset').addEventListener('click', () => {
   for (const k in elementVisible) elementVisible[k] = true;
@@ -1267,7 +1279,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
 
   if (rulerMode) setRulerMode(false);
   if (humanMode) setHumanMode(false);
-   humanGroup.visible = false;
+  humanGroup.visible = false;
   humanRotation = 0;
   rotationSlider.value = 0;
   rotationValue.textContent = '0°';
@@ -1344,7 +1356,7 @@ function resize() {
 }
 window.addEventListener('resize', resize);
 
-/* ---------- Цикл рендеринга ---------- */
+/* ---------- Цикл ---------- */
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);

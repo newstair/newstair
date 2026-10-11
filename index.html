@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Viewer — просмотр .dae</title>
+<title>3D Viewer</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:title" content="3D Viewer">
+<meta property="og:description" content="Просмотр 3D-модели лестницы">
+<meta property="og:image" content="Logo.png">
+<meta property="og:type" content="website">
 <style>
   :root{
     --bg:#0f1116; --panel:rgba(22,25,33,.92);
@@ -353,6 +358,18 @@ const UNIT_SCALE = 1.0;
 
 /* Имя файла с человечком */
 const HUMAN_FILE = 'human.glb';
+  /* ═══════════════════════════════════════════════════════════════
+   Автоматический заголовок из имени .dae
+   ═══════════════════════════════════════════════════════════════ */
+function setTitleFromModel(fileName) {
+  const baseName = (fileName || '').replace(/\.(dae|xml)$/i, '');
+  const title = baseName ? '3D Viewer — ' + baseName : '3D Viewer';
+  document.title = title;
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle) ogTitle.setAttribute('content', title);
+}
+
+setTitleFromModel(MODEL_FILE);
 
 /* ═══════════════════════════════════════════════════════════════
    СПИСОК ТЕКСТУР ДЛЯ ВЫБОРА
@@ -944,7 +961,8 @@ function loadCollada(url, fileName) {
       setHumanHeight(humanHeight);
       buildFinishPanel();
       applyFromURL();
-
+// Обновляем заголовок по имени загруженного файла
+setTitleFromModel(fileName);
       ui.file.textContent   = fileName;
       ui.meshes.textContent = fmtInt(meshCount);
       ui.verts.textContent  = fmtInt(Math.round(vertCount));

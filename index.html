@@ -958,10 +958,11 @@ function loadCollada(url, fileName) {
       currentModel = model;
       scene.add(currentModel);
 
-      applyElementVisibility();
+       applyElementVisibility();
       applyGlassWalls();
       setHumanHeight(humanHeight);
       buildFinishPanel();
+      applyFromURL();
 
       ui.file.textContent   = fileName;
       ui.meshes.textContent = fmtInt(meshCount);
@@ -1081,17 +1082,17 @@ function buildFinishPanel() {
       valueText.textContent = file ? name : 'Как в проекте';
       row.classList.remove('open');
 
-      // Применяем
+           // Применяем
       applyFinish(cat.key);
 
       // Умное затемнение пола
       if (cat.key === 'treads' || cat.key === 'floor') {
         applySmartFloor();
       }
-    });
 
-    finishRows.appendChild(row);
-  });
+      // Сохраняем в URL
+      updateURL();
+    });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1557,6 +1558,8 @@ document.getElementById('btnReset').addEventListener('click', () => {
 
   // Перерисовать панель, чтобы всё было выбрано «Как в проекте»
   buildFinishPanel();
+    // Очистить URL от параметров отделки
+  history.replaceState(null, '', location.pathname);
 
   const bg = '#0f1116';
   document.getElementById('bgColor').value = bg;
@@ -1646,7 +1649,63 @@ animate();
 if (MODEL_FILE) {
   loadCollada(MODEL_FILE, MODEL_FILE);
 }
+/* ═══════════════════════════════════════════════════════════════
+   СОХРАНЕНИЕ ОТДЕЛКИ В URL
+   ═══════════════════════════════════════════════════════════════ */
+function updateURL() {
+  const params = new URLSearchParams();
+  for (const key in currentFinish) {
+    if (currentFinish[key]) {
+      params.set(key, currentFinish[key].file);
+    }
+  }
+  const qs = params.toString();
+  const newUrl = location.pathname + (qs ? '?' + qs : '');
+  history.replaceState(null, '', newUrl);
+}
 
+function applyFromURL() {
+  const params = new URLSearchParams(location.search);
+  let anyApplied = false;
+
+  for (const key in currentFinish) {
+    const file = params.get(key);
+    if (!file) continue;
+
+    const found = TEXTURE_LIST.find(t => t.file === file);
+    if (!found) continue;
+
+    currentFinish[key] = { file: found.file, name: found.name };
+    applyFinish(key);
+    anyApplied = true;
+  }
+
+  if (anyApplied) {
+    applySmartFloor();
+    refreshPanelSelection();
+  }
+}
+
+/* Обновляет подсветку выбранных пунктов в панели */
+function refreshPanelSelection() {
+  const rows = finishRows.querySelectorAll('.finish-row');
+  rows.forEach((row) => {
+    const key = row.dataset.key;
+    const choice = currentFinish[key];
+    const options = row.querySelectorAll('.finish-option');
+    const valueText = row.querySelector('.finish-current');
+
+    options.forEach((opt) => {
+      const optFile = opt.dataset.file;
+      const isMatch = choice ? (optFile === choice.file) : (optFile === '');
+      opt.classList.toggle('selected', isMatch);
+    });
+
+    if (valueText) {
+      valueText.textContent = choice ? choice.name : 'Как в проекте';
+    }
+  });
+}
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

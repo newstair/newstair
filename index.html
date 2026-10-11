@@ -1701,10 +1701,10 @@ function refreshPanelSelection() {
       opt.classList.toggle('selected', isMatch);
     });
 
-    if (valueText) {
-      valueText.textContent = choice ? choice.name : 'Как в проекте';
-    }
-  });
+     if (valueText) {
+    valueText.textContent = choice ? choice.name : 'Как в проекте';
+  }
+});
 }
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);

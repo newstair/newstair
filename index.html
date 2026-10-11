@@ -31,7 +31,7 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{position:fixed;top:18px;right:18px;width:280px;padding:14px;
+  .panel{position:fixed;top:18px;right:18px;width:290px;padding:14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
@@ -94,6 +94,37 @@
     border:2px solid #0f1116;cursor:pointer;
     box-shadow:0 2px 8px rgba(49,208,170,.5);
   }
+
+  /* ---------- Выпадающие списки отделки ---------- */
+  .finish-row{display:flex;flex-direction:column;gap:0;
+    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    border-radius:10px;overflow:hidden;}
+  .finish-header{display:flex;align-items:center;justify-content:space-between;
+    gap:10px;padding:10px 12px;cursor:pointer;
+    transition:background .15s;}
+  .finish-header:hover{background:rgba(255,255,255,.05);}
+  .finish-header .label{font-size:12px;color:var(--muted);font-weight:550;}
+  .finish-header .value{font-size:12px;color:var(--text);font-weight:600;
+    display:flex;align-items:center;gap:6px;}
+  .finish-header .arrow{font-size:10px;color:var(--muted);
+    transition:transform .2s;}
+  .finish-row.open .arrow{transform:rotate(180deg);}
+  .finish-options{display:none;flex-direction:column;gap:2px;
+    padding:6px;max-height:260px;overflow-y:auto;
+    background:rgba(0,0,0,.2);border-top:1px solid var(--border);}
+  .finish-row.open .finish-options{display:flex;}
+  .finish-options::-webkit-scrollbar{width:6px;}
+  .finish-options::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
+  .finish-option{display:flex;align-items:center;gap:10px;
+    padding:8px 10px;font-size:12px;color:var(--text);
+    background:transparent;border:none;border-radius:7px;
+    cursor:pointer;text-align:left;font-family:inherit;
+    transition:background .15s;}
+  .finish-option:hover{background:rgba(255,255,255,.08);}
+  .finish-option.selected{background:rgba(91,140,255,.2);color:#b9cdff;font-weight:600;}
+  .finish-option .swatch{width:20px;height:20px;border-radius:5px;
+    background:#333;border:1px solid rgba(255,255,255,.15);flex-shrink:0;
+    background-size:cover;background-position:center;}
 
   .panel-toggle{position:fixed;top:18px;right:18px;width:44px;height:44px;
     display:none;align-items:center;justify-content:center;
@@ -160,7 +191,7 @@
     .panel-toggle{display:flex;top:12px;right:12px;width:40px;height:40px;font-size:18px;}
 
     .panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;
-      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:60vh;
+      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:65vh;
       transform:translateY(calc(100% + 30px));opacity:0;pointer-events:none;}
     .panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
     .panel .btn{font-size:11px;padding:8px 6px;flex:1 1 auto;min-width:80px;}
@@ -169,6 +200,7 @@
     .divider{flex:1 1 100%;}
     .color-row{flex:1 1 100%;}
     .slider-row{flex:1 1 100%;}
+    .finish-row{flex:1 1 100%;}
     .info{display:none;}
     .mode-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
   }
@@ -255,6 +287,10 @@
            min="0" max="360" step="15" value="0">
   </div>
 
+  <div class="panel-title">🎨 Отделка</div>
+
+  <div id="finishRows"></div>
+
   <div class="divider"></div>
 
   <div class="row">
@@ -319,6 +355,53 @@ const UNIT_SCALE = 1.0;
 
 /* Имя файла с человечком */
 const HUMAN_FILE = 'human.glb';
+
+/* ═══════════════════════════════════════════════════════════════
+   СПИСОК ТЕКСТУР ДЛЯ ВЫБОРА
+   Каждая запись: { file, name }
+   file — имя файла в репозитории
+   name — как показывать клиенту
+   ═══════════════════════════════════════════════════════════════ */
+const TEXTURE_LIST = [
+  { file: 'con_ash.bmp',        name: 'Ясень' },
+  { file: 'con_AshWhite.bmp',   name: 'Ясень белый' },
+  { file: 'con_bjork.bmp',      name: 'Берёза' },
+  { file: 'con_bok.bmp',        name: 'Бук' },
+  { file: 'con_brus.bmp',       name: 'Брус' },
+  { file: 'con_door_oak.bmp',   name: 'Дуб дверной' },
+  { file: 'con_fonst.bmp',      name: 'fonst' },
+  { file: 'con_fura.bmp',       name: 'fura' },
+  { file: 'con_jatoba.bmp',     name: 'Ятоба' },
+  { file: 'con_lonn.bmp',       name: 'Клён' },
+  { file: 'con_merbau.bmp',     name: 'Мербау' },
+  { file: 'con_oak.bmp',        name: 'Дуб' },
+  { file: 'con_sy-p.bmp',       name: 'sy-p' },
+  { file: 'con_valnot.bmp',     name: 'Орех' },
+  { file: 'con_vitek.bmp',      name: 'vitek' }
+];
+
+/* Какие текстуры считаются «светлыми» — для авто-затемнения пола */
+const LIGHT_TEXTURES = ['con_ash.bmp', 'con_AshWhite.bmp', 'con_bjork.bmp', 'con_lonn.bmp', 'con_oak.bmp'];
+
+/* Коэффициент затемнения пола: 0.6 = -40% яркости */
+const FLOOR_DARKEN = 0.6;
+
+/* ═══════════════════════════════════════════════════════════════
+   КАТЕГОРИИ ДЛЯ ПАНЕЛИ «ОТДЕЛКА»
+   key — совпадает с ключом elementGroups
+   label — как показывать в панели
+   ═══════════════════════════════════════════════════════════════ */
+const FINISH_CATEGORIES = [
+  { key: 'treads',    label: 'Ступени' },
+  { key: 'risers',    label: 'Подступенки' },
+  { key: 'stringers', label: 'Тетивы' },
+  { key: 'handrail',  label: 'Поручень' },
+  { key: 'baluster',  label: 'Балясины' },
+  { key: 'posts',     label: 'Столбы' },
+  { key: 'floor',     label: 'Пол' },
+  { key: 'wall',      label: 'Стены' }
+];
+
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ---------- DOM ---------- */
@@ -336,6 +419,7 @@ const rulerHint   = document.getElementById('rulerHint');
 const humanHint   = document.getElementById('humanHint');
 const heightSlider= document.getElementById('heightSlider');
 const heightValue = document.getElementById('heightValue');
+const finishRows  = document.getElementById('finishRows');
 
 const ui = {
   file:   document.getElementById('iFile'),
@@ -424,17 +508,10 @@ let currentMixer = null;
 let objectUrls   = [];
 const fileMap    = new Map();
 
-/* Группы элементов: обновлённые, с разделением ограждения */
 const elementGroups = {
-  treads:    [],   // TREAD
-  risers:    [],   // RISER
-  stringers: [],   // STRING
-  handrail:  [],   // HANDRAIL + BOTTOMRAIL (поручень + подбалясная планка)
-  baluster:  [],   // BALUSTER (балясины)
-  posts:     [],   // POST (столбы)
-  wall:      [],   // BEGIN_WALL
-  opening:   [],   // BEGIN_OPENING
-  floor:     [],   // parkett / ash / OBJECT3D
+  treads:    [], risers:    [], stringers: [],
+  handrail:  [], baluster:  [], posts:     [],
+  wall:      [], opening:   [], floor:     [],
 };
 
 const elementVisible = {
@@ -449,6 +526,33 @@ const WALL_OPACITY    = 0.15;
 const WINDOW_OPACITY  = 0.55;
 const OPENING_OPACITY = 0.2;
 
+/* ---------- Кэш текстур ---------- */
+const textureCache = new Map();   // file → THREE.Texture
+const texLoader = new THREE.TextureLoader();
+
+function getTexture(file) {
+  if (textureCache.has(file)) return textureCache.get(file);
+  const tex = texLoader.load(file);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.set(file, tex);
+  return tex;
+}
+
+/* ---------- Оригинальные текстуры и цвета материалов ---------- */
+/* При загрузке модели сохраняем оригинальные map и color для каждой группы —
+   чтобы потом можно было вернуться к «Как в проекте» */
+const originalMaterialState = new Map();  // mesh.uuid → { map, color }
+
+/* Текущий выбор отделки: key → { file, name } или null (оригинал) */
+const currentFinish = {
+  treads: null, risers: null, stringers: null,
+  handrail: null, baluster: null, posts: null,
+  floor: null, wall: null,
+};
+
 /* ---------- Линейка ---------- */
 let rulerMode = false;
 let rulerPoints = [];
@@ -462,10 +566,8 @@ const rulerDotGeo  = new THREE.SphereGeometry(0.03, 12, 12);
 const raycaster = new THREE.Raycaster();
 const pointer   = new THREE.Vector2();
 
-/* Все вершины модели — для привязки */
 const allVertices = [];
 
-/* Подсветка найденной точки */
 const snapDotGeo = new THREE.SphereGeometry(0.05, 16, 16);
 const snapDotMat = new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.85 });
 const snapDot = new THREE.Mesh(snapDotGeo, snapDotMat);
@@ -473,7 +575,7 @@ snapDot.visible = false;
 snapDot.renderOrder = 1000;
 scene.add(snapDot);
 
-const SNAP_RADIUS = 0.05;   // 5 см
+const SNAP_RADIUS = 0.05;
 
 /* ---------- Человечек ---------- */
 let humanMode = false;
@@ -483,7 +585,6 @@ const humanGroup = new THREE.Group();
 humanGroup.visible = false;
 scene.add(humanGroup);
 
-/* ---------- Загрузка human.glb ---------- */
 let humanTemplate = null;
 let humanTemplateHeight = 1.8;
 
@@ -492,7 +593,6 @@ humanLoader.load(
   HUMAN_FILE,
   (gltf) => {
     humanTemplate = gltf.scene;
-
     const box = new THREE.Box3().setFromObject(humanTemplate);
     const size = box.getSize(new THREE.Vector3());
     humanTemplateHeight = size.y > 0.001 ? size.y : 1.8;
@@ -513,30 +613,21 @@ humanLoader.load(
       }
     });
 
-    console.log('%c✔ ' + HUMAN_FILE + ' загружен. Исходная высота: ' + humanTemplateHeight.toFixed(2) + ' м',
+    console.log('%c✔ ' + HUMAN_FILE + ' загружен. Высота: ' + humanTemplateHeight.toFixed(2) + ' м',
                 'color:#31d0aa;font-weight:bold');
 
     if (humanGroup.visible) makeHumanFigure(humanHeight);
   },
-  (xhr) => {
-    if (xhr.total) {
-      const p = Math.round((xhr.loaded / xhr.total) * 100);
-      console.log('Загрузка ' + HUMAN_FILE + ': ' + p + '%');
-    }
-  },
-  (err) => {
-    console.warn('Не удалось загрузить ' + HUMAN_FILE + ':', err);
-  }
+  undefined,
+  (err) => { console.warn('Не удалось загрузить ' + HUMAN_FILE + ':', err); }
 );
 
-/* ---------- Установка роста ---------- */
 function setHumanHeight(cm) {
   humanHeight = cm;
   heightValue.textContent = cm + ' см';
   makeHumanFigure(cm);
 }
 
-/* ---------- Построение человечка ---------- */
 function makeHumanFigure(heightCm) {
   while (humanGroup.children.length) {
     const c = humanGroup.children.pop();
@@ -557,7 +648,6 @@ function makeHumanFigure(heightCm) {
   }
 
   const clone = humanTemplate.clone(true);
-
   const scale = targetH / humanTemplateHeight;
   clone.scale.setScalar(scale);
   clone.updateMatrixWorld(true);
@@ -573,14 +663,11 @@ function makeHumanFigure(heightCm) {
   });
 
   humanGroup.add(clone);
-
   humanGroup.add(makeHeightLabel(heightCm, targetH));
   humanGroup.userData.topY = targetH;
-
   humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
 }
 
-/* ---------- Подпись роста ---------- */
 function makeHeightLabel(text, yPos) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -627,12 +714,7 @@ function makeHeightLabel(text, yPos) {
   return sprite;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   КЛАССИФИКАЦИЯ МАТЕРИАЛОВ
-   Поручень = HANDRAIL + BOTTOMRAIL
-   Балясины = BALUSTER
-   Столбы = POST
-   ═══════════════════════════════════════════════════════════════ */
+/* ---------- Классификация материалов ---------- */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
@@ -678,7 +760,6 @@ function setLoading(show, text) {
   loadingEl.classList.toggle('show', show);
 }
 
-/* ---------- Toast ---------- */
 let toastTimer = null;
 function showToast(msg, ok = false) {
   toastEl.textContent = msg;
@@ -688,7 +769,6 @@ function showToast(msg, ok = false) {
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
 }
 
-/* ---------- Формат чисел ---------- */
 const fmtInt = (n) => new Intl.NumberFormat('ru-RU').format(n);
 function fmtNum(v) {
   const a = Math.abs(v);
@@ -699,7 +779,6 @@ function fmtNum(v) {
   return v.toExponential(2);
 }
 
-/* ---------- Dispose ---------- */
 function disposeObject(root) {
   const textures = new Set();
   root.traverse((obj) => {
@@ -714,7 +793,6 @@ function disposeObject(root) {
   textures.forEach(t => t.dispose());
 }
 
-/* ---------- Привязка к ближайшей вершине ---------- */
 function findNearestVertex(point, radius) {
   let bestDist = radius;
   let bestVert = null;
@@ -726,7 +804,15 @@ function findNearestVertex(point, radius) {
     }
   }
   return bestVert;
-}/* ═══════════════════════════════════════════════════════════════
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ФУНКЦИИ ОТДЕЛКИ — заменены в части 3
+   ═══════════════════════════════════════════════════════════════ */
+function applyFinish(categoryKey) { /* заполняется в части 3 */ }
+function applySmartFloor()        { /* заполняется в части 3 */ }
+function buildFinishPanel()       { /* заполняется в части 3 */ }
+  /* ═══════════════════════════════════════════════════════════════
    ЗАГРУЗКА МОДЕЛИ .dae
    ═══════════════════════════════════════════════════════════════ */
 function handleFiles(fileList) {
@@ -758,6 +844,7 @@ function loadCollada(url, fileName) {
   for (const k in elementGroups) elementGroups[k] = [];
   clearRuler();
   allVertices.length = 0;
+  originalMaterialState.clear();
 
   const loader = new ColladaLoader(manager);
   loader.load(url,
@@ -810,6 +897,15 @@ function loadCollada(url, fileName) {
           elementGroups[group].push(obj);
           if (group === 'wall' && isWindowTexture(matName)) obj.userData.isWindow = true;
         }
+
+        // Сохраняем оригинальное состояние материалов — для возврата «Как в проекте»
+        mats.forEach((m) => {
+          if (!m) return;
+          originalMaterialState.set(obj.uuid, {
+            map: m.map || null,
+            color: m.color ? m.color.getHex() : 0xffffff
+          });
+        });
       });
 
       model.updateMatrixWorld(true);
@@ -821,7 +917,7 @@ function loadCollada(url, fileName) {
       model.position.sub(center);
       model.updateMatrixWorld(true);
 
-      // Собираем вершины для привязки
+      // Вершины для привязки
       const v = new THREE.Vector3();
       const seenPos = new Set();
       model.traverse((obj) => {
@@ -871,6 +967,7 @@ function loadCollada(url, fileName) {
       applyElementVisibility();
       applyGlassWalls();
       setHumanHeight(humanHeight);
+      buildFinishPanel();
 
       ui.file.textContent   = fileName;
       ui.meshes.textContent = fmtInt(meshCount);
@@ -903,6 +1000,178 @@ function loadCollada(url, fileName) {
       showToast('Ошибка загрузки. Проверьте, что это корректный .dae');
     }
   );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ПАНЕЛЬ ОТДЕЛКИ — построение выпадающих списков
+   ═══════════════════════════════════════════════════════════════ */
+function buildFinishPanel() {
+  finishRows.innerHTML = '';
+
+  FINISH_CATEGORIES.forEach((cat) => {
+    const row = document.createElement('div');
+    row.className = 'finish-row';
+    row.dataset.key = cat.key;
+
+    const header = document.createElement('div');
+    header.className = 'finish-header';
+
+    const label = document.createElement('span');
+    label.className = 'label';
+    label.textContent = cat.label;
+
+    const right = document.createElement('span');
+    right.className = 'value';
+
+    const valueText = document.createElement('span');
+    valueText.className = 'finish-current';
+    valueText.textContent = 'Как в проекте';
+
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.textContent = '▼';
+
+    right.appendChild(valueText);
+    right.appendChild(arrow);
+
+    header.appendChild(label);
+    header.appendChild(right);
+
+    const options = document.createElement('div');
+    options.className = 'finish-options';
+
+    // Кнопка «Как в проекте»
+    const optOriginal = document.createElement('button');
+    optOriginal.className = 'finish-option selected';
+    optOriginal.dataset.file = '';
+    optOriginal.dataset.name = 'Как в проекте';
+    optOriginal.innerHTML = '<span class="swatch" style="background:#1a1d25;"></span>Как в проекте (оригинал .dae)';
+    options.appendChild(optOriginal);
+
+    // Все текстуры
+    TEXTURE_LIST.forEach((t) => {
+      const opt = document.createElement('button');
+      opt.className = 'finish-option';
+      opt.dataset.file = t.file;
+      opt.dataset.name = t.name;
+      opt.innerHTML = '<span class="swatch" style="background-image:url(' + t.file + ');"></span>' + t.name;
+      options.appendChild(opt);
+    });
+
+    row.appendChild(header);
+    row.appendChild(options);
+
+    // Клик по шапке — открыть/закрыть
+    header.addEventListener('click', () => {
+      const isOpen = row.classList.contains('open');
+      // Закрываем остальные
+      finishRows.querySelectorAll('.finish-row.open').forEach((r) => {
+        if (r !== row) r.classList.remove('open');
+      });
+      row.classList.toggle('open', !isOpen);
+    });
+
+    // Клик по опции
+    options.addEventListener('click', (e) => {
+      const btn = e.target.closest('.finish-option');
+      if (!btn) return;
+
+      const file = btn.dataset.file;
+      const name = btn.dataset.name;
+
+      currentFinish[cat.key] = file ? { file, name } : null;
+
+      // Обновляем UI
+      options.querySelectorAll('.finish-option').forEach((o) => o.classList.remove('selected'));
+      btn.classList.add('selected');
+      valueText.textContent = file ? name : 'Как в проекте';
+      row.classList.remove('open');
+
+      // Применяем
+      applyFinish(cat.key);
+
+      // Умное затемнение пола
+      if (cat.key === 'treads' || cat.key === 'floor') {
+        applySmartFloor();
+      }
+    });
+
+    finishRows.appendChild(row);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ЗАМЕНА ТЕКСТУРЫ ДЛЯ ОДНОЙ КАТЕГОРИИ
+   ═══════════════════════════════════════════════════════════════ */
+function applyFinish(categoryKey) {
+  const meshes = elementGroups[categoryKey] || [];
+  const choice = currentFinish[categoryKey];
+
+  meshes.forEach((obj) => {
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const orig = originalMaterialState.get(obj.uuid);
+
+    mats.forEach((m) => {
+      if (!m) return;
+
+      if (!choice) {
+        // Возврат к «Как в проекте»
+        if (orig) {
+          m.map = orig.map;
+          if (m.color) m.color.setHex(orig.color);
+        }
+      } else {
+        // Замена текстуры
+        m.map = getTexture(choice.file);
+        if (m.color) m.color.setHex(0xffffff);
+      }
+
+      m.needsUpdate = true;
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   УМНОЕ ЗАТЕМНЕНИЕ ПОЛА
+   Если пол и ступени — одна и та же светлая текстура,
+   пол затемняется на 40%, чтобы видеть границу.
+   ═══════════════════════════════════════════════════════════════ */
+function applySmartFloor() {
+  const treadsChoice = currentFinish.treads;
+  const floorChoice  = currentFinish.floor;
+
+  const treadsFile = treadsChoice ? treadsChoice.file : null;
+  const floorFile  = floorChoice  ? floorChoice.file  : null;
+
+  // Случай 1: обе выбраны вручную и совпадают, и текстура светлая
+  let darken = false;
+
+  if (treadsFile && floorFile && treadsFile === floorFile && LIGHT_TEXTURES.includes(treadsFile)) {
+    darken = true;
+  }
+  // Случай 2: обе «Как в проекте», но исходно одна и та же светлая — не считаем,
+  //           так как может быть оригинальная oak/ash. Пока пропускаем.
+
+  const meshes = elementGroups.floor || [];
+  meshes.forEach((obj) => {
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    mats.forEach((m) => {
+      if (!m || !m.color) return;
+      if (darken) {
+        m.color.setHex(0x666666);
+      } else {
+        // Если пол только что заменён — цвет белый (из applyFinish).
+        // Если был «Как в проекте» — вернём сохранённый.
+        const orig = originalMaterialState.get(obj.uuid);
+        if (!currentFinish.floor && orig) {
+          m.color.setHex(orig.color);
+        } else if (currentFinish.floor) {
+          m.color.setHex(0xffffff);
+        }
+      }
+      m.needsUpdate = true;
+    });
+  });
 }
 
 /* ---------- Видимость элементов ---------- */
@@ -1285,6 +1554,16 @@ document.getElementById('btnReset').addEventListener('click', () => {
   rotationValue.textContent = '0°';
   humanGroup.rotation.y = 0;
 
+  // Сброс отделки
+  for (const k in currentFinish) {
+    currentFinish[k] = null;
+    applyFinish(k);
+  }
+  applySmartFloor();
+
+  // Перерисовать панель, чтобы всё было выбрано «Как в проекте»
+  buildFinishPanel();
+
   const bg = '#0f1116';
   document.getElementById('bgColor').value = bg;
   scene.background.set(bg);
@@ -1377,6 +1656,7 @@ if (MODEL_FILE) {
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');
+console.log('Отделка: выпадающий список в панели 🎨');
 </script>
 </body>
 </html>

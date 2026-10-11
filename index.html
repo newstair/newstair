@@ -188,6 +188,92 @@
     box-shadow:0 8px 24px rgba(255,112,67,.4);}
   .mode-hint.human{background:linear-gradient(135deg,#31d0aa,#1e9e80);
     box-shadow:0 8px 24px rgba(49,208,170,.4);}
+  /* ---------- Модальное окно сметы ---------- */
+  .price-modal-overlay{
+    position:fixed;inset:0;z-index:90;
+    background:rgba(10,12,18,.75);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    opacity:0;visibility:hidden;
+    transition:opacity .25s, visibility .25s;
+  }
+  .price-modal-overlay.show{opacity:1;visibility:visible;}
+
+  .price-modal{
+    width:100%;max-width:440px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:0 24px 80px rgba(0,0,0,.6);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    transform:translateY(20px);
+    transition:transform .3s ease;
+  }
+  .price-modal-overlay.show .price-modal{transform:translateY(0);}
+
+  .price-modal-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+  }
+  .price-modal-header .title{
+    font-size:16px;font-weight:700;
+    display:flex;align-items:center;gap:8px;
+  }
+  .price-modal-header .subtitle{
+    font-size:12px;color:var(--muted);font-weight:500;
+    display:block;margin-top:2px;
+  }
+  .price-modal-close{
+    width:32px;height:32px;
+    display:flex;align-items:center;justify-content:center;
+    background:transparent;border:1px solid var(--border);
+    border-radius:8px;color:var(--muted);font-size:16px;
+    cursor:pointer;transition:background .15s, color .15s;
+  }
+  .price-modal-close:hover{background:rgba(255,255,255,.08);color:var(--text);}
+  .price-modal-close:active{transform:scale(.95);}
+
+  .price-modal-body{
+    padding:18px 20px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .price-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:16px;font-size:14px;
+  }
+  .price-row .label{color:var(--muted);}
+  .price-row .value{font-weight:600;color:var(--text);white-space:nowrap;}
+
+  .price-divider{
+    height:1px;background:var(--border);
+    margin:6px 0;
+  }
+
+  .price-row.total{font-size:17px;padding-top:6px;}
+  .price-row.total .label{color:var(--text);font-weight:600;}
+  .price-row.total .value{
+    color:var(--accent-2);font-weight:800;font-size:19px;
+    text-shadow:0 0 20px rgba(49,208,170,.3);
+  }
+
+  .price-modal-footer{
+    padding:14px 20px;
+    border-top:1px solid var(--border);
+    display:flex;justify-content:center;
+  }
+  .price-modal-footer .btn{
+    min-width:140px;padding:11px 20px;font-size:13px;
+  }
+
+  @media (max-width:640px){
+    .price-modal{max-width:100%;max-height:90vh;overflow-y:auto;}
+    .price-modal-header{padding:14px 16px;}
+    .price-modal-body{padding:16px 16px;}
+    .price-modal-footer{padding:12px 16px;}
+  }
 
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}
@@ -306,10 +392,12 @@
 
   <button class="btn" id="btnReset"><span class="ico">↺</span> Сброс</button>
 
-  <label class="color-row">
+   <label class="color-row">
     <span>Цвет фона</span>
     <input type="color" id="bgColor" value="#0f1116">
   </label>
+
+  <button class="btn" id="btnPrice" style="display:none;"><span class="ico">💰</span> Расчёт стоимости</button>
 </aside>
 
 <div class="info" id="info">
@@ -333,7 +421,24 @@
 <div class="mode-hint ruler" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
 <div class="mode-hint human" id="humanHint">🧍 Тапните по ступени, чтобы поставить человечка</div>
 <div class="toast" id="toast"></div>
-
+<!-- Модальное окно сметы -->
+<div class="price-modal-overlay" id="priceModalOverlay">
+  <div class="price-modal">
+    <div class="price-modal-header">
+      <div>
+        <span class="title">💰 Расчёт стоимости</span>
+        <span class="subtitle" id="priceModalSubtitle">—</span>
+      </div>
+      <button class="price-modal-close" id="priceModalClose" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="price-modal-body" id="priceModalBody">
+      <!-- Заполняется скриптом -->
+    </div>
+    <div class="price-modal-footer">
+      <button class="btn" id="priceModalCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
 <input type="file" id="fileInput" multiple
        accept=".dae,.xml,image/*,.jpg,.jpeg,.png,.gif,.bmp,.tga,.webp"
        style="display:none">
@@ -1557,7 +1662,101 @@ heightSlider.addEventListener('input', (e) => {
   const cm = parseInt(e.target.value, 10);
   setHumanHeight(cm);
 });
+/* ═══════════════════════════════════════════════════════════════
+   РАСЧЁТ СТОИМОСТИ — загрузка price.json и модальное окно
+   ═══════════════════════════════════════════════════════════════ */
+let priceData = null;
 
+const priceOverlay  = document.getElementById('priceModalOverlay');
+const priceBody     = document.getElementById('priceModalBody');
+const priceSubtitle = document.getElementById('priceModalSubtitle');
+const priceBtn      = document.getElementById('btnPrice');
+
+function formatRub(n) {
+  return new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+}
+
+function buildPriceModal() {
+  if (!priceData || !priceData.works || !priceData.works.length) {
+    priceBody.innerHTML = '<p style="text-align:center;color:#8b95a8;padding:20px 0;">Данные расчёта отсутствуют</p>';
+    return;
+  }
+
+  priceBody.innerHTML = '';
+
+  let total = 0;
+  priceData.works.forEach((w) => {
+    total += Number(w.sum) || 0;
+
+    const row = document.createElement('div');
+    row.className = 'price-row';
+    row.innerHTML =
+      '<span class="label">' + w.name + '</span>' +
+      '<span class="value">' + formatRub(w.sum) + '</span>';
+    priceBody.appendChild(row);
+  });
+
+  // Разделитель
+  const div = document.createElement('div');
+  div.className = 'price-divider';
+  priceBody.appendChild(div);
+
+  // Итого
+  const totalRow = document.createElement('div');
+  totalRow.className = 'price-row total';
+  totalRow.innerHTML =
+    '<span class="label">ИТОГО</span>' +
+    '<span class="value">' + formatRub(total) + '</span>';
+  priceBody.appendChild(totalRow);
+}
+
+function openPriceModal() {
+  buildPriceModal();
+  priceOverlay.classList.add('show');
+}
+
+function closePriceModal() {
+  priceOverlay.classList.remove('show');
+}
+
+// Загрузка price.json
+fetch('price.json', { cache: 'no-store' })
+  .then((r) => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then((data) => {
+    priceData = data;
+    priceBtn.style.display = 'inline-flex';
+    console.log('%c✔ price.json загружен — кнопка «Расчёт стоимости» доступна',
+                'color:#31d0aa;font-weight:bold');
+  })
+  .catch((err) => {
+    console.log('price.json не найден — кнопка расчёта скрыта:', err.message);
+  });
+
+// Название проекта из MODEL_FILE — для подзаголовка
+if (typeof MODEL_FILE === 'string' && MODEL_FILE) {
+  const baseName = MODEL_FILE.replace(/\.(dae|xml)$/i, '');
+  priceSubtitle.textContent = baseName;
+}
+
+// Навешиваем обработчики
+document.getElementById('btnPrice').addEventListener('click', openPriceModal);
+document.getElementById('priceModalClose').addEventListener('click', closePriceModal);
+document.getElementById('priceModalCloseBtn').addEventListener('click', closePriceModal);
+
+// Клик по затемнённому фону закрывает окно
+priceOverlay.addEventListener('click', (e) => {
+  if (e.target === priceOverlay) closePriceModal();
+});
+
+// Escape закрывает окно
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && priceOverlay.classList.contains('show')) {
+    closePriceModal();
+  }
+});
 const rotationSlider = document.getElementById('rotationSlider');
 const rotationValue  = document.getElementById('rotationValue');
 rotationSlider.addEventListener('input', (e) => {

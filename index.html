@@ -1885,17 +1885,7 @@ function formatRub(n) {
   return new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
 }
 
-function buildPriceModal() {
-  if (!priceData || !priceData.works || !priceData.works.length) {
-    priceBody.innerHTML = '<p style="text-align:center;color:#8b95a8;padding:20px 0;">Данные расчёта отсутствуют</p>';
-    return;
-  }
 
-  priceBody.innerHTML = '';
-
-  let total = 0;
-  priceData.works.forEach((w) => {
-    total += Number(w.sum) || 0;
 
     
 

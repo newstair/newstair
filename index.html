@@ -1113,55 +1113,76 @@ setTitleFromModel(fileName);
 function runAreaDiagnostics() {
   if (!currentModel) return;
 
+  const s = UNIT_SCALE;
+  const MIN_VOLUME = 0.001;   // порог: 1 литр — меньше = пазы, болты, шипы
+
   console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-  console.log('%c ДИАГНОСТИКА 3 — РАЗМЕРЫ МЕШЕЙ В ГРУППАХ', 'color:#5b8cff;font-weight:bold;font-size:14px');
+  console.log('%c ДИАГНОСТИКА 4 — ФИЛЬТР МЕЛКИХ МЕШЕЙ', 'color:#5b8cff;font-weight:bold;font-size:14px');
   console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('Порог отсечения: ' + MIN_VOLUME + ' м³ (1 литр)');
   console.log('');
 
-  const s = UNIT_SCALE;
+  // PDF-значения для сверки
+  const pdfRef = {
+    treads: 3.18,
+    risers: 2.28,
+    stringers: 4.07,
+    handrail: 3.75,
+    baluster: 2.00,
+    posts: 2.80
+  };
+
+  const summary = [];
 
   for (const key in elementGroups) {
     const meshes = elementGroups[key];
     if (!meshes.length) continue;
 
-    console.log('%c─── ' + key.toUpperCase() + ' (' + meshes.length + ' мешей) ───',
-                'color:#31d0aa;font-weight:bold');
+    let totalBbox = 0;
+    let countMain = 0;
+    let countSmall = 0;
+    let meshCountMain = 0;
 
-    const items = meshes.map((obj) => {
+    meshes.forEach((obj) => {
       const box = new THREE.Box3().setFromObject(obj);
       const size = box.getSize(new THREE.Vector3());
-      return {
-        sx: size.x * s,
-        sy: size.y * s,
-        sz: size.z * s,
-        volume: size.x * size.y * size.z * s * s * s
-      };
+      const vol = size.x * size.y * size.z * s * s * s;
+
+      if (vol >= MIN_VOLUME) {
+        countMain++;
+        meshCountMain++;
+        const dims = [size.x, size.y, size.z].sort((a, b) => b - a);
+        totalBbox += dims[0] * dims[1] * s * s;
+      } else {
+        countSmall++;
+      }
     });
 
-    items.sort((a, b) => b.volume - a.volume);
+    const bboxM2 = totalBbox;
+    const pdf = pdfRef[key];
+    const diff = pdf ? ((bboxM2 - pdf) / pdf * 100).toFixed(1) + '%' : '—';
 
-    const top = items.slice(0, 5);
-    const rest = items.slice(5);
-
-    console.log('  Крупнейшие меши (первые 5):');
-    top.forEach((it, i) => {
-      console.log('   #' + (i + 1) + ': ' +
-                  it.sx.toFixed(3) + ' × ' + it.sy.toFixed(3) + ' × ' + it.sz.toFixed(3) + ' м');
+    summary.push({
+      'Категория': key,
+      'Мешей всего': meshes.length,
+      'Крупных деталей': countMain,
+      'Отсеяно мелочи': countSmall,
+      'Bbox (м²)': bboxM2.toFixed(3),
+      'PDF (м²)': pdf || '—',
+      'Разница': diff
     });
-
-    if (rest.length) {
-      const maxRest = rest[0];
-      const minRest = rest[rest.length - 1];
-      console.log('  Остальные (' + rest.length + ' мешей):');
-      console.log('   Самый крупный: ' + maxRest.sx.toFixed(3) + ' × ' + maxRest.sy.toFixed(3) + ' × ' + maxRest.sz.toFixed(3) + ' м');
-      console.log('   Самый мелкий:  ' + minRest.sx.toFixed(3) + ' × ' + minRest.sy.toFixed(3) + ' × ' + minRest.sz.toFixed(3) + ' м');
-    }
-
-    console.log('');
   }
 
-  console.log('%c─── ГОТОВО ───', 'color:#ff9f43;font-weight:bold');
-  console.log('Крупные меши — главные детали. Мелкие — пазы, шипы, болты.');
+  console.table(summary);
+
+  console.log('');
+  console.log('%c─── РАСШИФРОВКА ───', 'color:#31d0aa;font-weight:bold');
+  console.log('«Крупных деталей» — сколько осталось после отсечения мелочи.');
+  console.log('«Отсеяно мелочи» — пазы, шипы, болты.');
+  console.log('');
+  console.log('%c─── ЧТО ДЕЛАЕМ ───', 'color:#ff9f43;font-weight:bold');
+  console.log('Если «Крупных деталей» совпало с PDF и «Разница» меньше 10% —');
+  console.log('значит, формула верна, делаем price.json.');
   console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
 }
 /* ═══════════════════════════════════════════════════════════════

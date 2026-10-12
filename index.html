@@ -1084,9 +1084,13 @@ setTitleFromModel(fileName);
         ui.animRow.style.display = 'none';
       }
 
-      infoEl.classList.add('show');
+          infoEl.classList.add('show');
       panelEl.classList.remove('hidden');
       fitCamera();
+
+      // Диагностика площадей по категориям
+      setTimeout(runAreaDiagnostics, 500);
+    },
     },
     (evt) => {
       if (evt && evt.total) {
@@ -1884,7 +1888,103 @@ animate();
 if (MODEL_FILE) {
   loadCollada(MODEL_FILE, MODEL_FILE);
 }
+/* ═══════════════════════════════════════════════════════════════
+   ДИАГНОСТИКА ПЛОЩАДЕЙ — временная, для сверки с Excel
+   ═══════════════════════════════════════════════════════════════ */
+function triangleArea(a, b, c) {
+  const ab = new THREE.Vector3().subVectors(b, a);
+  const ac = new THREE.Vector3().subVectors(c, a);
+  return ab.cross(ac).length() * 0.5;
+}
 
+function meshSurfaceArea(obj) {
+  const geo = obj.geometry;
+  if (!geo) return 0;
+  const pos = geo.attributes.position;
+  if (!pos) return 0;
+
+  let total = 0;
+  const index = geo.index;
+
+  if (index) {
+    for (let i = 0; i < index.count; i += 3) {
+      const a = new THREE.Vector3().fromBufferAttribute(pos, index.getX(i));
+      const b = new THREE.Vector3().fromBufferAttribute(pos, index.getX(i + 1));
+      const c = new THREE.Vector3().fromBufferAttribute(pos, index.getX(i + 2));
+      total += triangleArea(a, b, c);
+    }
+  } else {
+    for (let i = 0; i < pos.count; i += 3) {
+      const a = new THREE.Vector3().fromBufferAttribute(pos, i);
+      const b = new THREE.Vector3().fromBufferAttribute(pos, i + 1);
+      const c = new THREE.Vector3().fromBufferAttribute(pos, i + 2);
+      total += triangleArea(a, b, c);
+    }
+  }
+  return total;
+}
+
+function runAreaDiagnostics() {
+  if (!currentModel) return;
+
+  const stats = {};
+
+  for (const key in elementGroups) {
+    const meshes = elementGroups[key];
+    if (!meshes.length) continue;
+
+    let surfaceArea = 0;
+    let bboxArea = 0;
+    const boxes = [];
+
+    meshes.forEach((obj) => {
+      surfaceArea += meshSurfaceArea(obj);
+
+      const box = new THREE.Box3().setFromObject(obj);
+      boxes.push(box);
+
+      const size = box.getSize(new THREE.Vector3());
+      const dims = [size.x, size.y, size.z].sort((a, b) => b - a);
+      bboxArea += dims[0] * dims[1];
+    });
+
+    const groupBox = new THREE.Box3();
+    boxes.forEach(b => groupBox.union(b));
+    const groupSize = groupBox.getSize(new THREE.Vector3());
+    const groupDims = [groupSize.x, groupSize.y, groupSize.z].sort((a, b) => b - a);
+
+    stats[key] = {
+      count: meshes.length,
+      surface_m2: surfaceArea * (UNIT_SCALE * UNIT_SCALE),
+      bbox_m2: bboxArea * (UNIT_SCALE * UNIT_SCALE),
+      length_m: groupDims[0] * UNIT_SCALE,
+      size: groupSize.x.toFixed(2) + ' × ' + groupSize.y.toFixed(2) + ' × ' + groupSize.z.toFixed(2)
+    };
+  }
+
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('%c ДИАГНОСТИКА — ПЛОЩАДИ ПО КАТЕГОРИЯМ', 'color:#5b8cff;font-weight:bold;font-size:14px');
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('');
+  console.log('%c─── СВОДКА ───', 'color:#31d0aa;font-weight:bold');
+
+  const rows = Object.keys(stats).map((key) => ({
+    'Категория': key,
+    'Кол-во': stats[key].count,
+    'Площадь поверхн. (м²)': stats[key].surface_m2.toFixed(3),
+    'Площадь bbox (м²)': stats[key].bbox_m2.toFixed(3),
+    'Длина (м)': stats[key].length_m.toFixed(2),
+    'Габариты группы': stats[key].size
+  }));
+
+  console.table(rows);
+
+  console.log('');
+  console.log('%c─── СРАВНИТЕ С ВАШИМ PDF ───', 'color:#ff9f43;font-weight:bold');
+  console.log('Ступени: 3.18 м² · Тетивы: 4.07 м² · Столбы: 2.10 м²');
+  console.log('Подступенки: 2.28 м² · Поручни: 3.75 м² · Балясины: 2.00 м²');
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+}
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

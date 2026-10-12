@@ -1980,60 +1980,7 @@ function meshSurfaceArea(obj) {
   return total;
 }
 
-function runAreaDiagnostics() {
-  if (!currentModel) return;
 
-  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-  console.log('%c ДИАГНОСТИКА 3 — РАЗМЕРЫ МЕШЕЙ В ГРУППАХ', 'color:#5b8cff;font-weight:bold;font-size:14px');
-  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-  console.log('');
-
-  const s = UNIT_SCALE;
-
-  for (const key in elementGroups) {
-    const meshes = elementGroups[key];
-    if (!meshes.length) continue;
-
-    console.log('%c─── ' + key.toUpperCase() + ' (' + meshes.length + ' мешей) ───',
-                'color:#31d0aa;font-weight:bold');
-
-    const items = meshes.map((obj) => {
-      const box = new THREE.Box3().setFromObject(obj);
-      const size = box.getSize(new THREE.Vector3());
-      return {
-        sx: size.x * s,
-        sy: size.y * s,
-        sz: size.z * s,
-        volume: size.x * size.y * size.z * s * s * s
-      };
-    });
-
-    items.sort((a, b) => b.volume - a.volume);
-
-    const top = items.slice(0, 5);
-    const rest = items.slice(5);
-
-    console.log('  Крупнейшие меши (первые 5):');
-    top.forEach((it, i) => {
-      console.log('   #' + (i + 1) + ': ' +
-                  it.sx.toFixed(3) + ' × ' + it.sy.toFixed(3) + ' × ' + it.sz.toFixed(3) + ' м');
-    });
-
-    if (rest.length) {
-      const maxRest = rest[0];
-      const minRest = rest[rest.length - 1];
-      console.log('  Остальные (' + rest.length + ' мешей):');
-      console.log('   Самый крупный: ' + maxRest.sx.toFixed(3) + ' × ' + maxRest.sy.toFixed(3) + ' × ' + maxRest.sz.toFixed(3) + ' м');
-      console.log('   Самый мелкий:  ' + minRest.sx.toFixed(3) + ' × ' + minRest.sy.toFixed(3) + ' × ' + minRest.sz.toFixed(3) + ' м');
-    }
-
-    console.log('');
-  }
-
-  console.log('%c─── ГОТОВО ───', 'color:#ff9f43;font-weight:bold');
-  console.log('Крупные меши — главные детали. Мелкие — пазы, шипы, болты.');
-  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-}
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

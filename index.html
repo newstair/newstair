@@ -2073,6 +2073,19 @@ async function findModelFile() {
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');
+  /* ═══════════════════════════════════════════════════════════════
+   АККОРДЕОН — раскрытие секций панели
+   ═══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.accordion').forEach((acc) => {
+  const header = acc.querySelector('.accordion-header');
+  if (!header) return;
+  header.addEventListener('click', () => {
+    const isOpen = acc.classList.contains('open');
+    document.querySelectorAll('.accordion').forEach((a) => a.classList.remove('open'));
+    if (!isOpen) acc.classList.add('open');
+  });
+});
+console.log('✔ Аккордеон подключён:', document.querySelectorAll('.accordion').length, 'секций');
 </script>
 </body>
 </html>

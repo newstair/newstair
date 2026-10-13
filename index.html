@@ -250,6 +250,101 @@
     box-shadow:0 8px 24px rgba(255,112,67,.4);}
   .mode-hint.human{background:linear-gradient(135deg,#31d0aa,#1e9e80);
     box-shadow:0 8px 24px rgba(49,208,170,.4);}
+  /* ═══ Карточки отделки ═══ */
+  .finish-row{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:6px;
+  }
+  .finish-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:11px 12px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .finish-header:hover{
+    background:rgba(255,255,255,.05);
+  }
+  .finish-header .label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:550;
+  }
+  .finish-header .value{
+    font-size:12px;
+    color:var(--text);
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .finish-header .arrow{
+    font-size:10px;
+    color:var(--muted);
+    transition:transform .2s;
+  }
+  .finish-row.open .finish-header .arrow{
+    transform:rotate(180deg);
+  }
+  .finish-options{
+    display:none;
+    flex-direction:column;
+    gap:2px;
+    padding:6px;
+    max-height:260px;
+    overflow-y:auto;
+    background:rgba(0,0,0,.2);
+    border-top:1px solid var(--border);
+  }
+  .finish-row.open .finish-options{
+    display:flex;
+  }
+  .finish-options::-webkit-scrollbar{width:6px;}
+  .finish-options::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.15);
+    border-radius:3px;
+  }
+  .finish-option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 10px;
+    font-size:12px;
+    color:var(--text);
+    background:transparent;
+    border:none;
+    border-radius:7px;
+    cursor:pointer;
+    text-align:left;
+    font-family:inherit;
+    transition:background .15s;
+  }
+  .finish-option:hover{
+    background:rgba(255,255,255,.08);
+  }
+  .finish-option.selected{
+    background:rgba(91,140,255,.2);
+    color:#b9cdff;
+    font-weight:600;
+  }
+  .finish-option .swatch{
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    background:#333;
+    border:1px solid rgba(255,255,255,.15);
+    flex-shrink:0;
+    background-size:cover;
+    background-position:center;
+  }
 
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}

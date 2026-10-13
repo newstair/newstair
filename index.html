@@ -1676,14 +1676,7 @@ panelToggle.addEventListener('click', () => {
   const isOpen = panelEl.classList.toggle('open');
   panelToggle.classList.toggle('active', isOpen);
 });
-/* ---------- Аккордеон панели ---------- */
 
-  const header = acc.querySelector('.accordion-header');
-  if (!header) return;
-  header.addEventListener('click', () => {
-    acc.classList.toggle('open');
-  });
-});
 /* ---------- Кнопки ---------- */
 
 fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });

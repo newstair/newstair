@@ -1888,8 +1888,302 @@ function formatRub(n) {
 
 
     
+/* ═══════════════════════════════════════════════════════════════
+   КАЛЬКУЛЯТОР — вспомогательные функции подсчёта
+   ═══════════════════════════════════════════════════════════════ */
 
- 
+/* Ориентированный bounding box (OBB) — заготовка вокруг детали */
+function computeOBB(vs) {
+  if (!vs || vs.length < 4) return null;
+
+  const c = new THREE.Vector3();
+  vs.forEach(v => c.add(v));
+  c.divideScalar(vs.length);
+
+  let xx = 0, xy = 0, xz = 0, yy = 0, yz = 0, zz = 0;
+  vs.forEach(v => {
+    const dx = v.x - c.x, dy = v.y - c.y, dz = v.z - c.z;
+    xx += dx * dx; xy += dx * dy; xz += dx * dz;
+    yy += dy * dy; yz += dy * dz;
+    zz += dz * dz;
+  });
+  const M = [xx, xy, xz, yy, yz, zz];
+
+  function mulM(v) {
+    return new THREE.Vector3(
+      M[0] * v.x + M[1] * v.y + M[2] * v.z,
+      M[1] * v.x + M[3] * v.y + M[4] * v.z,
+      M[2] * v.x + M[4] * v.y + M[5] * v.z
+    );
+  }
+
+  let v1 = new THREE.Vector3(1, 0.5, 0.3).normalize();
+  for (let i = 0; i < 100; i++) {
+    v1 = mulM(v1);
+    if (v1.length() < 1e-12) break;
+    v1.normalize();
+  }
+  const lam1 = v1.dot(mulM(v1));
+
+  const M2 = [
+    M[0] - lam1 * v1.x * v1.x, M[1] - lam1 * v1.x * v1.y, M[2] - lam1 * v1.x * v1.z,
+    M[3] - lam1 * v1.y * v1.y, M[4] - lam1 * v1.y * v1.z,
+    M[5] - lam1 * v1.z * v1.z
+  ];
+  function mulM2(v) {
+    return new THREE.Vector3(
+      M2[0] * v.x + M2[1] * v.y + M2[2] * v.z,
+      M2[1] * v.x + M2[3] * v.y + M2[4] * v.z,
+      M2[2] * v.x + M2[4] * v.y + M2[5] * v.z
+    );
+  }
+
+  let v2 = new THREE.Vector3(0, 1, 0);
+  if (Math.abs(v1.dot(v2)) > 0.9) v2.set(1, 0, 0);
+  v2.sub(v1.clone().multiplyScalar(v2.dot(v1))).normalize();
+  for (let i = 0; i < 100; i++) {
+    v2 = mulM2(v2);
+    v2.sub(v1.clone().multiplyScalar(v2.dot(v1)));
+    if (v2.length() < 1e-12) break;
+    v2.normalize();
+  }
+
+  const v3 = new THREE.Vector3().crossVectors(v1, v2).normalize();
+
+  let min1 = Infinity, max1 = -Infinity;
+  let min2 = Infinity, max2 = -Infinity;
+  let min3 = Infinity, max3 = -Infinity;
+  vs.forEach(v => {
+    const d = v.clone().sub(c);
+    const p1 = d.dot(v1), p2 = d.dot(v2), p3 = d.dot(v3);
+    if (p1 < min1) min1 = p1; if (p1 > max1) max1 = p1;
+    if (p2 < min2) min2 = p2; if (p2 > max2) max2 = p2;
+    if (p3 < min3) min3 = p3; if (p3 > max3) max3 = p3;
+  });
+
+  const d1 = max1 - min1, d2 = max2 - min2, d3 = max3 - min3;
+  const dims = [d1, d2, d3].sort((a, b) => b - a);
+  return { area: dims[0] * dims[1], length: dims[0], volume: d1 * d2 * d3 };
+}
+
+/* Площадь поверхности меша (сумма треугольников) */
+function meshSurfaceArea(obj) {
+  const geo = obj.geometry;
+  if (!geo) return 0;
+  const pos = geo.attributes.position;
+  if (!pos) return 0;
+  let total = 0;
+  const idx = geo.index;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  if (idx) {
+    for (let i = 0; i < idx.count; i += 3) {
+      a.fromBufferAttribute(pos, idx.getX(i));
+      b.fromBufferAttribute(pos, idx.getX(i + 1));
+      c.fromBufferAttribute(pos, idx.getX(i + 2));
+      total += new THREE.Vector3().subVectors(b, a)
+              .cross(new THREE.Vector3().subVectors(c, a)).length() * 0.5;
+    }
+  } else {
+    for (let i = 0; i < pos.count; i += 3) {
+      a.fromBufferAttribute(pos, i);
+      b.fromBufferAttribute(pos, i + 1);
+      c.fromBufferAttribute(pos, i + 2);
+      total += new THREE.Vector3().subVectors(b, a)
+              .cross(new THREE.Vector3().subVectors(c, a)).length() * 0.5;
+    }
+  }
+  return total;
+}
+
+/* Анализ меша — OBB, поверхность, длина, объём */
+function analyzeMesh(obj) {
+  const geo = obj.geometry;
+  if (!geo || !geo.attributes.position) return null;
+  const pos = geo.attributes.position;
+  obj.updateMatrixWorld(true);
+  const vs = [];
+  for (let i = 0; i < pos.count; i++) {
+    vs.push(new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(obj.matrixWorld));
+  }
+  const obb = computeOBB(vs);
+  if (!obb) return null;
+  return {
+    obbArea: obb.area,
+    obbLength: obb.length,
+    obbVolume: obb.volume,
+    surface: meshSurfaceArea(obj)
+  };
+}
+
+/* Кэш анализа мешей — считается один раз */
+const meshAnalysisCache = new WeakMap();
+function getMeshAnalysis(obj) {
+  if (meshAnalysisCache.has(obj)) return meshAnalysisCache.get(obj);
+  const res = analyzeMesh(obj);
+  meshAnalysisCache.set(obj, res);
+  return res;
+}
+
+/* Очистка кэша — вызывается при загрузке новой модели */
+function clearMeshCache() {
+  meshAnalysisCache.delete();
+}
+/* ═══════════════════════════════════════════════════════════════
+   КАЛЬКУЛЯТОР — определение материала и подсчёт стоимости
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Какой материал выбран для категории (из панели «Отделка») */
+function getMaterialForKey(key) {
+  const chosen = currentFinish[key];
+  if (!chosen || !chosen.file) return 'pine';
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  for (const matKey in mats) {
+    const t = mats[matKey].textures || [];
+    if (t.indexOf(chosen.file) !== -1) return matKey;
+  }
+  return 'pine';
+}
+
+function getMaterialInfo(matKey) {
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  return mats[matKey] || mats.pine || { name: 'Сосна', multiplier: 1 };
+}
+
+/* Главный расчёт */
+function calculatePrice() {
+  const result = {
+    categories: [],
+    materialTotal: 0,
+    paintTotal: 0,
+    total: 0
+  };
+
+  if (!priceData || !priceData.categories) return result;
+
+  const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
+  const MIN_VOL = 0.001;
+  const s2 = UNIT_SCALE * UNIT_SCALE;
+
+  for (const key in priceData.categories) {
+    const cat = priceData.categories[key];
+    const meshes = elementGroups[key] || [];
+    if (!meshes.length) continue;
+
+    const matKey = getMaterialForKey(key);
+    const matInfo = getMaterialInfo(matKey);
+    const mult = matInfo.multiplier || 1;
+
+    let qty = 0;
+    let unit = '';
+    let formula = '';
+    let materialCost = 0;
+    let paintArea = 0;
+
+    if (cat.method === 'm2') {
+      let totalOBB = 0, totalSurf = 0;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        totalOBB += a.obbArea * s2;
+        totalSurf += a.surface * s2;
+      });
+      qty = totalOBB * (cat.coef || 1);
+      unit = 'м²';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty.toFixed(3) + ' м² × ' + cat.base_price + ' × ' + mult;
+
+    } else if (cat.method === 'length') {
+      let totalLen = 0, totalSurf = 0, count = 0;
+      const extra = (cat.extra_mm || 0) / 1000;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        count++;
+        totalLen += a.obbLength * UNIT_SCALE + extra;
+        totalSurf += a.surface * s2;
+      });
+      qty = totalLen;
+      unit = 'м';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + cat.base_price + ' × ' + mult;
+
+    } else if (cat.method === 'count') {
+      let count = 0, totalSurf = 0;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        count++;
+        totalSurf += a.surface * s2;
+      });
+      qty = count;
+      unit = 'шт';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty + ' шт × ' + cat.base_price + ' × ' + mult;
+    }
+
+    const paintCost = paintArea * paintPrice;
+
+    result.categories.push({
+      name: cat.name,
+      materialName: matInfo.name,
+      formula: formula,
+      materialCost: materialCost,
+      paintCost: paintCost
+    });
+
+    result.materialTotal += materialCost;
+    result.paintTotal += paintCost;
+  }
+
+  result.total = result.materialTotal + result.paintTotal;
+  return result;
+}
+
+/* Построение окна */
+function buildPriceModal() {
+  if (!priceData) {
+    priceBody.innerHTML = '<div class="price-empty">Файл price.json не найден</div>';
+    return;
+  }
+
+  const result = calculatePrice();
+
+  if (!result.categories.length) {
+    priceBody.innerHTML = '<div class="price-empty">Нет данных для расчёта</div>';
+    return;
+  }
+
+  priceBody.innerHTML = '';
+
+  // Блоки категорий
+  result.categories.forEach((cat) => {
+    const block = document.createElement('div');
+    block.className = 'price-cat';
+    block.innerHTML =
+      '<div class="price-cat-name">' +
+        '<span>' + cat.name + '</span>' +
+        '<span class="material">' + cat.materialName + '</span>' +
+      '</div>' +
+      '<div class="price-cat-formula">' + cat.formula + '</div>' +
+      '<div class="price-cat-result">' + formatRub(cat.materialCost) + '</div>';
+    priceBody.appendChild(block);
+  });
+
+  // Итоги
+  const totals = document.createElement('div');
+  totals.className = 'price-totals';
+  totals.innerHTML =
+    '<div class="price-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
+    '<div class="price-totals-row"><span>Покраска</span><span>' + formatRub(result.paintTotal) + '</span></div>' +
+    '<div class="price-totals-row total"><span>ИТОГО</span><span>' + formatRub(result.total) + '</span></div>';
+  priceBody.appendChild(totals);
+} 
 
 function openPriceModal() {
   buildPriceModal();

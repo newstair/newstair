@@ -1403,22 +1403,7 @@ function applyGlassWalls() {
       m.needsUpdate = true;
     });
   });
-  elementGroups.opening.forEach((obj) => {
-    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-    mats.forEach((m) => {
-      if (!m) return;
-      if (glassWalls) {
-        m.transparent = true;
-        m.opacity = OPENING_OPACITY;
-        m.depthWrite = false;
-      } else {
-        m.transparent = false;
-        m.opacity = 1;
-        m.depthWrite = true;
-      }
-      m.needsUpdate = true;
-    });
-  });
+ 
 }
 
 /* ---------- Камера ---------- */

@@ -24,7 +24,7 @@
     },
     "posts": {
       "name": "Столбы", "method": "length", "extra_mm": 100,
-      "prices": { "pine": 11555, "beech": 1500, "ash": 2200, "oak": 3000 }
+      "prices": { "pine": 3622, "beech": 1500, "ash": 2200, "oak": 3000 }
     },
     "baluster": {
       "name": "Балясины", "method": "count",

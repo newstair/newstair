@@ -402,7 +402,8 @@ import { GLTFLoader }     from 'three/addons/loaders/GLTFLoader.js';
 /* ═══════════════════════════════════════════════════════════════
    ★ ЗДЕСЬ МЕНЯЕТЕ ИМЯ МОДЕЛИ ★
    ═══════════════════════════════════════════════════════════════ */
-const MODEL_FILE = 'Korobitsyno.dae';
+const MODEL_FILE_DEFAULT = 'model.dae';
+let MODEL_FILE = null;
 const UNIT_SCALE = 1.0;
 const HUMAN_FILE = 'human.glb';
 
@@ -1842,7 +1843,7 @@ async function loadBOM() {
   }
 }
 
-loadBOM();
+
 fetch('price.json', { cache: 'no-store' })
   .then((r) => {
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -1861,14 +1862,7 @@ fetch('price.json', { cache: 'no-store' })
 resize();
 animate();
 
-if (MODEL_FILE) {
-  loadCollada(MODEL_FILE, MODEL_FILE);
-  const modelName = MODEL_FILE.replace(/\.(dae|xml)$/i, '');
-  if (modelName) {
-    document.title = '3D Viewer — ' + modelName;
-    priceSubtitle.textContent = modelName;
-  }
-}
+
 /* ═══════════════════════════════════════════════════════════════
    ДИАГНОСТИКА — какие материалы есть в модели
    ═══════════════════════════════════════════════════════════════ */
@@ -1944,10 +1938,61 @@ function runAreaDiagnostics() {
 
   console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
 }
-  /* ═══════════════════════════════════════════════════════════════
-   ДИАГНОСТИКА XML (BOM из Staircon)
+  
+/* ═══════════════════════════════════════════════════════════════
+   АВТОПОИСК DAE в репозитории
    ═══════════════════════════════════════════════════════════════ */
+async function findModelFile() {
+  // 1. Пробуем model.dae
+  try {
+    const r = await fetch(MODEL_FILE_DEFAULT, { method: 'HEAD' });
+    if (r.ok) {
+      console.log('%c✔ Найден ' + MODEL_FILE_DEFAULT, 'color:#31d0aa;font-weight:bold');
+      return MODEL_FILE_DEFAULT;
+    }
+  } catch (e) { /* ignore */ }
 
+  // 2. Ищем любой .dae через GitHub API
+  try {
+    const parts = location.pathname.split('/').filter(x => x);
+    const owner = location.hostname.split('.')[0];
+    const repo = parts[0];
+    if (!owner || !repo) throw new Error('не удалось определить owner/repo');
+
+    const r = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/');
+    if (!r.ok) throw new Error('GitHub API: HTTP ' + r.status);
+
+    const files = await r.json();
+    const dae = files.find(f => f.name && f.name.toLowerCase().endsWith('.dae'));
+    if (dae) {
+      console.log('%c✔ Найден в репозитории: ' + dae.name, 'color:#31d0aa;font-weight:bold');
+      return dae.name;
+    }
+  } catch (e) {
+    console.warn('Автопоиск через API не сработал:', e.message);
+  }
+
+  return null;
+}
+
+(async () => {
+  MODEL_FILE = await findModelFile();
+
+  if (!MODEL_FILE) {
+    showToast('Файл .dae не найден. Загрузите его в репозиторий.');
+    console.warn('Не найден ни model.dae, ни другой .dae в репозитории.');
+    return;
+  }
+
+  await loadBOM();
+  loadCollada(MODEL_FILE, MODEL_FILE);
+
+  const modelName = MODEL_FILE.replace(/\.(dae|xml)$/i, '');
+  if (modelName) {
+    document.title = '3D Viewer — ' + modelName;
+    priceSubtitle.textContent = modelName;
+  }
+})();
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

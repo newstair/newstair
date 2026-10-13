@@ -230,6 +230,44 @@
     display:flex;justify-content:center;flex-shrink:0;}
   .price-modal-footer .btn{min-width:140px;padding:11px 20px;font-size:13px;}
   .price-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;line-height:1.6;}
+  /* ---------- Аккордеон (раскрывающиеся секции) ---------- */
+  .accordion{
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .accordion-header{
+    width:100%;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:8px;padding:12px 14px;
+    background:transparent;border:none;
+    color:var(--text);font-size:13px;font-weight:600;
+    font-family:inherit;cursor:pointer;
+    transition:background .15s;
+    text-align:left;
+  }
+  .accordion-header:hover{background:rgba(255,255,255,.05);}
+  .accordion-header .ico{font-size:14px;margin-right:6px;}
+  .accordion-header .arrow{
+    font-size:11px;color:var(--muted);
+    transition:transform .2s;
+    margin-left:auto;
+  }
+  .accordion.open .accordion-header .arrow{transform:rotate(90deg);}
+  .accordion-body{
+    display:none;flex-direction:column;gap:8px;
+    padding:10px;
+    background:rgba(0,0,0,.15);
+    border-top:1px solid var(--border);
+  }
+  .accordion.open .accordion-body{display:flex;}
+
+  .btn.big{
+    padding:14px 18px;
+    font-size:14px;
+    font-weight:600;
+  }
 
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}
@@ -275,57 +313,82 @@
 <button class="panel-toggle" id="panelToggle" title="Настройки" aria-label="Настройки">⚙</button>
 
 <aside class="panel hidden" id="panel">
-  <div class="panel-title">Общее</div>
-  <button class="btn primary" id="btnOpen"><span class="ico">📂</span> Открыть .dae</button>
-  <div class="row">
-    <button class="btn" id="btnFit" title="Вписать (F)"><span class="ico">⛶</span> Вписать</button>
-    <button class="btn" id="btnRotate" title="Автовращение (R)"><span class="ico">⟳</span> Вращение</button>
+
+  <button class="btn primary big" id="btnPrice" style="display:none;">
+    <span class="ico">💰</span> Расчёт стоимости
+  </button>
+
+  <div class="accordion">
+    <button class="accordion-header">
+      <span><span class="ico">👁</span> Настройки просмотра</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="accordion-body">
+      <div class="row">
+        <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
+        <button class="btn active" id="el_risers"><span class="ico">📐</span> Подступенки</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_stringers"><span class="ico">🏗</span> Тетивы</button>
+        <button class="btn active" id="el_handrail"><span class="ico">➖</span> Поручень</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_baluster"><span class="ico">🪜</span> Балясины</button>
+        <button class="btn active" id="el_posts"><span class="ico">🏛</span> Столбы</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_wall"><span class="ico">🧱</span> Стена</button>
+        <button class="btn active" id="el_opening"><span class="ico">🪟</span> Проём</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_covering"><span class="ico">📏</span> Панель</button>
+        <button class="btn active" id="el_floor"><span class="ico">🌳</span> Пол</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="btnGlass"><span class="ico">◇</span> Стекло</button>
+      </div>
+    </div>
   </div>
 
-  <div class="panel-title">Элементы модели</div>
-  <div class="row">
-    <button class="btn active" id="el_treads" title="Ступени"><span class="ico">🪵</span> Ступени</button>
-    <button class="btn active" id="el_risers" title="Подступенки"><span class="ico">📐</span> Подступенки</button>
-  </div>
-  <div class="row">
-    <button class="btn active" id="el_stringers" title="Тетивы"><span class="ico">🏗</span> Тетивы</button>
-    <button class="btn active" id="el_handrail" title="Поручень"><span class="ico">➖</span> Поручень</button>
-  </div>
-  <div class="row">
-    <button class="btn active" id="el_baluster" title="Балясины"><span class="ico">🪜</span> Балясины</button>
-    <button class="btn active" id="el_posts" title="Столбы"><span class="ico">🏛</span> Столбы</button>
-  </div>
-  <div class="row">
-    <button class="btn active" id="el_wall" title="Стена"><span class="ico">🧱</span> Стена</button>
-    <button class="btn active" id="el_opening" title="Проём"><span class="ico">🪟</span> Проём</button>
-    <button class="btn active" id="el_covering" title="Панель перекрытия"><span class="ico">📏</span> Панель</button>
-  </div>
-  <div class="row">
-    <button class="btn active" id="el_floor" title="Пол"><span class="ico">🌳</span> Пол</button>
-    <button class="btn active" id="btnGlass" title="Прозрачные стены"><span class="ico">◇</span> Стекло</button>
-  </div>
-
-  <div class="panel-title">Инструменты</div>
-  <div class="row">
-    <button class="btn" id="btnRuler" title="Линейка (M)"><span class="ico">📏</span> Линейка</button>
-    <button class="btn" id="btnRulerClear" title="Очистить"><span class="ico">✕</span> Очистить</button>
-  </div>
-  <div class="row">
-    <button class="btn" id="btnHuman" title="Человечек (H)"><span class="ico">🧍</span> Человечек</button>
-    <button class="btn" id="btnHumanRemove" title="Убрать"><span class="ico">✕</span> Убрать</button>
+  <div class="accordion">
+    <button class="accordion-header">
+      <span><span class="ico">📏</span> Измерить</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="accordion-body">
+      <div class="row">
+        <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
+        <button class="btn" id="btnRulerClear"><span class="ico">✕</span> Очистить</button>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnHuman"><span class="ico">🧍</span> Человечек</button>
+        <button class="btn" id="btnHumanRemove"><span class="ico">✕</span> Убрать</button>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Рост</span><b id="heightValue">185 см</b></div>
+        <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Поворот</span><b id="rotationValue">0°</b></div>
+        <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
+      </div>
+    </div>
   </div>
 
-  <div class="slider-row">
-    <div class="slider-label"><span>Рост человека</span><b id="heightValue">185 см</b></div>
-    <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
-  </div>
-  <div class="slider-row">
-    <div class="slider-label"><span>Поворот человека</span><b id="rotationValue">0°</b></div>
-    <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
+  <div class="accordion">
+    <button class="accordion-header">
+      <span><span class="ico">🎨</span> Текстуры</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="accordion-body">
+      <div id="finishRows"></div>
+    </div>
   </div>
 
-  <div class="panel-title">🎨 Отделка</div>
-  <div id="finishRows"></div>
+  <div class="row">
+    <button class="btn" id="btnFit"><span class="ico">⛶</span> Вписать</button>
+    <button class="btn" id="btnRotate"><span class="ico">⟳</span> Вращение</button>
+  </div>
 
   <div class="divider"></div>
 
@@ -341,7 +404,6 @@
     <input type="color" id="bgColor" value="#0f1116">
   </label>
 
-  <button class="btn" id="btnPrice" style="display:none;"><span class="ico">💰</span> Расчёт стоимости</button>
 </aside>
 
 <div class="info" id="info">
@@ -1605,9 +1667,16 @@ panelToggle.addEventListener('click', () => {
   const isOpen = panelEl.classList.toggle('open');
   panelToggle.classList.toggle('active', isOpen);
 });
-
+/* ---------- Аккордеон панели ---------- */
+document.querySelectorAll('.accordion').forEach((acc) => {
+  const header = acc.querySelector('.accordion-header');
+  if (!header) return;
+  header.addEventListener('click', () => {
+    acc.classList.toggle('open');
+  });
+});
 /* ---------- Кнопки ---------- */
-document.getElementById('btnOpen').addEventListener('click', () => fileInput.click());
+
 fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
 document.getElementById('btnFit').addEventListener('click', fitCamera);
 

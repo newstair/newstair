@@ -1899,6 +1899,84 @@ function runAreaDiagnostics() {
 
   console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
 }
+  /* ═══════════════════════════════════════════════════════════════
+   ДИАГНОСТИКА XML (BOM из Staircon)
+   ═══════════════════════════════════════════════════════════════ */
+function runBOMDiagnostics() {
+  const bomFile = MODEL_FILE.replace(/\.(dae|xml)$/i, '.xml');
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('%c ДИАГНОСТИКА BOM — ' + bomFile, 'color:#5b8cff;font-weight:bold;font-size:14px');
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+
+  fetch(bomFile, { cache: 'no-store' })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.arrayBuffer();
+    })
+    .then(buf => {
+      const decoder = new TextDecoder('windows-1252');
+      const text = decoder.decode(buf);
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, 'application/xml');
+
+      const details = xml.querySelectorAll('detail');
+      console.log('Всего detail-записей:', details.length);
+      console.log('');
+
+      const rows = [];
+      details.forEach((d) => {
+        const name = d.getAttribute('name') || '';
+        const typeNode = d.querySelector('type');
+        const typeId = typeNode ? typeNode.getAttribute('id') : '';
+        const extra = typeNode ? (typeNode.getAttribute('extra') || '') : '';
+
+        const dim = d.querySelector('dim');
+        const thickness = dim && dim.querySelector('thickness') ? dim.querySelector('thickness').textContent : '';
+        const width = dim && dim.querySelector('width') ? dim.querySelector('width').textContent : '';
+        const length = dim && dim.querySelector('length') ? dim.querySelector('length').textContent : '';
+
+        const matNode = d.querySelector('material');
+        const material = matNode ? (matNode.textContent || '').trim() : '';
+
+        rows.push({
+          'Name': name,
+          'Type': typeId,
+          'Extra': extra,
+          'T': thickness,
+          'W': width,
+          'L': length,
+          'Material': material
+        });
+      });
+
+      console.log('%c─── ВСЕ ДЕТАЛИ ───', 'color:#31d0aa;font-weight:bold');
+      console.table(rows);
+
+      const byType = {};
+      rows.forEach((r) => {
+        if (!r.Type) return;
+        if (!byType[r.Type]) byType[r.Type] = { count: 0, materials: {} };
+        byType[r.Type].count++;
+        const m = r.Material || '(нет)';
+        byType[r.Type].materials[m] = (byType[r.Type].materials[m] || 0) + 1;
+      });
+
+      console.log('%c─── СВОДКА ПО ТИПАМ ───', 'color:#31d0aa;font-weight:bold');
+      const summary = Object.keys(byType).map(t => ({
+        'Тип': t,
+        'Кол-во': byType[t].count,
+        'Материалы': Object.entries(byType[t].materials).map(([m, c]) => m + '(' + c + ')').join(', ')
+      }));
+      console.table(summary);
+      console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+    })
+    .catch(err => {
+      console.warn('BOM не загружен:', err.message);
+      console.warn('Ожидается файл: ' + bomFile);
+    });
+}
+
+setTimeout(runBOMDiagnostics, 1000);
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

@@ -255,11 +255,19 @@
     margin-left:auto;
   }
   .accordion.open .accordion-header .arrow{transform:rotate(90deg);}
-  .accordion-body{
+    .accordion-body{
     display:none;flex-direction:column;gap:8px;
     padding:10px;
     background:rgba(0,0,0,.15);
     border-top:1px solid var(--border);
+    max-height:45vh;
+    overflow-y:auto;
+    scroll-behavior:smooth;
+  }
+  .accordion-body::-webkit-scrollbar{width:6px;}
+  .accordion-body::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.15);border-radius:3px;
+  }
   }
   .accordion.open .accordion-body{display:flex;}
 

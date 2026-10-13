@@ -1296,7 +1296,7 @@ function calculatePrice() {
       qty = totalLen;
       materialCost = qty * (cat.prices[matKey] || 0);
       paintArea = totalSurf;
-      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + (cat.prices[matKey] || 0) + ' × ' + mult;
+      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + (cat.prices[matKey] || 0) + ' × ' + multх1;
 
     } else if (cat.method === 'count') {
       let count = 0, totalSurf = 0;
@@ -1310,7 +1310,7 @@ function calculatePrice() {
       qty = count;
       materialCost = qty * (cat.prices[matKey] || 0);
       paintArea = totalSurf;
-      formula = qty + ' шт × ' + (cat.prices[matKey] || 0) + ' × ' + mult;
+      formula = qty + ' шт × ' + (cat.prices[matKey] || 0) + ' × ' + multх1;
     }
 
     const paintCost = paintArea * paintPrice;

@@ -1099,10 +1099,12 @@ function loadCollada(url, fileName) {
         ui.animRow.style.display = 'none';
       }
 
-      infoEl.classList.add('show');
+            infoEl.classList.add('show');
       panelEl.classList.remove('hidden');
       fitCamera();
+      setTimeout(runAreaDiagnostics, 500);
     },
+    
     (evt) => {
       if (evt && evt.total) {
         const p = Math.round((evt.loaded / evt.total) * 100);
@@ -1834,7 +1836,81 @@ if (MODEL_FILE) {
     priceSubtitle.textContent = modelName;
   }
 }
+/* ═══════════════════════════════════════════════════════════════
+   ДИАГНОСТИКА — какие материалы есть в модели
+   ═══════════════════════════════════════════════════════════════ */
+function runAreaDiagnostics() {
+  if (!currentModel) return;
 
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('%c ДИАГНОСТИКА МАТЕРИАЛОВ', 'color:#5b8cff;font-weight:bold;font-size:14px');
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+  console.log('');
+
+  const s = UNIT_SCALE;
+  const byMaterial = {};
+
+  currentModel.traverse((obj) => {
+    if (!obj.isMesh && !obj.isSkinnedMesh) return;
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const matName = mats[0] && mats[0].name ? mats[0].name : '(без имени)';
+
+    if (!byMaterial[matName]) {
+      byMaterial[matName] = { count: 0, obb: 0, surface: 0, samples: [] };
+    }
+    byMaterial[matName].count++;
+
+    const a = getMeshAnalysis(obj);
+    if (a) {
+      byMaterial[matName].obb += a.obbArea * s * s;
+      byMaterial[matName].surface += a.surface * s * s;
+    }
+
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    if (byMaterial[matName].samples.length < 3) {
+      byMaterial[matName].samples.push(
+        size.x.toFixed(2) + '×' + size.y.toFixed(2) + '×' + size.z.toFixed(2)
+      );
+    }
+  });
+
+  const rows = Object.keys(byMaterial).map((name) => ({
+    'Материал': name,
+    'Мешей': byMaterial[name].count,
+    'OBB (м²)': byMaterial[name].obb.toFixed(3),
+    'Surface (м²)': byMaterial[name].surface.toFixed(3),
+    'Примеры размеров': byMaterial[name].samples.join(' | ')
+  }));
+  rows.sort((a, b) => parseFloat(b['OBB (м²)']) - parseFloat(a['OBB (м²)']));
+  console.log('%c─── ВСЕ МАТЕРИАЛЫ В МОДЕЛИ ───', 'color:#31d0aa;font-weight:bold');
+  console.table(rows);
+
+  console.log('');
+  console.log('%c─── ТЕКУЩИЕ ГРУППЫ (в какую попал каждый материал) ───', 'color:#31d0aa;font-weight:bold');
+  for (const key in elementGroups) {
+    const m = elementGroups[key];
+    if (!m.length) continue;
+    let obbSum = 0;
+    m.forEach((obj) => {
+      const a = getMeshAnalysis(obj);
+      if (a) obbSum += a.obbArea * s * s;
+    });
+    console.log('  ' + key + ': ' + m.length + ' мешей, OBB ' + obbSum.toFixed(3) + ' м²');
+  }
+
+  console.log('');
+  console.log('%c─── ГРУППА HANDRAIL — что там на самом деле ───', 'color:#ff9f43;font-weight:bold');
+  elementGroups.handrail.forEach((obj, i) => {
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const a = getMeshAnalysis(obj);
+    const obbStr = a ? a.obbArea.toFixed(3) : '—';
+    console.log('  #' + (i+1) + ': ' + size.x.toFixed(2) + '×' + size.y.toFixed(2) + '×' + size.z.toFixed(2) + ' м, OBB ' + obbStr + ' м²');
+  });
+
+  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
+}
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

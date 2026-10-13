@@ -39,11 +39,11 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{position:fixed;top:18px;right:18px;width:290px;padding:14px;
+    .panel{position:fixed;top:14px;right:14px;width:320px;padding:14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
-    max-height:calc(100vh - 36px);overflow-y:auto;
+    max-height:calc(100vh - 28px);overflow-y:auto;
     transition:transform .25s ease, opacity .25s ease;}
   .panel::-webkit-scrollbar{width:6px;}
   .panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
@@ -255,18 +255,13 @@
     margin-left:auto;
   }
   .accordion.open .accordion-header .arrow{transform:rotate(90deg);}
-    .accordion-body{
+  .accordion-body{
     display:none;flex-direction:column;gap:8px;
     padding:10px;
     background:rgba(0,0,0,.15);
     border-top:1px solid var(--border);
-    max-height:45vh;
-    overflow-y:auto;
-    scroll-behavior:smooth;
   }
-  .accordion-body::-webkit-scrollbar{width:6px;}
-  .accordion-body::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.15);border-radius:3px;
+  .accordion.open .accordion-body{display:flex;}
   }
   }
   .accordion.open .accordion-body{display:flex;}
@@ -282,8 +277,9 @@
     .brand h1{font-size:12px;} .brand p{display:none;}
     .logo{width:28px;height:28px;font-size:14px;border-radius:8px;}
     .panel-toggle{display:flex;top:12px;right:12px;width:40px;height:40px;font-size:18px;}
-    .panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;
-      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:65vh;
+       .panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;
+      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:80vh;
+      ...
       transform:translateY(calc(100% + 30px));opacity:0;pointer-events:none;}
     .panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
     .panel .btn{font-size:11px;padding:8px 6px;flex:1 1 auto;min-width:80px;}

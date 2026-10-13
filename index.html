@@ -242,9 +242,9 @@
   .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
     transition:width .15s ease;}
 
-  .mode-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
+    .mode-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
     padding:10px 18px;color:#fff;border-radius:12px;font-size:13px;font-weight:600;
-    z-index:75;opacity:0;pointer-events:none;transition:opacity .25s;}
+    z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;}
   .mode-hint.show{opacity:1;}
   .mode-hint.ruler{background:linear-gradient(135deg,#ff9f43,#ff7043);
     box-shadow:0 8px 24px rgba(255,112,67,.4);}
@@ -267,7 +267,14 @@
     .slider-row{flex:1 1 100%;}
     .info{display:none;}
     .mode-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
-    .modal{max-width:100%;max-height:95vh;border-radius:14px;}
+        .modal{
+      max-width:100%;max-height:65vh;
+      border-radius:18px 18px 0 0;
+      position:absolute;bottom:0;left:0;right:0;
+      transform:translateY(100%);
+    }
+    .modal-overlay.show .modal{transform:translateY(0);}
+    .modal-overlay{align-items:flex-end;}
     .modal-header{padding:14px 16px;}
     .modal-body{padding:14px 16px;gap:8px;}
     .modal-footer{padding:12px 16px;}
@@ -1411,54 +1418,67 @@ function buildFinishPanel() {
     const row = document.createElement('div');
     row.className = 'finish-row';
     row.dataset.key = cat.key;
-    // Стиль для горизонтального расположения
-    row.style.flexDirection = 'row';
-    row.style.alignItems = 'center';
-    row.style.justifyContent = 'space-between';
-    row.style.padding = '10px 12px';
-    row.style.background = 'rgba(255,255,255,.04)';
-    row.style.border = '1px solid var(--border)';
-    row.style.borderRadius = '10px';
-    row.style.marginBottom = '6px';
 
-    const label = document.createElement('span');
-    label.style.fontSize = '12px';
-    label.style.color = 'var(--muted)';
-    label.style.fontWeight = '550';
-    label.textContent = cat.label;
+    const header = document.createElement('div');
+    header.className = 'finish-header';
+    header.innerHTML =
+      '<span class="label">' + cat.label + '</span>' +
+      '<span class="value">' +
+        '<span class="finish-current">Как в проекте</span>' +
+        '<span class="arrow">▼</span>' +
+      '</span>';
 
-    const select = document.createElement('select');
-    select.style.background = 'rgba(255,255,255,.08)';
-    select.style.border = '1px solid var(--border)';
-    select.style.borderRadius = '7px';
-    select.style.color = 'var(--text)';
-    select.style.fontFamily = 'inherit';
-    select.style.fontSize = '12px';
-    select.style.padding = '5px 8px';
-    select.style.cursor = 'pointer';
-    select.style.outline = 'none';
+    const options = document.createElement('div');
+    options.className = 'finish-options';
 
-    const optOrig = document.createElement('option');
-    optOrig.value = '';
-    optOrig.textContent = 'Как в проекте';
-    select.appendChild(optOrig);
+    // Кнопка «Как в проекте»
+    const optOriginal = document.createElement('button');
+    optOriginal.className = 'finish-option selected';
+    optOriginal.dataset.file = '';
+    optOriginal.dataset.name = 'Как в проекте';
+    optOriginal.innerHTML =
+      '<span class="swatch" style="background:#1a1d25;"></span>Как в проекте';
+    options.appendChild(optOriginal);
 
+    // Кнопки текстур
     TEXTURE_LIST.forEach((t) => {
-      const opt = document.createElement('option');
-      opt.value = t.file;
-      opt.textContent = t.name;
-      select.appendChild(opt);
+      const opt = document.createElement('button');
+      opt.className = 'finish-option';
+      opt.dataset.file = t.file;
+      opt.dataset.name = t.name;
+      opt.innerHTML =
+        '<span class="swatch" style="background-image:url(' + t.file + ');"></span>' +
+        t.name;
+      options.appendChild(opt);
     });
 
-    select.addEventListener('change', (e) => {
-      const file = e.target.value;
-      const name = file ? (TEXTURE_LIST.find(t => t.file === file) || {}).name : '';
+    row.appendChild(header);
+    row.appendChild(options);
+
+    // Клик по заголовку — раскрыть/закрыть
+    header.addEventListener('click', () => {
+      const isOpen = row.classList.contains('open');
+      finishRows.querySelectorAll('.finish-row.open').forEach((r) => {
+        if (r !== row) r.classList.remove('open');
+      });
+      row.classList.toggle('open', !isOpen);
+    });
+
+    // Клик по опции
+    options.addEventListener('click', (e) => {
+      const btn = e.target.closest('.finish-option');
+      if (!btn) return;
+      const file = btn.dataset.file;
+      const name = btn.dataset.name;
       currentFinish[cat.key] = file ? { file, name } : null;
+      options.querySelectorAll('.finish-option').forEach((o) => o.classList.remove('selected'));
+      btn.classList.add('selected');
+      row.querySelector('.finish-current').textContent = file ? name : 'Как в проекте';
+      row.classList.remove('open');
       applyFinish(cat.key);
+      finishModal.closeFn();   // ← закрываем окно — видно результат на модели
     });
 
-    row.appendChild(label);
-    row.appendChild(select);
     finishRows.appendChild(row);
   });
 }
@@ -1974,10 +1994,15 @@ document.getElementById('btnGlass').addEventListener('click', (e) => {
   applyGlassWalls();
 });
 
-document.getElementById('btnRuler').addEventListener('click', () => setRulerMode(!rulerMode));
+document.getElementById('btnRuler').addEventListener('click', () => {
+  setRulerMode(!rulerMode);
+  toolsModal.closeFn();   // ← закрываем окно — модель видна, подсказка тоже
+});
+
 document.getElementById('btnRulerClear').addEventListener('click', () => {
   clearRuler();
   showToast('Замеры очищены', true);
+  toolsModal.closeFn();
 });
 
 document.getElementById('btnHuman').addEventListener('click', () => {
@@ -1985,11 +2010,14 @@ document.getElementById('btnHuman').addEventListener('click', () => {
   if (humanMode && !humanGroup.visible && currentModel) {
     showToast('Тапните по ступени, чтобы поставить человечка', true);
   }
+  toolsModal.closeFn();   // ← закрываем окно
 });
+
 document.getElementById('btnHumanRemove').addEventListener('click', () => {
   humanGroup.visible = false;
   setHumanMode(false);
   showToast('Человечек убран', true);
+  toolsModal.closeFn();
 });
 heightSlider.addEventListener('input', (e) => setHumanHeight(parseInt(e.target.value, 10)));
 

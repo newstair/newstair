@@ -1253,82 +1253,76 @@ function getMaterialInfo(matKey) {
 
 function calculatePrice() {
   const result = { categories: [], materialTotal: 0, paintTotal: 0, total: 0 };
-  if (!priceData || !priceData.categories) return result;
+  if (!bomData || !priceData || !priceData.categories) return result;
 
   const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
-  const MIN_VOL = 0.001;
-  const s2 = UNIT_SCALE * UNIT_SCALE;
 
-  for (const key in priceData.categories) {
-    const cat = priceData.categories[key];
-    const meshes = elementGroups[key] || [];
-    if (!meshes.length) continue;
+  const typeMap = {
+    'Step':       'treads',
+    'Riser':      'risers',
+    'String':     'stringers',
+    'Newel':      'posts',
+    'Handrail':   'handrail',
+    'Baluster':   'baluster',
+    'Covering':   'covering',
+    'Bottomrail': 'handrail'
+  };
 
-    const matKey = getMaterialForKey(key);
+  const grouped = {};
+  bomData.items.forEach(d => {
+    const catKey = typeMap[d.type];
+    if (!catKey) return;
+    if (!grouped[catKey]) grouped[catKey] = [];
+    grouped[catKey].push(d);
+  });
+
+  for (const catKey in grouped) {
+    const cat = priceData.categories[catKey];
+    if (!cat) continue;
+
+    const items = grouped[catKey];
+    const matKey = getMaterialForKey(catKey);
     const matInfo = getMaterialInfo(matKey);
-    
+    const unitPrice = (cat.prices && cat.prices[matKey]) || 0;
+
     let qty = 0;
-    let formula = '';
-    let materialCost = 0;
     let paintArea = 0;
+    let formula = '';
 
     if (cat.method === 'm2') {
-      let totalOBB = 0, totalSurf = 0;
-      meshes.forEach((obj) => {
-        const a = getMeshAnalysis(obj);
-        if (!a) return;
-        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
-        totalOBB += a.obbArea * s2;
-        totalSurf += a.surface * s2;
+      items.forEach(d => {
+        qty += (d.W * d.L) / 1e6;
+        paintArea += (2 * (d.W + d.T) * d.L + 2 * d.W * d.T) / 1e6;
       });
-      qty = totalOBB * (cat.coef || 1);
-      materialCost = qty * (cat.prices[matKey] || 0);
-      paintArea = totalSurf;
-      formula = qty.toFixed(3) + ' м² × ' + (cat.prices[matKey] || 0);
+      formula = qty.toFixed(3) + ' м² × ' + unitPrice;
 
     } else if (cat.method === 'length') {
-      let totalLen = 0, totalSurf = 0, count = 0;
       const extra = (cat.extra_mm || 0) / 1000;
-      meshes.forEach((obj) => {
-        const a = getMeshAnalysis(obj);
-        if (!a) return;
-        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
-        count++;
-        totalLen += a.obbLength * UNIT_SCALE + extra;
-        totalSurf += a.surface * s2;
+      items.forEach(d => {
+        const Lp = d.L / 1000 + extra;
+        qty += Lp;
+        paintArea += (2 * (d.W + d.T) * (Lp * 1000)) / 1e6;
       });
-      qty = totalLen;
-      materialCost = qty * (cat.prices[matKey] || 0);
-      paintArea = totalSurf;
-      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + (cat.prices[matKey] || 0)
+      formula = qty.toFixed(2) + ' м (' + items.length + ' шт) × ' + unitPrice;
 
     } else if (cat.method === 'count') {
-      let count = 0, totalSurf = 0;
-      meshes.forEach((obj) => {
-        const a = getMeshAnalysis(obj);
-        if (!a) return;
-        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
-        count++;
-        totalSurf += a.surface * s2;
+      qty = items.length;
+      items.forEach(d => {
+        paintArea += (Math.PI * d.W * d.L) / 1e6;
       });
-      qty = count;
-      materialCost = qty * (cat.prices[matKey] || 0);
-      paintArea = totalSurf;
-      formula = qty + ' шт × ' + (cat.prices[matKey] || 0)
+      formula = qty + ' шт × ' + unitPrice;
     }
-
-    const paintCost = paintArea * paintPrice;
 
     result.categories.push({
       name: cat.name,
       materialName: matInfo.name,
       formula: formula,
-      materialCost: materialCost,
-      paintCost: paintCost
+      materialCost: qty * unitPrice,
+      paintCost: paintArea * paintPrice
     });
 
-    result.materialTotal += materialCost;
-    result.paintTotal += paintCost;
+    result.materialTotal += qty * unitPrice;
+    result.paintTotal += paintArea * paintPrice;
   }
 
   result.total = result.materialTotal + result.paintTotal;
@@ -1798,6 +1792,57 @@ function animate() {
 }
 
 /* ---------- Загрузка price.json ---------- */
+  /* ═══════════════════════════════════════════════════════════════
+   BOM (XML из Staircon)
+   ═══════════════════════════════════════════════════════════════ */
+let bomData = null;
+
+function parseBOM(xmlText) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, 'application/xml');
+  const details = xml.querySelectorAll('detail');
+  const items = [];
+
+  details.forEach((d) => {
+    const typeNode = d.querySelector('type');
+    const typeId = typeNode ? typeNode.getAttribute('id') : '';
+    if (!typeId || typeId === 'Bolt') return;
+
+    const dim = d.querySelector('dim');
+    if (!dim) return;
+
+    const T = parseFloat(dim.querySelector('thickness')?.textContent) || 0;
+    const W = parseFloat(dim.querySelector('width')?.textContent) || 0;
+    const L = parseFloat(dim.querySelector('length')?.textContent) || 0;
+    if (!L) return;
+
+    const matNode = d.querySelector('material');
+    const mat = matNode ? (matNode.textContent || '').trim() : '';
+
+    items.push({ type: typeId, T, W, L, mat });
+  });
+
+  return { items };
+}
+
+async function loadBOM() {
+  const bomFile = MODEL_FILE.replace(/\.(dae|xml)$/i, '.xml');
+  try {
+    const r = await fetch(bomFile, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const buf = await r.arrayBuffer();
+    const decoder = new TextDecoder('windows-1252');
+    const text = decoder.decode(buf);
+    bomData = parseBOM(text);
+    console.log('%c✔ BOM загружен: ' + bomData.items.length + ' деталей',
+                'color:#31d0aa;font-weight:bold');
+  } catch (err) {
+    console.log('BOM не найден (' + bomFile + '):', err.message);
+    bomData = null;
+  }
+}
+
+loadBOM();
 fetch('price.json', { cache: 'no-store' })
   .then((r) => {
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -1902,81 +1947,7 @@ function runAreaDiagnostics() {
   /* ═══════════════════════════════════════════════════════════════
    ДИАГНОСТИКА XML (BOM из Staircon)
    ═══════════════════════════════════════════════════════════════ */
-function runBOMDiagnostics() {
-  const bomFile = MODEL_FILE.replace(/\.(dae|xml)$/i, '.xml');
-  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-  console.log('%c ДИАГНОСТИКА BOM — ' + bomFile, 'color:#5b8cff;font-weight:bold;font-size:14px');
-  console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
 
-  fetch(bomFile, { cache: 'no-store' })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.arrayBuffer();
-    })
-    .then(buf => {
-      const decoder = new TextDecoder('windows-1252');
-      const text = decoder.decode(buf);
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(text, 'application/xml');
-
-      const details = xml.querySelectorAll('detail');
-      console.log('Всего detail-записей:', details.length);
-      console.log('');
-
-      const rows = [];
-      details.forEach((d) => {
-        const name = d.getAttribute('name') || '';
-        const typeNode = d.querySelector('type');
-        const typeId = typeNode ? typeNode.getAttribute('id') : '';
-        const extra = typeNode ? (typeNode.getAttribute('extra') || '') : '';
-
-        const dim = d.querySelector('dim');
-        const thickness = dim && dim.querySelector('thickness') ? dim.querySelector('thickness').textContent : '';
-        const width = dim && dim.querySelector('width') ? dim.querySelector('width').textContent : '';
-        const length = dim && dim.querySelector('length') ? dim.querySelector('length').textContent : '';
-
-        const matNode = d.querySelector('material');
-        const material = matNode ? (matNode.textContent || '').trim() : '';
-
-        rows.push({
-          'Name': name,
-          'Type': typeId,
-          'Extra': extra,
-          'T': thickness,
-          'W': width,
-          'L': length,
-          'Material': material
-        });
-      });
-
-      console.log('%c─── ВСЕ ДЕТАЛИ ───', 'color:#31d0aa;font-weight:bold');
-      console.table(rows);
-
-      const byType = {};
-      rows.forEach((r) => {
-        if (!r.Type) return;
-        if (!byType[r.Type]) byType[r.Type] = { count: 0, materials: {} };
-        byType[r.Type].count++;
-        const m = r.Material || '(нет)';
-        byType[r.Type].materials[m] = (byType[r.Type].materials[m] || 0) + 1;
-      });
-
-      console.log('%c─── СВОДКА ПО ТИПАМ ───', 'color:#31d0aa;font-weight:bold');
-      const summary = Object.keys(byType).map(t => ({
-        'Тип': t,
-        'Кол-во': byType[t].count,
-        'Материалы': Object.entries(byType[t].materials).map(([m, c]) => m + '(' + c + ')').join(', ')
-      }));
-      console.table(summary);
-      console.log('%c═══════════════════════════════════════════', 'color:#5b8cff');
-    })
-    .catch(err => {
-      console.warn('BOM не загружен:', err.message);
-      console.warn('Ожидается файл: ' + bomFile);
-    });
-}
-
-setTimeout(runBOMDiagnostics, 1000);
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Модель:', MODEL_FILE);
 console.log('Линейка — M. Человечек — H.');

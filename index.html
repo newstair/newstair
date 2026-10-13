@@ -1262,8 +1262,7 @@ function calculatePrice() {
 
     const matKey = getMaterialForKey(key);
     const matInfo = getMaterialInfo(matKey);
-    const mult = matInfo.multiplier || 1;
-
+    
     let qty = 0;
     let formula = '';
     let materialCost = 0;
@@ -1279,9 +1278,9 @@ function calculatePrice() {
         totalSurf += a.surface * s2;
       });
       qty = totalOBB * (cat.coef || 1);
-      materialCost = qty * cat.base_price * mult;
+      materialCost = qty * (cat.prices[matKey] || 0);
       paintArea = totalSurf;
-      formula = qty.toFixed(3) + ' м² × ' + cat.base_price + ' × ' + mult;
+      formula = qty.toFixed(3) + ' м² × ' + (cat.prices[matKey] || 0);
 
     } else if (cat.method === 'length') {
       let totalLen = 0, totalSurf = 0, count = 0;
@@ -1295,9 +1294,9 @@ function calculatePrice() {
         totalSurf += a.surface * s2;
       });
       qty = totalLen;
-      materialCost = qty * cat.base_price * mult;
+      materialCost = qty * (cat.prices[matKey] || 0);
       paintArea = totalSurf;
-      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + cat.base_price + ' × ' + mult;
+      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + (cat.prices[matKey] || 0) + ' × ' + mult;
 
     } else if (cat.method === 'count') {
       let count = 0, totalSurf = 0;
@@ -1309,9 +1308,9 @@ function calculatePrice() {
         totalSurf += a.surface * s2;
       });
       qty = count;
-      materialCost = qty * cat.base_price * mult;
+      materialCost = qty * (cat.prices[matKey] || 0);
       paintArea = totalSurf;
-      formula = qty + ' шт × ' + cat.base_price + ' × ' + mult;
+      formula = qty + ' шт × ' + (cat.prices[matKey] || 0) + ' × ' + mult;
     }
 
     const paintCost = paintArea * paintPrice;

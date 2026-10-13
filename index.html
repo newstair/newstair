@@ -1894,7 +1894,118 @@ function formatRub(n) {
 
 /* Ориентированный bounding box (OBB) — заготовка вокруг детали */
 
+/* Какой материал выбран для категории */
+function getMaterialForKey(key) {
+  const chosen = currentFinish[key];
+  if (!chosen || !chosen.file) return 'pine';
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  for (const matKey in mats) {
+    const t = mats[matKey].textures || [];
+    if (t.indexOf(chosen.file) !== -1) return matKey;
+  }
+  return 'pine';
+}
 
+function getMaterialInfo(matKey) {
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  return mats[matKey] || mats.pine || { name: 'Сосна', multiplier: 1 };
+}
+
+/* Главный расчёт */
+function calculatePrice() {
+  const result = {
+    categories: [],
+    materialTotal: 0,
+    paintTotal: 0,
+    total: 0
+  };
+
+  if (!priceData || !priceData.categories) return result;
+
+  const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
+  const MIN_VOL = 0.001;
+  const s2 = UNIT_SCALE * UNIT_SCALE;
+
+  for (const key in priceData.categories) {
+    const cat = priceData.categories[key];
+    const meshes = elementGroups[key] || [];
+    if (!meshes.length) continue;
+
+    const matKey = getMaterialForKey(key);
+    const matInfo = getMaterialInfo(matKey);
+    const mult = matInfo.multiplier || 1;
+
+    let qty = 0;
+    let unit = '';
+    let formula = '';
+    let materialCost = 0;
+    let paintArea = 0;
+
+    if (cat.method === 'm2') {
+      let totalOBB = 0, totalSurf = 0;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        totalOBB += a.obbArea * s2;
+        totalSurf += a.surface * s2;
+      });
+      qty = totalOBB * (cat.coef || 1);
+      unit = 'м²';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty.toFixed(3) + ' м² × ' + cat.base_price + ' × ' + mult;
+
+    } else if (cat.method === 'length') {
+      let totalLen = 0, totalSurf = 0, count = 0;
+      const extra = (cat.extra_mm || 0) / 1000;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        count++;
+        totalLen += a.obbLength * UNIT_SCALE + extra;
+        totalSurf += a.surface * s2;
+      });
+      qty = totalLen;
+      unit = 'м';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty.toFixed(2) + ' м (' + count + ' шт) × ' + cat.base_price + ' × ' + mult;
+
+    } else if (cat.method === 'count') {
+      let count = 0, totalSurf = 0;
+      meshes.forEach((obj) => {
+        const a = getMeshAnalysis(obj);
+        if (!a) return;
+        if (a.obbVolume * UNIT_SCALE * UNIT_SCALE * UNIT_SCALE < MIN_VOL) return;
+        count++;
+        totalSurf += a.surface * s2;
+      });
+      qty = count;
+      unit = 'шт';
+      materialCost = qty * cat.base_price * mult;
+      paintArea = totalSurf;
+      formula = qty + ' шт × ' + cat.base_price + ' × ' + mult;
+    }
+
+    const paintCost = paintArea * paintPrice;
+
+    result.categories.push({
+      name: cat.name,
+      materialName: matInfo.name,
+      formula: formula,
+      materialCost: materialCost,
+      paintCost: paintCost
+    });
+
+    result.materialTotal += materialCost;
+    result.paintTotal += paintCost;
+  }
+
+  result.total = result.materialTotal + result.paintTotal;
+  return result;
+}
 /* Построение окна */
 function buildPriceModal() {
   if (!priceData) {

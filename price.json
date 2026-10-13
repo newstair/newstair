@@ -29,15 +29,11 @@
     "baluster": {
       "name": "Балясины", "method": "count",
       "prices": { "pine": 850, "beech": 1400, "ash": 2000, "oak": 2800 }
-    }
-  },
-  "paint": { "price_m2": 3500 }
-},
-    "baluster": {
-      "name": "Балясины", "method": "count",
-      "prices": { "pine": 850, "beech": 1400, "ash": 2000, "oak": 2800 }
     },
     "covering": {
       "name": "Панель перекрытия", "method": "m2", "coef": 1.0,
       "prices": { "pine": 10650, "beech": 18000, "ash": 26000, "oak": 35000 }
     }
+  },
+  "paint": { "price_m2": 3500 }
+}

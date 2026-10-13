@@ -298,6 +298,7 @@
   <div class="row">
     <button class="btn active" id="el_wall" title="Стена"><span class="ico">🧱</span> Стена</button>
     <button class="btn active" id="el_opening" title="Проём"><span class="ico">🪟</span> Проём</button>
+    <button class="btn active" id="el_covering" title="Панель перекрытия"><span class="ico">📏</span> Панель</button>
   </div>
   <div class="row">
     <button class="btn active" id="el_floor" title="Пол"><span class="ico">🌳</span> Пол</button>
@@ -422,7 +423,8 @@ const FINISH_CATEGORIES = [
   { key: 'stringers', label: 'Тетивы' },
   { key: 'handrail',  label: 'Поручень' },
   { key: 'baluster',  label: 'Балясины' },
-  { key: 'posts',     label: 'Столбы' }
+  { key: 'posts',     label: 'Столбы' },
+  { key: 'covering',  label: 'Панель перекрытия' }
 ];
 
 /* ---------- DOM ---------- */
@@ -535,13 +537,13 @@ const fileMap    = new Map();
 const elementGroups = {
   treads: [], risers: [], stringers: [],
   handrail: [], baluster: [], posts: [],
-  wall: [], opening: [], floor: [],
+  wall: [], covering: [], floor: [],
 };
 
 const elementVisible = {
   treads: true, risers: true, stringers: true,
   handrail: true, baluster: true, posts: true,
-  wall: true, opening: true, floor: true,
+  wall: true, covering: true, floor: true,
 };
 
 let glassWalls = true;
@@ -714,7 +716,7 @@ function classifyMaterial(matName) {
   if (n.includes('BALUSTER'))      return 'baluster';
   if (n.includes('POST'))          return 'posts';
   if (n.includes('BEGIN_WALL'))    return 'wall';
-  if (n.includes('BEGIN_OPENING')) return 'opening';
+  if (n.includes('BEGIN_OPENING')) return 'covering';
   if (n.includes('PARKETT'))       return 'floor';
   if (n.includes('ASH'))           return 'floor';
   if (n.includes('OBJECT3D'))      return 'floor';
@@ -1652,6 +1654,7 @@ bindElementButton('el_baluster',  'baluster');
 bindElementButton('el_posts',     'posts');
 bindElementButton('el_wall',      'wall');
 bindElementButton('el_opening',   'opening');
+bindElementButton('el_covering',  'covering');
 bindElementButton('el_floor',     'floor');
 
 document.getElementById('btnGlass').addEventListener('click', (e) => {

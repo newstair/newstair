@@ -327,10 +327,11 @@
   </button>
 
   <div class="accordion">
-    <button class="accordion-header">
-      <span><span class="ico">👁</span> Настройки просмотра</span>
-      <span class="arrow">▶</span>
-    </button>
+   
+      <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
+  <span><span class="ico">👁</span> Настройки просмотра</span>
+  <span class="arrow">▶</span>
+</button>
     <div class="accordion-body">
       <div class="row">
         <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
@@ -359,10 +360,10 @@
   </div>
 
   <div class="accordion">
-    <button class="accordion-header">
-      <span><span class="ico">📏</span> Измерить</span>
-      <span class="arrow">▶</span>
-    </button>
+    <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
+  <span><span class="ico">📏</span> Измерить</span>
+  <span class="arrow">▶</span>
+</button>
     <div class="accordion-body">
       <div class="row">
         <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
@@ -384,10 +385,10 @@
   </div>
 
   <div class="accordion">
-    <button class="accordion-header">
-      <span><span class="ico">🎨</span> Текстуры</span>
-      <span class="arrow">▶</span>
-    </button>
+  <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
+  <span><span class="ico">🎨</span> Текстуры</span>
+  <span class="arrow">▶</span>
+</button>
     <div class="accordion-body">
       <div id="finishRows"></div>
     </div>
@@ -1676,7 +1677,7 @@ panelToggle.addEventListener('click', () => {
   panelToggle.classList.toggle('active', isOpen);
 });
 /* ---------- Аккордеон панели ---------- */
-document.querySelectorAll('.accordion').forEach((acc) => {
+
   const header = acc.querySelector('.accordion-header');
   if (!header) return;
   header.addEventListener('click', () => {
@@ -2076,16 +2077,16 @@ console.log('Линейка — M. Человечек — H.');
   /* ═══════════════════════════════════════════════════════════════
    АККОРДЕОН — раскрытие секций панели
    ═══════════════════════════════════════════════════════════════ */
-document.querySelectorAll('.accordion').forEach((acc) => {
+
   const header = acc.querySelector('.accordion-header');
   if (!header) return;
   header.addEventListener('click', () => {
     const isOpen = acc.classList.contains('open');
-    document.querySelectorAll('.accordion').forEach((a) => a.classList.remove('open'));
+    
     if (!isOpen) acc.classList.add('open');
   });
 });
-console.log('✔ Аккордеон подключён:', document.querySelectorAll('.accordion').length, 'секций');
+
 </script>
 </body>
 </html>

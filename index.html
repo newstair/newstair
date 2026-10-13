@@ -84,8 +84,7 @@
   .slider-label b{color:var(--accent-2);font-size:13px;font-weight:700;}
   input[type="range"].heightSlider{
     -webkit-appearance:none;appearance:none;width:100%;height:6px;
-    background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;
-  }
+    background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;}
   input[type="range"].heightSlider::-webkit-slider-thumb{
     -webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
     background:linear-gradient(135deg,#31d0aa,#1e9e80);border:2px solid #0f1116;cursor:pointer;
@@ -95,59 +94,7 @@
     background:linear-gradient(135deg,#31d0aa,#1e9e80);border:2px solid #0f1116;cursor:pointer;
     box-shadow:0 2px 8px rgba(49,208,170,.5);}
 
-  /* ---------- Аккордеон ---------- */
-  .accordion{
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--border);
-    border-radius:10px;
-    overflow:hidden;
-  }
-  .accordion-header{
-    width:100%;display:flex;align-items:center;justify-content:space-between;
-    gap:8px;padding:12px 14px;background:transparent;border:none;
-    color:var(--text);font-size:13px;font-weight:600;
-    font-family:inherit;cursor:pointer;
-    transition:background .15s;text-align:left;
-  }
-  .accordion-header:hover{background:rgba(255,255,255,.05);}
-  .accordion-header .ico{font-size:14px;margin-right:6px;}
-  .accordion-header .arrow{font-size:11px;color:var(--muted);
-    transition:transform .2s;margin-left:auto;}
-  .accordion.open .accordion-header .arrow{transform:rotate(90deg);}
-  .accordion-body{
-    display:none;flex-direction:column;gap:8px;
-    padding:10px;
-    background:rgba(0,0,0,.15);
-    border-top:1px solid var(--border);
-  }
-  .accordion.open .accordion-body{display:flex !important;}
-
-  .finish-row{display:flex;flex-direction:column;gap:0;
-    background:rgba(255,255,255,.04);border:1px solid var(--border);
-    border-radius:10px;overflow:hidden;}
-  .finish-header{display:flex;align-items:center;justify-content:space-between;
-    gap:10px;padding:10px 12px;cursor:pointer;transition:background .15s;}
-  .finish-header:hover{background:rgba(255,255,255,.05);}
-  .finish-header .label{font-size:12px;color:var(--muted);font-weight:550;}
-  .finish-header .value{font-size:12px;color:var(--text);font-weight:600;
-    display:flex;align-items:center;gap:6px;}
-  .finish-header .arrow{font-size:10px;color:var(--muted);transition:transform .2s;}
-  .finish-row.open .arrow{transform:rotate(180deg);}
-  .finish-options{display:none;flex-direction:column;gap:2px;
-    padding:6px;max-height:260px;overflow-y:auto;
-    background:rgba(0,0,0,.2);border-top:1px solid var(--border);}
-  .finish-row.open .finish-options{display:flex;}
-  .finish-options::-webkit-scrollbar{width:6px;}
-  .finish-options::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
-  .finish-option{display:flex;align-items:center;gap:10px;padding:8px 10px;
-    font-size:12px;color:var(--text);background:transparent;border:none;
-    border-radius:7px;cursor:pointer;text-align:left;font-family:inherit;
-    transition:background .15s;}
-  .finish-option:hover{background:rgba(255,255,255,.08);}
-  .finish-option.selected{background:rgba(91,140,255,.2);color:#b9cdff;font-weight:600;}
-  .finish-option .swatch{width:20px;height:20px;border-radius:5px;background:#333;
-    border:1px solid rgba(255,255,255,.15);flex-shrink:0;
-    background-size:cover;background-position:center;}  /* ---------- Модальные окна ---------- */
+  /* ---------- Модальные окна ---------- */
   .modal-overlay{
     position:fixed;inset:0;z-index:90;
     background:rgba(10,12,18,.75);
@@ -158,7 +105,6 @@
     transition:opacity .25s, visibility .25s;
   }
   .modal-overlay.show{opacity:1;visibility:visible;}
-
   .modal{
     width:100%;max-width:520px;max-height:90vh;
     background:var(--panel);
@@ -171,7 +117,6 @@
     transition:transform .3s ease;
   }
   .modal-overlay.show .modal{transform:translateY(0);}
-
   .modal-header{
     display:flex;align-items:center;justify-content:space-between;
     padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
@@ -191,8 +136,7 @@
   .modal-footer{padding:14px 20px;border-top:1px solid var(--border);
     display:flex;justify-content:center;flex-shrink:0;}
   .modal-footer .btn{min-width:140px;padding:11px 20px;font-size:13px;}
-
-  /* ---------- Поля ввода ---------- */
+    /* ---------- Поля ввода ---------- */
   .input-row{
     display:flex;align-items:center;gap:10px;
     padding:10px 12px;
@@ -313,17 +257,14 @@
     .logo{width:28px;height:28px;font-size:14px;border-radius:8px;}
     .panel-toggle{display:flex;top:12px;right:12px;width:40px;height:40px;font-size:18px;}
     .panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;
-      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:80vh;
+      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:85vh;
       transform:translateY(calc(100% + 30px));opacity:0;pointer-events:none;}
     .panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
     .panel .btn{font-size:11px;padding:8px 6px;flex:1 1 auto;min-width:80px;}
+    .panel .btn.big{flex:1 1 100%;}
     .panel .row{flex:1 1 100%;}
-    .accordion{flex:1 1 100%;}
-    .accordion-body .row{flex-wrap:wrap;}
-    .accordion-body .btn{flex:1 1 45%;}
     .color-row{flex:1 1 100%;}
     .slider-row{flex:1 1 100%;}
-    .finish-row{flex:1 1 100%;}
     .info{display:none;}
     .mode-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
     .modal{max-width:100%;max-height:95vh;border-radius:14px;}
@@ -357,86 +298,32 @@
     <span class="ico">💰</span> Расчёт стоимости
   </button>
 
-  <div class="accordion">
-    <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
-      <span><span class="ico">👁</span> Настройки просмотра</span>
-      <span class="arrow">▶</span>
-    </button>
-    <div class="accordion-body">
-      <div class="row">
-        <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
-        <button class="btn active" id="el_risers"><span class="ico">📐</span> Подступенки</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_stringers"><span class="ico">🏗</span> Тетивы</button>
-        <button class="btn active" id="el_handrail"><span class="ico">➖</span> Поручень</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_baluster"><span class="ico">🪜</span> Балясины</button>
-        <button class="btn active" id="el_posts"><span class="ico">🏛</span> Столбы</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_wall"><span class="ico">🧱</span> Стена</button>
-        <button class="btn active" id="el_opening"><span class="ico">🪟</span> Проём</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_covering"><span class="ico">📏</span> Панель</button>
-        <button class="btn active" id="el_floor"><span class="ico">🌳</span> Пол</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="btnGlass"><span class="ico">◇</span> Стекло</button>
-      </div>
-    </div>
-  </div>
+  <button class="btn big" id="btnShowView">
+    <span class="ico">👁</span> Настройки просмотра
+  </button>
 
-  <div class="accordion">
-    <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
-      <span><span class="ico">📏</span> Измерить</span>
-      <span class="arrow">▶</span>
-    </button>
-    <div class="accordion-body">
-      <div class="row">
-        <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
-        <button class="btn" id="btnRulerClear"><span class="ico">✕</span> Очистить</button>
-      </div>
-      <div class="row">
-        <button class="btn" id="btnHuman"><span class="ico">🧍</span> Человечек</button>
-        <button class="btn" id="btnHumanRemove"><span class="ico">✕</span> Убрать</button>
-      </div>
-      <div class="slider-row">
-        <div class="slider-label"><span>Рост</span><b id="heightValue">185 см</b></div>
-        <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
-      </div>
-      <div class="slider-row">
-        <div class="slider-label"><span>Поворот</span><b id="rotationValue">0°</b></div>
-        <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
-      </div>
-    </div>
-  </div>
+  <button class="btn big" id="btnShowTools">
+    <span class="ico">📏</span> Измерить
+  </button>
 
-  <div class="accordion">
-    <button class="accordion-header" onclick="document.querySelectorAll('.accordion').forEach(a=>a.classList.remove('open'));this.parentElement.classList.add('open')">
-      <span><span class="ico">🎨</span> Текстуры</span>
-      <span class="arrow">▶</span>
-    </button>
-    <div class="accordion-body">
-      <div id="finishRows"></div>
-    </div>
-  </div>
+  <button class="btn big" id="btnShowFinish">
+    <span class="ico">🎨</span> Текстуры
+  </button>
 
-  <div class="accordion">
-    <button class="accordion-header" id="btnParams">
-      <span><span class="ico">📐</span> Параметры лестницы</span>
-      <span class="arrow">▶</span>
-    </button>
-  </div>
+  <button class="btn big" id="btnParams">
+    <span class="ico">📐</span> Параметры лестницы
+  </button>
+
+  <button class="btn big" id="btnSavePos">
+    <span class="ico">💾</span> Сохранить позицию
+  </button>
+
+  <div class="divider"></div>
 
   <div class="row">
     <button class="btn" id="btnFit"><span class="ico">⛶</span> Вписать</button>
     <button class="btn" id="btnRotate"><span class="ico">⟳</span> Вращение</button>
   </div>
-
-  <div class="divider"></div>
 
   <div class="row">
     <button class="btn" id="btnShot"><span class="ico">📷</span> Снимок</button>
@@ -474,6 +361,7 @@
 <div class="mode-hint human" id="humanHint">🧍 Тапните по ступени, чтобы поставить человечка</div>
 <div class="toast" id="toast"></div>
 
+<!-- Окно сметы -->
 <div class="modal-overlay" id="priceModalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -490,6 +378,7 @@
   </div>
 </div>
 
+<!-- Окно параметров -->
 <div class="modal-overlay" id="paramsModalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -502,6 +391,99 @@
     <div class="modal-body" id="paramsModalBody"></div>
     <div class="modal-footer">
       <button class="btn" id="paramsModalCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно: Настройки просмотра -->
+<div class="modal-overlay" id="viewModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div><span class="title">👁 Настройки просмотра</span></div>
+      <button class="modal-close" id="viewModalClose" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="viewModalBody">
+      <div class="row">
+        <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
+        <button class="btn active" id="el_risers"><span class="ico">📐</span> Подступенки</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_stringers"><span class="ico">🏗</span> Тетивы</button>
+        <button class="btn active" id="el_kosour"><span class="ico">📏</span> Косоуры</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_welcome_steps"><span class="ico">🌀</span> Приглас. ступени</button>
+        <button class="btn active" id="el_welcome_risers"><span class="ico">🌀</span> Приглас. подступенки</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_handrail"><span class="ico">➖</span> Поручень</button>
+        <button class="btn active" id="el_baluster"><span class="ico">🪜</span> Балясины</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_posts"><span class="ico">🏛</span> Столбы</button>
+        <button class="btn active" id="el_covering"><span class="ico">📏</span> Панель</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_wall"><span class="ico">🧱</span> Стена</button>
+        <button class="btn active" id="el_opening"><span class="ico">🪟</span> Проём</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_floor"><span class="ico">🌳</span> Пол</button>
+        <button class="btn active" id="btnGlass"><span class="ico">◇</span> Стекло</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="viewModalCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно: Измерить -->
+<div class="modal-overlay" id="toolsModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div><span class="title">📏 Измерить</span></div>
+      <button class="modal-close" id="toolsModalClose" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="toolsModalBody">
+      <div class="row">
+        <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
+        <button class="btn" id="btnRulerClear"><span class="ico">✕</span> Очистить</button>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnHuman"><span class="ico">🧍</span> Человечек</button>
+        <button class="btn" id="btnHumanRemove"><span class="ico">✕</span> Убрать</button>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Рост</span><b id="heightValue">185 см</b></div>
+        <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Поворот</span><b id="rotationValue">0°</b></div>
+        <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="toolsModalCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно: Текстуры -->
+<div class="modal-overlay" id="finishModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <span class="title">🎨 Текстуры</span>
+        <span class="subtitle" id="finishModalSubtitle">—</span>
+      </div>
+      <button class="modal-close" id="finishModalClose" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="finishModalBody">
+      <div id="finishRows"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="finishModalCloseBtn">Закрыть</button>
     </div>
   </div>
 </div>
@@ -535,21 +517,17 @@ const TEXTURE_LIST = [
 ];
 
 const FINISH_CATEGORIES = [
-  { key: 'treads',    label: 'Ступени' },
-  { key: 'risers',    label: 'Подступенки' },
-  { key: 'stringers', label: 'Тетивы' },
-  { key: 'handrail',  label: 'Поручень' },
-  { key: 'baluster',  label: 'Балясины' },
-  { key: 'posts',     label: 'Столбы' },
-  { key: 'covering',  label: 'Панель перекрытия' }
+  { key: 'treads',          label: 'Ступени' },
+  { key: 'risers',          label: 'Подступенки' },
+  { key: 'stringers',       label: 'Тетивы' },
+  { key: 'kosour',          label: 'Косоуры' },
+  { key: 'welcome_steps',   label: 'Приглас. ступени' },
+  { key: 'welcome_risers',  label: 'Приглас. подступенки' },
+  { key: 'handrail',        label: 'Поручень' },
+  { key: 'baluster',        label: 'Балясины' },
+  { key: 'posts',           label: 'Столбы' },
+  { key: 'covering',        label: 'Панель перекрытия' }
 ];
-
-const MATERIAL_KEY_MAP = {
-  pine:  'Сосна',
-  beech: 'Бук',
-  ash:   'Ясень',
-  oak:   'Дуб'
-};
 
 /* ---------- DOM ---------- */
 const canvas      = document.getElementById('canvas');
@@ -662,13 +640,15 @@ let objectUrls   = [];
 const fileMap    = new Map();
 
 const elementGroups = {
-  treads: [], risers: [], stringers: [],
+  treads: [], risers: [], stringers: [], kosour: [],
+  welcome_steps: [], welcome_risers: [],
   handrail: [], baluster: [], posts: [],
   wall: [], covering: [], floor: [],
 };
 
 const elementVisible = {
-  treads: true, risers: true, stringers: true,
+  treads: true, risers: true, stringers: true, kosour: true,
+  welcome_steps: true, welcome_risers: true,
   handrail: true, baluster: true, posts: true,
   wall: true, covering: true, floor: true,
 };
@@ -695,7 +675,8 @@ function getTexture(file) {
 const originalMaterialState = new Map();
 
 const currentFinish = {
-  treads: null, risers: null, stringers: null,
+  treads: null, risers: null, stringers: null, kosour: null,
+  welcome_steps: null, welcome_risers: null,
   handrail: null, baluster: null, posts: null, covering: null,
 };
 
@@ -925,46 +906,40 @@ function findNearestVertex(point, radius) {
 /* ═══════════════════════════════════════════════════════════════
    ПАРСЕР XML (BOM из Staircon)
    ═══════════════════════════════════════════════════════════════ */
+function getAttr(node, name) {
+  if (!node) return '';
+  const attrs = node.querySelectorAll('attribute');
+  for (let i = 0; i < attrs.length; i++) {
+    if (attrs[i].getAttribute('name') === name) {
+      return attrs[i].getAttribute('value') || '';
+    }
+  }
+  return '';
+}
+
 function parseBOM(xmlText) {
   const parser = new DOMParser();
   const xml = parser.parseFromString(xmlText, 'application/xml');
 
-  const result = {
-    items: [],
-    params: {}
-  };
+  const result = { items: [], params: {} };
 
   // ---- Параметры лестницы ----
-  const ceiling     = xml.querySelector('ceiling');
-  const floorheight = xml.querySelector('floorheight');
-  const floorthick  = xml.querySelector('floorthickness');
-  const headroom    = xml.querySelector('headroom');
-  const rise        = xml.querySelector('rise');
-  const going       = xml.querySelector('going');
-  const recalcGoing = xml.querySelector('recalculatedgoing');
-  const numRisers   = xml.querySelector('numberofrisers');
-  const widths      = xml.querySelector('widths');
-  const pitch       = xml.querySelector('pitch');
-  const railing     = xml.querySelector('railing > height');
-  const handrailDim = xml.querySelector('handrail > dim');
-  const balusterDim = xml.querySelector('baluster > dim');
-  const newelName   = xml.querySelector('newel > name');
-
+  const q = (tag) => xml.querySelector(tag);
   result.params = {
-    ceiling:     ceiling ? parseFloat(ceiling.textContent) : null,
-    floorheight: floorheight ? parseFloat(floorheight.textContent) : null,
-    floorthick:  floorthick ? parseFloat(floorthick.textContent) : null,
-    headroom:    headroom ? parseFloat(headroom.textContent) : null,
-    rise:        rise ? parseFloat(rise.textContent) : null,
-    going:       going ? parseFloat(going.textContent) : null,
-    recalcGoing: recalcGoing ? recalcGoing.textContent.trim() : null,
-    numRisers:   numRisers ? parseInt(numRisers.textContent, 10) : null,
-    widths:      widths ? parseFloat(widths.textContent) : null,
-    pitch:       pitch ? pitch.textContent.trim() : null,
-    railingHeight: railing ? railing.textContent.trim() : null,
-    handrailDim: handrailDim ? handrailDim.textContent.trim() : null,
-    balusterDim: balusterDim ? balusterDim.textContent.trim() : null,
-    newelName:   newelName ? newelName.textContent.trim() : null
+    ceiling:     q('ceiling')       ? parseFloat(q('ceiling').textContent) : null,
+    floorheight: q('floorheight')   ? parseFloat(q('floorheight').textContent) : null,
+    floorthick:  q('floorthickness')? parseFloat(q('floorthickness').textContent) : null,
+    headroom:    q('headroom')      ? parseFloat(q('headroom').textContent) : null,
+    rise:        q('rise')          ? parseFloat(q('rise').textContent) : null,
+    going:       q('going')         ? parseFloat(q('going').textContent) : null,
+    recalcGoing: q('recalculatedgoing') ? q('recalculatedgoing').textContent.trim() : null,
+    numRisers:   q('numberofrisers')? parseInt(q('numberofrisers').textContent, 10) : null,
+    widths:      q('widths')        ? parseFloat(q('widths').textContent) : null,
+    pitch:       q('pitch')         ? q('pitch').textContent.trim() : null,
+    railingHeight: q('railing > height') ? q('railing > height').textContent.trim() : null,
+    handrailDim:   q('handrail > dim') ? q('handrail > dim').textContent.trim() : null,
+    balusterDim:   q('baluster > dim') ? q('baluster > dim').textContent.trim() : null,
+    newelName:     q('newel > name')   ? q('newel > name').textContent.trim() : null
   };
 
   // ---- Детали ----
@@ -986,11 +961,16 @@ function parseBOM(xmlText) {
     const matNode = d.querySelector('material');
     const mat = matNode ? (matNode.textContent || '').trim() : '';
 
+    // --- Атрибуты, критичные для классификации ---
+    const subtype     = getAttr(d, 'subtype');
+    const stringtype  = getAttr(d, 'stringtype');
+
     result.items.push({
       name: nameAttr,
       type: typeId,
-      T, W, L,
-      mat
+      T, W, L, mat,
+      subtype,
+      stringtype
     });
   });
 
@@ -1030,7 +1010,7 @@ async function findModelFile() {
     const parts = location.pathname.split('/').filter(x => x);
     const owner = location.hostname.split('.')[0];
     const repo = parts[0];
-    if (!owner || !repo) throw new Error('не удалось определить owner/repo');
+    if (!owner || !repo) throw new Error('owner/repo не определены');
 
     const r = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/');
     if (!r.ok) throw new Error('GitHub API: HTTP ' + r.status);
@@ -1046,7 +1026,8 @@ async function findModelFile() {
   }
 
   return null;
-}/* ═══════════════════════════════════════════════════════════════
+}
+  /* ═══════════════════════════════════════════════════════════════
    OBB / ПЛОЩАДЬ
    ═══════════════════════════════════════════════════════════════ */
 function computeOBB(vs) {
@@ -1162,7 +1143,7 @@ function getMeshAnalysis(obj) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   КАЛЬКУЛЯТОР
+   КАЛЬКУЛЯТОР — материал
    ═══════════════════════════════════════════════════════════════ */
 function getMaterialForKey(key) {
   const chosen = currentFinish[key];
@@ -1180,29 +1161,45 @@ function getMaterialInfo(matKey) {
   return mats[matKey] || mats.pine || { name: 'Сосна' };
 }
 
-/* Классификация BOM items по категориям */
+/* ═══════════════════════════════════════════════════════════════
+   КЛАССИФИКАЦИЯ BOM ITEMS
+   ═══════════════════════════════════════════════════════════════ */
 function classifyBOMItems() {
   if (!bomData) return {};
-  const map = {
-    'Step': 'treads',
-    'Riser': 'risers',
-    'String': 'stringers',
-    'Newel': 'posts',
-    'Handrail': 'handrail',
-    'Baluster': 'baluster',
-    'Covering': 'covering',
-    'Bottomrail': 'handrail'
-  };
   const grouped = {};
+
+  // Найти пригласительные подступенки: первые 2 ризера по алфавитному порядку имён
+  const risers = bomData.items
+    .filter(d => d.type === 'Riser')
+    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const welcomeRiserNames = risers.slice(0, 2).map(r => r.name);
+
   bomData.items.forEach(d => {
-    const catKey = map[d.type];
+    let catKey = null;
+
+    if (d.type === 'Step') {
+      catKey = (d.subtype === 'bullnose') ? 'welcome_steps' : 'treads';
+    } else if (d.type === 'Riser') {
+      catKey = welcomeRiserNames.includes(d.name) ? 'welcome_risers' : 'risers';
+    } else if (d.type === 'String') {
+      catKey = (d.stringtype === 'cut') ? 'kosour' : 'stringers';
+    } else if (d.type === 'Newel')      catKey = 'posts';
+    else if (d.type === 'Handrail')     catKey = 'handrail';
+    else if (d.type === 'Baluster')     catKey = 'baluster';
+    else if (d.type === 'Covering')     catKey = 'covering';
+    else if (d.type === 'Bottomrail')   catKey = 'handrail';
+
     if (!catKey) return;
     if (!grouped[catKey]) grouped[catKey] = [];
     grouped[catKey].push(d);
   });
+
   return grouped;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   КАЛЬКУЛЯТОР — главный
+   ═══════════════════════════════════════════════════════════════ */
 function calculatePrice() {
   const result = { categories: [], materialTotal: 0, paintTotal: 0,
                    deliveryCost: 0, montageCost: 0, total: 0 };
@@ -1211,11 +1208,12 @@ function calculatePrice() {
   const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
   const grouped = classifyBOMItems();
 
-  for (const catKey in grouped) {
+  // Идём в порядке из price.json, чтобы категории шли логично
+  for (const catKey in priceData.categories) {
     const cat = priceData.categories[catKey];
-    if (!cat) continue;
-
     const items = grouped[catKey];
+    if (!items || !items.length) continue;
+
     const matKey = getMaterialForKey(catKey);
     const matInfo = getMaterialInfo(matKey);
     const unitPrice = (cat.prices && cat.prices[matKey]) || 0;
@@ -1239,7 +1237,6 @@ function calculatePrice() {
     } else if (cat.method === 'count') {
       qty = items.length;
       items.forEach(d => {
-        // Балясина круглая Ø30 мм, или прямоугольная
         if (d.W && d.W < 50) paintArea += (Math.PI * d.W * d.L) / 1e6;
         else paintArea += (2 * (d.W + d.T) * d.L) / 1e6;
       });
@@ -1258,38 +1255,32 @@ function calculatePrice() {
     result.paintTotal += paintArea * paintPrice;
   }
 
-  /* ---------- ДОСТАВКА ---------- */
+  /* ---------- ДОСТАВКА: 60 ₽/км + 800 подача, минимум 4500 ---------- */
   const km = parseFloat(document.getElementById('deliveryKm')?.value) || 0;
   const base = 60 * km + 800;
   result.deliveryCost = Math.max(4500, base);
+  result.deliveryKm = km;
 
   /* ---------- МОНТАЖ ---------- */
-  // База — по материалу ступеней
   const treadMatKey = getMaterialForKey('treads');
   const baseMontage = (treadMatKey === 'pine') ? 25000 : 30000;
   let coef = 1.0;
 
-  // +10% если есть подступенки
+  // +10% если есть подступенки (обычные)
   if (grouped.risers && grouped.risers.length > 0) coef += 0.10;
 
-  // +5% если ограждение 2 этажа > 3000 мм (по Bottomrail с префиксом "2_")
+  // +5% если ограждение 2 этажа > 3000 мм (Bottomrail с префиксом "2_")
   let rail2len = 0;
-  if (bomData && bomData.items) {
-    bomData.items.forEach(d => {
-      if (d.type === 'Bottomrail' && d.name && d.name.indexOf('2_') === 0) {
-        rail2len += d.L;
-      }
-    });
-  }
+  bomData.items.forEach(d => {
+    if (d.type === 'Bottomrail' && d.name && d.name.indexOf('2_') === 0) {
+      rail2len += d.L;
+    }
+  });
   if (rail2len > 3000) coef += 0.05;
 
   // +1200 ₽ за каждую Covering
   const coveringCount = (grouped.covering || []).length;
   result.montageCost = baseMontage * coef + 1200 * coveringCount;
-  result.montageBase = baseMontage;
-  result.montageCoef = coef;
-  result.montageCoveringCount = coveringCount;
-  result.montageRail2len = rail2len;
 
   result.total = result.materialTotal + result.paintTotal
                + result.deliveryCost + result.montageCost;
@@ -1305,7 +1296,7 @@ function buildPriceModal() {
     return;
   }
   if (!bomData) {
-    priceBody.innerHTML = '<div class="price-empty">Файл XML из Staircon не найден.<br>Загрузите его в репозиторий рядом с .dae</div>';
+    priceBody.innerHTML = '<div class="price-empty">Файл XML из Staircon не найден.<br>Загрузите его рядом с .dae</div>';
     return;
   }
 
@@ -1323,7 +1314,6 @@ function buildPriceModal() {
 
   kmRow.querySelector('input').addEventListener('input', (e) => {
     window._lastKm = parseInt(e.target.value, 10) || 0;
-    // Пересобрать смету
     buildPriceModal();
   });
 
@@ -1344,23 +1334,11 @@ function buildPriceModal() {
   // Итоги
   const totals = document.createElement('div');
   totals.className = 'price-totals';
-
-  let montageDetails = 'Монтаж';
-  const parts = [];
-  if (result.montageCoef > 1) {
-    const addCoef = Math.round((result.montageCoef - 1) * 100);
-    parts.push('+' + addCoef + '%');
-  }
-  if (result.montageCoveringCount > 0) {
-    parts.push(result.montageCoveringCount + ' панели');
-  }
-  if (parts.length) montageDetails += ' (' + parts.join(', ') + ')';
-
   totals.innerHTML =
     '<div class="price-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
     '<div class="price-totals-row"><span>Покраска</span><span>' + formatRub(result.paintTotal) + '</span></div>' +
-    '<div class="price-totals-row"><span>Доставка (' + (window._lastKm || 0) + ' км)</span><span>' + formatRub(result.deliveryCost) + '</span></div>' +
-    '<div class="price-totals-row"><span>' + montageDetails + '</span><span>' + formatRub(result.montageCost) + '</span></div>' +
+    '<div class="price-totals-row"><span>Доставка (' + (result.deliveryKm || 0) + ' км)</span><span>' + formatRub(result.deliveryCost) + '</span></div>' +
+    '<div class="price-totals-row"><span>Монтаж</span><span>' + formatRub(result.montageCost) + '</span></div>' +
     '<div class="price-totals-row total"><span>ИТОГО</span><span>' + formatRub(result.total) + '</span></div>';
 
   priceBody.appendChild(totals);
@@ -1409,7 +1387,6 @@ function buildParamsModal() {
   row('Диаметр балясины', p.balusterDim);
   row('Сечение столба', p.newelName);
 
-  // Обшивка проёма
   if (bomData.items) {
     const cov = bomData.items.filter(d => d.type === 'Covering');
     if (cov.length) {
@@ -1434,55 +1411,54 @@ function buildFinishPanel() {
     const row = document.createElement('div');
     row.className = 'finish-row';
     row.dataset.key = cat.key;
+    // Стиль для горизонтального расположения
+    row.style.flexDirection = 'row';
+    row.style.alignItems = 'center';
+    row.style.justifyContent = 'space-between';
+    row.style.padding = '10px 12px';
+    row.style.background = 'rgba(255,255,255,.04)';
+    row.style.border = '1px solid var(--border)';
+    row.style.borderRadius = '10px';
+    row.style.marginBottom = '6px';
 
-    const header = document.createElement('div');
-    header.className = 'finish-header';
-    header.innerHTML = '<span class="label">' + cat.label + '</span>' +
-      '<span class="value"><span class="finish-current">Как в проекте</span><span class="arrow">▼</span></span>';
+    const label = document.createElement('span');
+    label.style.fontSize = '12px';
+    label.style.color = 'var(--muted)';
+    label.style.fontWeight = '550';
+    label.textContent = cat.label;
 
-    const options = document.createElement('div');
-    options.className = 'finish-options';
+    const select = document.createElement('select');
+    select.style.background = 'rgba(255,255,255,.08)';
+    select.style.border = '1px solid var(--border)';
+    select.style.borderRadius = '7px';
+    select.style.color = 'var(--text)';
+    select.style.fontFamily = 'inherit';
+    select.style.fontSize = '12px';
+    select.style.padding = '5px 8px';
+    select.style.cursor = 'pointer';
+    select.style.outline = 'none';
 
-    const optOriginal = document.createElement('button');
-    optOriginal.className = 'finish-option selected';
-    optOriginal.dataset.file = '';
-    optOriginal.dataset.name = 'Как в проекте';
-    optOriginal.innerHTML = '<span class="swatch" style="background:#1a1d25;"></span>Как в проекте';
-    options.appendChild(optOriginal);
+    const optOrig = document.createElement('option');
+    optOrig.value = '';
+    optOrig.textContent = 'Как в проекте';
+    select.appendChild(optOrig);
 
     TEXTURE_LIST.forEach((t) => {
-      const opt = document.createElement('button');
-      opt.className = 'finish-option';
-      opt.dataset.file = t.file;
-      opt.dataset.name = t.name;
-      opt.innerHTML = '<span class="swatch" style="background-image:url(' + t.file + ');"></span>' + t.name;
-      options.appendChild(opt);
+      const opt = document.createElement('option');
+      opt.value = t.file;
+      opt.textContent = t.name;
+      select.appendChild(opt);
     });
 
-    row.appendChild(header);
-    row.appendChild(options);
-
-    header.addEventListener('click', () => {
-      const isOpen = row.classList.contains('open');
-      finishRows.querySelectorAll('.finish-row.open').forEach((r) => {
-        if (r !== row) r.classList.remove('open');
-      });
-      row.classList.toggle('open', !isOpen);
-    });
-
-    options.addEventListener('click', (e) => {
-      const btn = e.target.closest('.finish-option');
-      if (!btn) return;
-      const file = btn.dataset.file;
-      const name = btn.dataset.name;
+    select.addEventListener('change', (e) => {
+      const file = e.target.value;
+      const name = file ? (TEXTURE_LIST.find(t => t.file === file) || {}).name : '';
       currentFinish[cat.key] = file ? { file, name } : null;
-      options.querySelectorAll('.finish-option').forEach((o) => o.classList.remove('selected'));
-      btn.classList.add('selected');
-      row.querySelector('.finish-current').textContent = file ? name : 'Как в проекте';
-      row.classList.remove('open');
       applyFinish(cat.key);
     });
 
+    row.appendChild(label);
+    row.appendChild(select);
     finishRows.appendChild(row);
   });
 }
@@ -1540,7 +1516,7 @@ function applyGlassWalls() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   КАМЕРА
+   КАМЕРА — модель ближе
    ═══════════════════════════════════════════════════════════════ */
 function fitCamera() {
   if (!currentModel) return;
@@ -1548,7 +1524,8 @@ function fitCamera() {
   const sphere = box.getBoundingSphere(new THREE.Sphere());
   const radius = Math.max(sphere.radius, 0.0001);
   const fovRad = THREE.MathUtils.degToRad(camera.fov);
-  const zoomFactor = isMobile() ? 0.78 : 1.18;
+  // Модель занимает больше экрана: 0.85 ПК, 0.7 мобильный
+  const zoomFactor = isMobile() ? 0.70 : 0.85;
   const dist = (radius / Math.sin(fovRad / 2)) * zoomFactor;
   const dir = new THREE.Vector3(1, 0.62, 1).normalize();
   camera.position.copy(sphere.center).addScaledVector(dir, dist);
@@ -1559,6 +1536,43 @@ function fitCamera() {
   controls.minDistance = radius * 0.05;
   controls.maxDistance = radius * 60;
   controls.update();
+}
+
+/* ---------- Восстановление камеры из URL ---------- */
+function applyCameraFromURL() {
+  const params = new URLSearchParams(location.search);
+  const camStr = params.get('cam');
+  const tgtStr = params.get('target');
+  if (!camStr) return false;
+  try {
+    const camParts = camStr.split(',').map(parseFloat);
+    const tgtParts = tgtStr ? tgtStr.split(',').map(parseFloat) : [0, 0, 0];
+    if (camParts.length === 3 && camParts.every(isFinite)) {
+      camera.position.set(camParts[0], camParts[1], camParts[2]);
+      controls.target.set(tgtParts[0] || 0, tgtParts[1] || 0, tgtParts[2] || 0);
+      camera.updateProjectionMatrix();
+      controls.update();
+      return true;
+    }
+  } catch (e) { /* ignore */ }
+  return false;
+}
+
+/* ---------- Сохранение позиции в URL ---------- */
+function saveCameraPosition() {
+  const p = camera.position;
+  const t = controls.target;
+  const params = new URLSearchParams(location.search);
+  params.set('cam', p.x.toFixed(3) + ',' + p.y.toFixed(3) + ',' + p.z.toFixed(3));
+  params.set('target', t.x.toFixed(3) + ',' + t.y.toFixed(3) + ',' + t.z.toFixed(3));
+  const newUrl = location.origin + location.pathname + '?' + params.toString();
+  history.replaceState(null, '', newUrl);
+
+  navigator.clipboard.writeText(newUrl).then(() => {
+    showToast('Ссылка с позицией скопирована', true);
+  }).catch(() => {
+    prompt('Скопируйте ссылку вручную:', newUrl);
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1698,6 +1712,8 @@ function loadCollada(url, fileName) {
         document.title = '3D Viewer — ' + modelName;
         priceSubtitle.textContent = modelName;
         paramsSubtitle.textContent = modelName;
+        const f = document.getElementById('finishModalSubtitle');
+        if (f) f.textContent = modelName;
       }
 
       ui.file.textContent   = fileName;
@@ -1715,7 +1731,9 @@ function loadCollada(url, fileName) {
 
       infoEl.classList.add('show');
       panelEl.classList.remove('hidden');
-      fitCamera();
+
+      // Камера: URL > стандартный fit
+      if (!applyCameraFromURL()) fitCamera();
     },
     (evt) => {
       if (evt && evt.total) {
@@ -1904,7 +1922,7 @@ canvas.addEventListener('pointermove', (e) => {
 canvas.addEventListener('pointerleave', () => { snapDot.visible = false; });
 
 /* ═══════════════════════════════════════════════════════════════
-   ИНИЦИАЛИЗАЦИЯ
+   ИНИЦИАЛИЗАЦИЯ ПАНЕЛИ
    ═══════════════════════════════════════════════════════════════ */
 if (isMobile()) {
   panelEl.classList.remove('hidden');
@@ -1918,8 +1936,10 @@ panelToggle.addEventListener('click', () => {
   panelToggle.classList.toggle('active', isOpen);
 });
 
-/* ---------- Кнопки ---------- */
+/* ---------- Кнопки общие ---------- */
 document.getElementById('btnFit').addEventListener('click', fitCamera);
+document.getElementById('btnSavePos').addEventListener('click', saveCameraPosition);
+
 document.getElementById('btnRotate').addEventListener('click', (e) => {
   controls.autoRotate = !controls.autoRotate;
   e.currentTarget.classList.toggle('active', controls.autoRotate);
@@ -1934,16 +1954,19 @@ function bindElementButton(id, key) {
     applyElementVisibility();
   });
 }
-bindElementButton('el_treads',    'treads');
-bindElementButton('el_risers',    'risers');
-bindElementButton('el_stringers', 'stringers');
-bindElementButton('el_handrail',  'handrail');
-bindElementButton('el_baluster',  'baluster');
-bindElementButton('el_posts',     'posts');
-bindElementButton('el_wall',      'wall');
-bindElementButton('el_opening',   'opening');
-bindElementButton('el_covering',  'covering');
-bindElementButton('el_floor',     'floor');
+bindElementButton('el_treads',          'treads');
+bindElementButton('el_risers',          'risers');
+bindElementButton('el_stringers',       'stringers');
+bindElementButton('el_kosour',          'kosour');
+bindElementButton('el_welcome_steps',   'welcome_steps');
+bindElementButton('el_welcome_risers',  'welcome_risers');
+bindElementButton('el_handrail',        'handrail');
+bindElementButton('el_baluster',        'baluster');
+bindElementButton('el_posts',           'posts');
+bindElementButton('el_wall',            'wall');
+bindElementButton('el_opening',         'opening');
+bindElementButton('el_covering',        'covering');
+bindElementButton('el_floor',           'floor');
 
 document.getElementById('btnGlass').addEventListener('click', (e) => {
   glassWalls = !glassWalls;
@@ -2035,25 +2058,39 @@ document.getElementById('bgColor').addEventListener('input', (e) => {
   scene.background.set(e.target.value);
 });
 
-/* ---------- Модальные окна ---------- */
-function openPriceModal() { buildPriceModal(); priceOverlay.classList.add('show'); }
-function closePriceModal() { priceOverlay.classList.remove('show'); }
-priceBtn.addEventListener('click', openPriceModal);
-document.getElementById('priceModalClose').addEventListener('click', closePriceModal);
-document.getElementById('priceModalCloseBtn').addEventListener('click', closePriceModal);
-priceOverlay.addEventListener('click', (e) => { if (e.target === priceOverlay) closePriceModal(); });
+/* ═══════════════════════════════════════════════════════════════
+   МОДАЛЬНЫЕ ОКНА
+   ═══════════════════════════════════════════════════════════════ */
+function makeModal(overlayId, closeBtnId, closeIconId, onOpen) {
+  const overlay = document.getElementById(overlayId);
+  const openFn = () => { if (onOpen) onOpen(); overlay.classList.add('show'); };
+  const closeFn = () => overlay.classList.remove('show');
 
-function openParamsModal() { buildParamsModal(); paramsOverlay.classList.add('show'); }
-function closeParamsModal() { paramsOverlay.classList.remove('show'); }
-document.getElementById('btnParams').addEventListener('click', openParamsModal);
-document.getElementById('paramsModalClose').addEventListener('click', closeParamsModal);
-document.getElementById('paramsModalCloseBtn').addEventListener('click', closeParamsModal);
-paramsOverlay.addEventListener('click', (e) => { if (e.target === paramsOverlay) closeParamsModal(); });
+  if (closeBtnId) document.getElementById(closeBtnId).addEventListener('click', closeFn);
+  if (closeIconId) document.getElementById(closeIconId).addEventListener('click', closeFn);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeFn(); });
+  return { openFn, closeFn, overlay };
+}
+
+const priceModal   = makeModal('priceModalOverlay',  'priceModalCloseBtn',  'priceModalClose',  buildPriceModal);
+const paramsModal  = makeModal('paramsModalOverlay', 'paramsModalCloseBtn', 'paramsModalClose', buildParamsModal);
+const viewModal    = makeModal('viewModalOverlay',   'viewModalCloseBtn',   'viewModalClose');
+const toolsModal   = makeModal('toolsModalOverlay',  'toolsModalCloseBtn',  'toolsModalClose');
+const finishModal  = makeModal('finishModalOverlay', 'finishModalCloseBtn', 'finishModalClose');
+
+priceBtn.addEventListener('click', priceModal.openFn);
+document.getElementById('btnParams').addEventListener('click', paramsModal.openFn);
+document.getElementById('btnShowView').addEventListener('click', viewModal.openFn);
+document.getElementById('btnShowTools').addEventListener('click', toolsModal.openFn);
+document.getElementById('btnShowFinish').addEventListener('click', finishModal.openFn);
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    if (priceOverlay.classList.contains('show')) closePriceModal();
-    if (paramsOverlay.classList.contains('show')) closeParamsModal();
+    if (priceModal.overlay.classList.contains('show')) priceModal.closeFn();
+    if (paramsModal.overlay.classList.contains('show')) paramsModal.closeFn();
+    if (viewModal.overlay.classList.contains('show')) viewModal.closeFn();
+    if (toolsModal.overlay.classList.contains('show')) toolsModal.closeFn();
+    if (finishModal.overlay.classList.contains('show')) finishModal.closeFn();
   }
 });
 
@@ -2120,6 +2157,8 @@ animate();
     document.title = '3D Viewer — ' + modelName;
     priceSubtitle.textContent = modelName;
     paramsSubtitle.textContent = modelName;
+    const f = document.getElementById('finishModalSubtitle');
+    if (f) f.textContent = modelName;
   }
 })();
 

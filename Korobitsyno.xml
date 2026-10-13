@@ -1,0 +1,2678 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<drawingdata version="1.00">
+	<drawingfile>
+		<filename>Korobitsyno.wmf</filename>
+		<fullpath>D:\YandexDisk\Ñêðèíøîòû\Korobitsyno.wmf</fullpath>
+		<scale>10.0</scale>
+	</drawingfile>
+	<params version="1.00">
+		<project>
+			<customer>Îëüãà Íèêîëàåâíà </customer>
+			<address1>Ïîñ. Êîðîáèöûíî óëèöà Ðó÷åéíàÿ äîì 21</address1>
+			<address2/>
+			<address3/>
+			<customerprojectnr/>
+			<ourprojectnr>1</ourprojectnr>
+			<norm>eng.nrm</norm>
+			<location/>
+			<date>04-10-2026</date>
+			<signature/>
+			<deliveries>1</deliveries>
+			<extra/>
+			<exchange/>
+			<cost/>
+			<price/>
+		</project>
+		<stairwell>
+			<name>Ëåñòíè÷íàÿ êëåòêà: 1</name>
+			<pieces>1</pieces>
+			<piecesreserved>0</piecesreserved>
+			<floor>
+				<name>Ýòàæ: 1</name>
+				<ceiling>2450</ceiling>
+				<flooring>0</flooring>
+				<flooringnextfloor>0</flooringnextfloor>
+				<floorheight>2665</floorheight>
+				<floorthickness>215</floorthickness>
+				<extra/>
+				<stair>
+					<model>Standard</model>
+					<going>181.98</going>
+					<recalculatedgoing>247/235/205/185/182</recalculatedgoing>
+					<startmeas>30</startmeas>
+					<endmeas>60</endmeas>
+					<underside>Widoczny</underside>
+					<deliverytype/>
+					<packingassemblage stair="" railing=""/>
+					<extrainfo/>
+					<numberofrisers>13</numberofrisers>
+					<openorclosed>Schody zamkniête </openorclosed>
+					<notincluded>Not included: Pokrycie stopni, String capping</notincluded>
+					<headroom>1931</headroom>
+					<normtest>Spe³nienie wymagañ normowych: Brak.</normtest>
+					<diffmodel>Differences in relation to our model:
+Balustrady: WallHandrail</diffmodel>
+					<shoulder>1=34.41;5=66.75 / 6=136.71;8=85.97;12=121.98;</shoulder>
+					<materialoverride/>
+					<finishoverride/>
+					<latestmaterialoverride/>
+					<latestfinishoverride/>
+					<stepcover/>
+					<opensides/>
+					<freeformtreads/>
+				</stair>
+				<flight>
+					<pitch>48.40°</pitch>
+					<pitchreversed>41.60°</pitchreversed>
+					<widths>745</widths>
+					<hypo>274.12</hypo>
+				</flight>
+				<step>
+					<blockstep/>
+					<rise>205</rise>
+					<material>Pine</material>
+					<finish>8</finish>
+					<thickness>40</thickness>
+					<carpetname/>
+					<stepcover/>
+				</step>
+				<string>
+					<projectiondown>0/0</projectiondown>
+					<arcangles/>
+					<material>Pine</material>
+					<finish>8</finish>
+					<thickness>40</thickness>
+				</string>
+				<riser>
+					<name>16</name>
+					<material>Pine</material>
+					<finish>8</finish>
+					<thickness>16</thickness>
+				</riser>
+				<safetyriser>
+					<name/>
+					<material/>
+					<finish/>
+					<thickness/>
+					<dim/>
+				</safetyriser>
+				<railing>
+					<height>800/900</height>
+					<deliverytype/>
+				</railing>
+				<newel>
+					<name>P80x80</name>
+					<material>Pine</material>
+					<finish>8</finish>
+					<table>
+						<header>Nazwa klienta - Typ - Wym. </header>
+						<dim>S£1   P80x80   80x80x1115</dim>
+						<dim>S£2   P80x80   80x80x2429</dim>
+						<dim>S£3   P80x80   80x80x1427</dim>
+						<dim>S£4   P80x80   80x80x1367</dim>
+					</table>
+					<tablenolength>
+						<header>Nazwa klienta - Typ - Wym. </header>
+						<dim>S£1   P80x80   80x80</dim>
+						<dim>S£2   P80x80   80x80</dim>
+						<dim>S£3   P80x80   80x80</dim>
+						<dim>S£4   P80x80   80x80</dim>
+					</tablenolength>
+				</newel>
+				<handrail>
+					<name>W³asny</name>
+					<material>Pine</material>
+					<finish>8</finish>
+					<dim>40x90</dim>
+				</handrail>
+				<baluster>
+					<name>Bal01</name>
+					<material>Pine</material>
+					<finish>8</finish>
+					<dim>Ø30</dim>
+				</baluster>
+				<apronlining>
+					<material>Beech</material>
+					<finish>8</finish>
+					<thickness>16</thickness>
+				</apronlining>
+				<bottomrail>
+					<name/>
+					<material/>
+					<finish/>
+					<dim/>
+				</bottomrail>
+				<noselistel>
+					<name/>
+					<material/>
+					<finish/>
+					<dim/>
+				</noselistel>
+				<stringcover>
+					<name/>
+					<material/>
+					<finish/>
+					<dim/>
+				</stringcover>
+			</floor>
+		</stairwell>
+	</params>
+	<bom version="104">
+		<details>
+			<detail name="1_St1L" articleno="">
+				<type id="String" extra="">Òåòèâà</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+					<attribute name="subtype" type="string" value="housed"/>
+					<attribute name="stringtype" type="string" value="housed"/>
+					<attribute name="tenon_start" type="bool" value="false"/>
+					<attribute name="tenon_end" type="bool" value="false"/>
+					<attribute name="makeup" type="bool" value="false"/>
+					<attribute name="makedown" type="bool" value="false"/>
+				</attributes>
+				<typename>40</typename>
+				<rawmat>1_St1L</rawmat>
+				<dim text="40 x 1405 x 303">
+					<thickness>40</thickness>
+					<width>303</width>
+					<length>1405</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_St2L" articleno="">
+				<type id="String" extra="">Òåòèâà</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+					<attribute name="subtype" type="string" value="housed"/>
+					<attribute name="stringtype" type="string" value="housed"/>
+					<attribute name="tenon_start" type="bool" value="false"/>
+					<attribute name="tenon_end" type="bool" value="false"/>
+					<attribute name="makeup" type="bool" value="false"/>
+					<attribute name="makedown" type="bool" value="false"/>
+				</attributes>
+				<typename>40</typename>
+				<rawmat>1_St2L</rawmat>
+				<dim text="40 x 1734 x 365">
+					<thickness>40</thickness>
+					<width>365</width>
+					<length>1734</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_St1R" articleno="">
+				<type id="String" extra="wall">Òåòèâà</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+					<attribute name="subtype" type="string" value="housed"/>
+					<attribute name="stringtype" type="string" value="housed"/>
+					<attribute name="tenon_start" type="bool" value="false"/>
+					<attribute name="tenon_end" type="bool" value="false"/>
+					<attribute name="makeup" type="bool" value="false"/>
+					<attribute name="makedown" type="bool" value="false"/>
+				</attributes>
+				<typename>40</typename>
+				<rawmat>1_St1R</rawmat>
+				<dim text="40 x 2145 x 591">
+					<thickness>40</thickness>
+					<width>591</width>
+					<length>2145</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_St2R" articleno="">
+				<type id="String" extra="wall">Òåòèâà</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+					<attribute name="subtype" type="string" value="housed"/>
+					<attribute name="stringtype" type="string" value="housed"/>
+					<attribute name="tenon_start" type="bool" value="false"/>
+					<attribute name="tenon_end" type="bool" value="false"/>
+					<attribute name="makeup" type="bool" value="false"/>
+					<attribute name="makedown" type="bool" value="false"/>
+				</attributes>
+				<typename>40</typename>
+				<rawmat>1_St2R</rawmat>
+				<dim text="40 x 461 x 200">
+					<thickness>40</thickness>
+					<width>200</width>
+					<length>461</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_St3R" articleno="">
+				<type id="String" extra="wall">Òåòèâà</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+					<attribute name="subtype" type="string" value="housed"/>
+					<attribute name="stringtype" type="string" value="housed"/>
+					<attribute name="tenon_start" type="bool" value="false"/>
+					<attribute name="tenon_end" type="bool" value="false"/>
+					<attribute name="makeup" type="bool" value="false"/>
+					<attribute name="makedown" type="bool" value="false"/>
+				</attributes>
+				<typename>40</typename>
+				<rawmat>1_St3R</rawmat>
+				<dim text="40 x 2320 x 617">
+					<thickness>40</thickness>
+					<width>617</width>
+					<length>2320</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì10*140">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_10x140c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr1" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr1</rawmat>
+				<dim text="40 x 922 x 419">
+					<thickness>40</thickness>
+					<width>419</width>
+					<length>922</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr2" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr2</rawmat>
+				<dim text="40 x 777 x 344">
+					<thickness>40</thickness>
+					<width>344</width>
+					<length>777</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr3" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr3</rawmat>
+				<dim text="40 x 716 x 279">
+					<thickness>40</thickness>
+					<width>279</width>
+					<length>716</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr4" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr4</rawmat>
+				<dim text="40 x 697 x 279">
+					<thickness>40</thickness>
+					<width>279</width>
+					<length>697</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr5" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr5</rawmat>
+				<dim text="40 x 738 x 375">
+					<thickness>40</thickness>
+					<width>375</width>
+					<length>738</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr6" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr6</rawmat>
+				<dim text="40 x 944 x 486">
+					<thickness>40</thickness>
+					<width>486</width>
+					<length>944</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr7" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr7</rawmat>
+				<dim text="40 x 906 x 381">
+					<thickness>40</thickness>
+					<width>381</width>
+					<length>906</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr8" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr8</rawmat>
+				<dim text="40 x 738 x 293">
+					<thickness>40</thickness>
+					<width>293</width>
+					<length>738</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr9" articleno="">
+				<type id="Step" extra="StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="winder"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr9</rawmat>
+				<dim text="40 x 701 x 235">
+					<thickness>40</thickness>
+					<width>235</width>
+					<length>701</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr10" articleno="">
+				<type id="Step" extra="Ïðÿìûå ñòóïåíè,StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr10</rawmat>
+				<dim text="40 x 695 x 222">
+					<thickness>40</thickness>
+					<width>222</width>
+					<length>695</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr11" articleno="">
+				<type id="Step" extra="Ïðÿìûå ñòóïåíè,StepOnHousedString,ClosedStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr11</rawmat>
+				<dim text="40 x 695 x 222">
+					<thickness>40</thickness>
+					<width>222</width>
+					<length>695</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Tr12" articleno="">
+				<type id="Step" extra="Ïðÿìûå ñòóïåíè,StepOnHousedString,OpenStep">Ñòóïåíü</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<typename/>
+				<rawmat>1_Tr12</rawmat>
+				<dim text="40 x 695 x 242">
+					<thickness>40</thickness>
+					<width>242</width>
+					<length>695</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri1" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri1</rawmat>
+				<dim text="16 x 170 x 893">
+					<thickness>16</thickness>
+					<width>170</width>
+					<length>893</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri2" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri2</rawmat>
+				<dim text="16 x 210 x 734">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>734</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri3" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri3</rawmat>
+				<dim text="16 x 210 x 702">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>702</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri4" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri4</rawmat>
+				<dim text="16 x 210 x 697">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>697</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri5" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri5</rawmat>
+				<dim text="16 x 210 x 704">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>704</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri6" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri6</rawmat>
+				<dim text="16 x 210 x 754">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>754</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri7" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri7</rawmat>
+				<dim text="16 x 210 x 857">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>857</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri8" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri8</rawmat>
+				<dim text="16 x 210 x 717">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>717</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri9" articleno="">
+				<type id="Riser" extra="winder">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri9</rawmat>
+				<dim text="16 x 210 x 698">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>698</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri10" articleno="">
+				<type id="Riser" extra="">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri10</rawmat>
+				<dim text="16 x 210 x 697">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>697</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri11" articleno="">
+				<type id="Riser" extra="">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri11</rawmat>
+				<dim text="16 x 210 x 697">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>697</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ri12" articleno="">
+				<type id="Riser" extra="">Ïîäñòóïåíîê</type>
+				<attributes>
+					<attribute name="FactoryFitted" type="bool" value="true"/>
+				</attributes>
+				<typename>16</typename>
+				<rawmat>1_Ri12</rawmat>
+				<dim text="16 x 210 x 697">
+					<thickness>16</thickness>
+					<width>210</width>
+					<length>697</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*80">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x80c</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_StPL" articleno="">
+				<type id="Newel" extra="">Ñòîëáû â ëåñòíèöå</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.0"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>1_StPL</rawmat>
+				<dim text="80 x 80 x 1115">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>1115</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier>ÈÏ Áîáðîâ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_SP1-2L" articleno="">
+				<type id="Newel" extra="">Ñòîëáû â ëåñòíèöå</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.0"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>1_SP1-2L</rawmat>
+				<dim text="80 x 80 x 2429">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>2429</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier>ÈÏ Áîáðîâ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_EnPL" articleno="">
+				<type id="Newel" extra="">Ñòîëáû â ëåñòíèöå</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.0"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>1_EnPL</rawmat>
+				<dim text="80 x 80 x 1427">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>1427</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier>ÈÏ Áîáðîâ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_SP1-2R" articleno="">
+				<type id="Newel" extra="">Ñòîëáû â ëåñòíèöå</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.0"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>1_SP1-2R</rawmat>
+				<dim text="80 x 80 x 1367">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>1367</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier>ÈÏ Áîáðîâ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_HRR1L" articleno="">
+				<type id="Handrail" extra="raking">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="handrailheight" type="double" value="800.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>1_HRR1L</rawmat>
+				<dim text="40 x 115 x 1283">
+					<thickness>40</thickness>
+					<width>115</width>
+					<length>1283</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_HRR2L" articleno="">
+				<type id="Handrail" extra="raking">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="handrailheight" type="double" value="800.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>1_HRR2L</rawmat>
+				<dim text="40 x 131 x 1508">
+					<thickness>40</thickness>
+					<width>131</width>
+					<length>1508</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_HRR1R" articleno="">
+				<type id="Handrail" extra="wall">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="handrailheight" type="double" value="900.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>1_HRR1R</rawmat>
+				<dim text="40 x 195 x 1808">
+					<thickness>40</thickness>
+					<width>195</width>
+					<length>1808</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_HRR3R" articleno="">
+				<type id="Handrail" extra="wall">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="handrailheight" type="double" value="900.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>1_HRR3R</rawmat>
+				<dim text="40 x 280 x 2232">
+					<thickness>40</thickness>
+					<width>280</width>
+					<length>2232</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba1R1L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1283.4804104370139"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba1R1L</rawmat>
+				<dim text="30 x 721">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>721</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba2R1L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1283.4804104370139"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba2R1L</rawmat>
+				<dim text="30 x 721">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>721</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba3R1L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1283.4804104370139"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba3R1L</rawmat>
+				<dim text="30 x 720">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>720</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba4R1L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1283.4804104370139"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba4R1L</rawmat>
+				<dim text="30 x 711">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>711</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba1R2L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1507.5678939110558"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba1R2L</rawmat>
+				<dim text="30 x 706">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>706</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba2R2L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1507.5678939110558"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba2R2L</rawmat>
+				<dim text="30 x 718">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>718</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba3R2L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1507.5678939110558"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba3R2L</rawmat>
+				<dim text="30 x 721">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>721</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba4R2L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1507.5678939110558"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba4R2L</rawmat>
+				<dim text="30 x 721">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>721</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_Ba5R2L" articleno="">
+				<type id="Baluster" extra="raking">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="0.0"/>
+					<attribute name="handraillength" type="double" value="1507.5678939110558"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>1_Ba5R2L</rawmat>
+				<dim text="30 x 721">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>721</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">PINE</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_FC1" articleno="">
+				<type id="Covering" extra="">Îáøèâêà ïðî¸ìà</type>
+				<typename>16</typename>
+				<rawmat>1_FC1</rawmat>
+				<dim text="16 x 215 x 615">
+					<thickness>16</thickness>
+					<width>215</width>
+					<length>615</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_FC2" articleno="">
+				<type id="Covering" extra="">Îáøèâêà ïðî¸ìà</type>
+				<typename>16</typename>
+				<rawmat>1_FC2</rawmat>
+				<dim text="16 x 215 x 561">
+					<thickness>16</thickness>
+					<width>215</width>
+					<length>561</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="1_FC3" articleno="">
+				<type id="Covering" extra="">Îáøèâêà ïðî¸ìà</type>
+				<typename>16</typename>
+				<rawmat>1_FC3</rawmat>
+				<dim text="16 x 215 x 781">
+					<thickness>16</thickness>
+					<width>215</width>
+					<length>781</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_P1" articleno="">
+				<type id="Newel" extra="">Ñâîáîäíûå ñòîëáû</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.000000000000000000020448014602235949"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>2_P1</rawmat>
+				<dim text="80 x 80 x 1000">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>1000</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_P2" articleno="">
+				<type id="Newel" extra="">Ñâîáîäíûå ñòîëáû</type>
+				<attributes>
+					<attribute name="TenonStringConnection" type="bool" value="false"/>
+					<attribute name="sidewayoffset" type="double" value="0.0"/>
+					<attribute name="postdryfitted" type="bool" value="false"/>
+				</attributes>
+				<linkedparts/>
+				<typename>P80x80</typename>
+				<rawmat>2_P2</rawmat>
+				<dim text="80 x 80 x 1000">
+					<thickness>80</thickness>
+					<width>80</width>
+					<length>1000</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_HRFR1" articleno="">
+				<type id="Handrail" extra="landing">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="handrailheight" type="double" value="950.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>2_HRFR1</rawmat>
+				<dim text="40 x 90 x 495  -0°/-0°">
+					<thickness>40</thickness>
+					<width>90</width>
+					<length>495</length>
+					<angup>0</angup>
+					<angdown>0</angdown>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_HRFR2" articleno="">
+				<type id="Handrail" extra="landing">Ïîðó÷åíü</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="handrailheight" type="double" value="950.0"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<linkedparts/>
+				<typename/>
+				<rawmat>2_HRFR2</rawmat>
+				<dim text="40 x 90 x 561  -0°/-0°">
+					<thickness>40</thickness>
+					<width>90</width>
+					<length>561</length>
+					<angup>0</angup>
+					<angdown>0</angdown>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="" articleno="Áîëò Ì6*120">
+				<type id="Bolt" extra="">Áîëò</type>
+				<typename>B_6x120b</typename>
+				<rawmat/>
+				<dim text="">
+					<thickness>0</thickness>
+					<width>0</width>
+					<length>0</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No"/>
+				<finish combo="No"/>
+				<supplier>ÐîññÊðåïåæ</supplier>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_BRFR11" articleno="">
+				<type id="Bottomrail" extra="floor">Ïîäáàëÿñåííèê</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<typename>40õ40</typename>
+				<rawmat>2_BRFR11</rawmat>
+				<dim text="40 x 40 x 495">
+					<thickness>40</thickness>
+					<width>40</width>
+					<length>495</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_Ba1FR11" articleno="">
+				<type id="Baluster" extra="landing">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="495.00103411521491"/>
+					<attribute name="handraillength" type="double" value="495.00103411531427"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>2_Ba1FR11</rawmat>
+				<dim text="30 x 870">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>870</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_Ba2FR11" articleno="">
+				<type id="Baluster" extra="landing">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="495.00103411521491"/>
+					<attribute name="handraillength" type="double" value="495.00103411531427"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>2_Ba2FR11</rawmat>
+				<dim text="30 x 870">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>870</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_BRFR21" articleno="">
+				<type id="Bottomrail" extra="floor">Ïîäáàëÿñåííèê</type>
+				<attributes>
+					<attribute name="balustersize" type="string" value="30x30"/>
+					<attribute name="subtype" type="string" value="straight"/>
+				</attributes>
+				<typename>40õ40</typename>
+				<rawmat>2_BRFR21</rawmat>
+				<dim text="40 x 40 x 561">
+					<thickness>40</thickness>
+					<width>40</width>
+					<length>561</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_Ba1FR21" articleno="">
+				<type id="Baluster" extra="landing">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="561.00103792432071"/>
+					<attribute name="handraillength" type="double" value="561.00103792441996"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>2_Ba1FR21</rawmat>
+				<dim text="30 x 870">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>870</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_Ba2FR21" articleno="">
+				<type id="Baluster" extra="landing">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="561.00103792432071"/>
+					<attribute name="handraillength" type="double" value="561.00103792441996"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>2_Ba2FR21</rawmat>
+				<dim text="30 x 870">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>870</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+			<detail name="2_Ba3FR21" articleno="">
+				<type id="Baluster" extra="landing">Áàëÿñèíà</type>
+				<attributes>
+					<attribute name="bottomraillength" type="double" value="561.00103792432071"/>
+					<attribute name="handraillength" type="double" value="561.00103792441996"/>
+				</attributes>
+				<typename>Bal01</typename>
+				<rawmat>2_Ba3FR21</rawmat>
+				<dim text="30 x 870">
+					<thickness>0</thickness>
+					<width>30</width>
+					<length>870</length>
+					<angup/>
+					<angdown/>
+				</dim>
+				<material combo="No">BEECH</material>
+				<finish combo="No">8</finish>
+				<supplier/>
+				<floor>1</floor>
+				<stairwell>1</stairwell>
+			</detail>
+		</details>
+	</bom>
+</drawingdata>
+
+

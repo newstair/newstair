@@ -36,7 +36,7 @@
   .brand h1{margin:0;font-size:14px;font-weight:650;}
   .brand p{margin:2px 0 0;font-size:11px;color:var(--muted);}
 
-  .panel{position:fixed;top:14px;right:14px;width:320px;padding:14px;
+  .panel{position:fixed;top:14px;right:14px;width:340px;padding:14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     z-index:20;display:flex;flex-direction:column;gap:9px;
@@ -63,7 +63,7 @@
     border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(255,112,67,.35);}
   .btn.human-on{background:linear-gradient(135deg,#31d0aa,#1e9e80);
     border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(49,208,170,.35);}
-  .btn.big{padding:14px 18px;font-size:14px;font-weight:600;}
+  .btn.big{padding:13px 18px;font-size:13px;font-weight:600;}
   .btn .ico{font-size:13px;line-height:1;}
 
   .divider{height:1px;background:var(--border);margin:3px 0;}
@@ -75,6 +75,31 @@
     padding:0;border:none;border-radius:7px;background:transparent;cursor:pointer;overflow:hidden;}
   input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
   input[type="color"]::-webkit-color-swatch{border:1px solid var(--border-str);border-radius:7px;}
+
+  input[type="number"]{
+    width:90px;padding:6px 10px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border);
+    border-radius:7px;color:var(--text);
+    font-family:inherit;font-size:13px;
+    outline:none;text-align:right;
+    -moz-appearance:textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0;
+  }
+  input[type="number"]:focus{border-color:var(--accent);}
+
+  input[type="text"]{
+    padding:6px 10px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border);
+    border-radius:7px;color:var(--text);
+    font-family:inherit;font-size:13px;
+    outline:none;width:100%;
+  }
+  input[type="text"]:focus{border-color:var(--accent);}
 
   .slider-row{display:flex;flex-direction:column;gap:6px;
     padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);
@@ -94,7 +119,119 @@
     background:linear-gradient(135deg,#31d0aa,#1e9e80);border:2px solid #0f1116;cursor:pointer;
     box-shadow:0 2px 8px rgba(49,208,170,.5);}
 
-  /* ---------- Модальные окна ---------- */
+  /* ═══ Аккордеон в панели ═══ */
+  .acc{
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .acc-header{
+    width:100%;display:flex;align-items:center;justify-content:space-between;
+    gap:8px;padding:12px 14px;background:transparent;border:none;
+    color:var(--text);font-size:13px;font-weight:600;
+    font-family:inherit;cursor:pointer;text-align:left;
+    transition:background .15s;
+  }
+  .acc-header:hover{background:rgba(255,255,255,.05);}
+  .acc-header .ico{font-size:14px;margin-right:6px;}
+  .acc-header .arrow{font-size:11px;color:var(--muted);
+    transition:transform .2s;margin-left:auto;}
+  .acc.open .acc-header .arrow{transform:rotate(90deg);}
+  .acc-body{
+    display:none;flex-direction:column;gap:8px;
+    padding:10px;background:rgba(0,0,0,.15);
+    border-top:1px solid var(--border);
+  }
+  .acc.open .acc-body{display:flex;}
+
+  /* ═══ Карточки отделки ═══ */
+  .finish-row{
+    display:flex;flex-direction:column;gap:0;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    border-radius:10px;overflow:hidden;margin-bottom:6px;
+  }
+  .finish-header{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;padding:11px 12px;cursor:pointer;transition:background .15s;
+  }
+  .finish-header:hover{background:rgba(255,255,255,.05);}
+  .finish-header .label{font-size:12px;color:var(--muted);font-weight:550;}
+  .finish-header .value{font-size:12px;color:var(--text);font-weight:600;
+    display:flex;align-items:center;gap:6px;}
+  .finish-header .arrow{font-size:10px;color:var(--muted);transition:transform .2s;}
+  .finish-row.open .finish-header .arrow{transform:rotate(180deg);}
+  .finish-options{
+    display:none;flex-direction:column;gap:2px;padding:6px;
+    max-height:260px;overflow-y:auto;
+    background:rgba(0,0,0,.2);border-top:1px solid var(--border);
+  }
+  .finish-row.open .finish-options{display:flex;}
+  .finish-options::-webkit-scrollbar{width:6px;}
+  .finish-options::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
+  .finish-option{
+    display:flex;align-items:center;gap:10px;padding:8px 10px;
+    font-size:12px;color:var(--text);background:transparent;border:none;
+    border-radius:7px;cursor:pointer;text-align:left;font-family:inherit;
+    transition:background .15s;
+  }
+  .finish-option:hover{background:rgba(255,255,255,.08);}
+  .finish-option.selected{background:rgba(91,140,255,.2);color:#b9cdff;font-weight:600;}
+  .finish-option .swatch{
+    width:22px;height:22px;border-radius:6px;
+    background:#333;border:1px solid rgba(255,255,255,.15);
+    flex-shrink:0;background-size:cover;background-position:center;
+  }
+
+  /* ═══ Плавающая плашка ═══ */
+  .float-bar{
+    position:fixed;
+    left:50%;bottom:20px;
+    transform:translateX(-50%) translateY(80px);
+    display:flex;align-items:center;gap:12px;
+    padding:10px 14px;
+    background:rgba(22,25,33,.95);
+    border:1px solid var(--border-str);
+    border-radius:14px;
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    box-shadow:0 12px 40px rgba(0,0,0,.6);
+    z-index:85;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .3s;
+    max-width:calc(100vw - 20px);
+    flex-wrap:wrap;
+  }
+  .float-bar.show{
+    opacity:1;pointer-events:auto;
+    transform:translateX(-50%) translateY(0);
+  }
+  .float-bar .fb-label{
+    font-size:13px;font-weight:600;
+    display:flex;align-items:center;gap:6px;
+    color:var(--text);white-space:nowrap;
+  }
+  .float-bar .fb-slider{
+    display:flex;align-items:center;gap:8px;
+    font-size:11px;color:var(--muted);white-space:nowrap;
+  }
+  .float-bar .fb-slider input[type="range"].heightSlider{
+    width:120px;
+  }
+  .float-bar .fb-slider b{
+    color:var(--accent-2);font-size:12px;font-weight:700;min-width:40px;text-align:right;
+  }
+  .float-bar .btn.fb-off{
+    background:rgba(255,107,107,.15);
+    border-color:rgba(255,107,107,.45);
+    color:#ffb4b4;
+    padding:6px 12px;font-size:12px;
+  }
+  .float-bar .btn.fb-off:hover{
+    background:rgba(255,107,107,.25);
+  }
+
+  /* ═══ Модальные окна ═══ */
   .modal-overlay{
     position:fixed;inset:0;z-index:90;
     background:rgba(10,12,18,.75);
@@ -106,7 +243,7 @@
   }
   .modal-overlay.show{opacity:1;visibility:visible;}
   .modal{
-    width:100%;max-width:520px;max-height:90vh;
+    width:100%;max-width:600px;max-height:92vh;
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:18px;
@@ -127,16 +264,59 @@
     display:block;margin-top:2px;}
   .modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;
     background:transparent;border:1px solid var(--border);border-radius:8px;
-    color:var(--muted);font-size:16px;cursor:pointer;transition:background .15s, color .15s;}
+    color:var(--muted);font-size:16px;cursor:pointer;
+    transition:background .15s, color .15s;}
   .modal-close:hover{background:rgba(255,255,255,.08);color:var(--text);}
   .modal-body{padding:16px 20px;overflow-y:auto;flex:1;
-    display:flex;flex-direction:column;gap:10px;}
+    display:flex;flex-direction:column;gap:12px;}
   .modal-body::-webkit-scrollbar{width:6px;}
   .modal-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
   .modal-footer{padding:14px 20px;border-top:1px solid var(--border);
-    display:flex;justify-content:center;flex-shrink:0;}
+    display:flex;justify-content:center;gap:10px;flex-shrink:0;flex-wrap:wrap;}
   .modal-footer .btn{min-width:140px;padding:11px 20px;font-size:13px;}
-    /* ---------- Поля ввода ---------- */
+
+  /* ═══ Смета (БЕЗ формул) ═══ */
+  .price-cat{
+    display:flex;flex-direction:column;gap:4px;padding:12px 14px;
+    background:rgba(255,255,255,.03);border:1px solid var(--border);
+    border-radius:10px;
+  }
+  .price-cat-name{
+    font-size:13px;font-weight:600;color:var(--text);
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  }
+  .price-cat-name .material{
+    font-size:11px;font-weight:500;color:var(--accent);
+    padding:2px 7px;background:rgba(91,140,255,.12);border-radius:5px;
+  }
+  .price-cat-result{
+    font-size:15px;font-weight:700;color:var(--text);
+    text-align:right;
+  }
+  .price-totals{
+    display:flex;flex-direction:column;gap:8px;padding:14px 12px 6px;
+    border-top:1px solid var(--border);margin-top:6px;
+  }
+  .price-totals-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:13px;color:var(--muted);
+  }
+  .price-totals-row span:last-child{color:var(--text);font-weight:600;}
+  .price-totals-row.total{
+    font-size:17px;padding-top:8px;
+    border-top:1px solid var(--border);margin-top:4px;
+  }
+  .price-totals-row.total span:first-child{color:var(--text);font-weight:600;}
+  .price-totals-row.total span:last-child{
+    color:var(--accent-2);font-weight:800;font-size:20px;
+    text-shadow:0 0 20px rgba(49,208,170,.3);
+  }
+  .price-empty{
+    text-align:center;padding:32px 16px;color:var(--muted);
+    font-size:13px;line-height:1.6;
+  }
+
+  /* ═══ Поле ввода ═══ */
   .input-row{
     display:flex;align-items:center;gap:10px;
     padding:10px 12px;
@@ -153,59 +333,166 @@
     border-radius:7px;color:var(--text);
     font-family:inherit;font-size:13px;
     outline:none;text-align:right;
+    -moz-appearance:textfield;
+  }
+  .input-row input[type="number"]::-webkit-inner-spin-button,
+  .input-row input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0;
   }
   .input-row input[type="number"]:focus{border-color:var(--accent);}
   .input-row .unit{color:var(--muted);font-size:12px;}
 
-  /* ---------- Смета ---------- */
-  .price-cat{display:flex;flex-direction:column;gap:4px;padding:10px 12px;
-    background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;}
-  .price-cat-name{font-size:13px;font-weight:600;color:var(--text);
-    display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
-  .price-cat-name .material{font-size:11px;font-weight:500;color:var(--accent);
-    padding:2px 7px;background:rgba(91,140,255,.12);border-radius:5px;}
-  .price-cat-formula{font-size:11px;color:var(--muted);
-    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
-  .price-cat-result{font-size:15px;font-weight:700;color:var(--text);
-    text-align:right;margin-top:2px;}
-  .price-totals{display:flex;flex-direction:column;gap:8px;padding:14px 12px 6px;
-    border-top:1px solid var(--border);margin-top:6px;}
-  .price-totals-row{display:flex;justify-content:space-between;align-items:baseline;
-    font-size:13px;color:var(--muted);}
-  .price-totals-row span:last-child{color:var(--text);font-weight:600;}
-  .price-totals-row.total{font-size:17px;padding-top:8px;
-    border-top:1px solid var(--border);margin-top:4px;}
-  .price-totals-row.total span:first-child{color:var(--text);font-weight:600;}
-  .price-totals-row.total span:last-child{color:var(--accent-2);font-weight:800;font-size:20px;
-    text-shadow:0 0 20px rgba(49,208,170,.3);}
-  .price-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;line-height:1.6;}
-
-  /* ---------- Параметры ---------- */
-  .param-row{display:flex;justify-content:space-between;align-items:baseline;
-    gap:16px;padding:8px 12px;
-    background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;
-    font-size:13px;}
+  /* ═══ Параметры ═══ */
+  .param-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:16px;padding:9px 12px;
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;
+  }
   .param-row .label{color:var(--muted);}
   .param-row .value{font-weight:600;color:var(--text);white-space:nowrap;}
-  .param-row.section{background:rgba(91,140,255,.08);border-color:rgba(91,140,255,.25);
-    font-weight:600;color:#b9cdff;text-transform:uppercase;font-size:10px;
-    letter-spacing:1.2px;padding:6px 12px;justify-content:center;}
+  .param-row.section{
+    background:rgba(91,140,255,.08);
+    border-color:rgba(91,140,255,.25);
+    font-weight:600;color:#b9cdff;
+    text-transform:uppercase;font-size:10px;
+    letter-spacing:1.2px;padding:6px 12px;justify-content:center;
+  }
 
-  /* ---------- Кнопка-переключатель панели ---------- */
-  .panel-toggle{position:fixed;top:14px;right:14px;width:44px;height:44px;
+  /* ═══ Бланк заказа ═══ */
+  .order-section{
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .order-section-title{
+    font-size:10px;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--accent);font-weight:700;
+    padding-bottom:4px;
+    border-bottom:1px solid var(--border);
+  }
+  .order-image-frame{
+    background:#fff;border-radius:10px;
+    padding:6px;overflow:hidden;
+    display:flex;justify-content:center;align-items:center;
+    min-height:120px;
+  }
+  .order-image-frame img{
+    max-width:100%;max-height:280px;
+    display:block;
+  }
+  .order-image-frame iframe{
+    width:100%;height:340px;
+    border:none;background:#fff;
+    border-radius:6px;
+  }
+  .order-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+  }
+  .order-table th{
+    text-align:left;
+    font-size:10px;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:600;
+    padding:8px 8px;
+    border-bottom:1px solid var(--border);
+  }
+  .order-table td{
+    padding:9px 8px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    color:var(--text);
+    vertical-align:top;
+  }
+  .order-table tr:last-child td{
+    border-bottom:none;
+  }
+  .order-table td.num{
+    color:var(--muted);
+    width:28px;
+  }
+  .order-table td.mat{
+    color:var(--muted);
+    font-size:11px;
+  }
+  .order-table td.qty{
+    text-align:right;
+    white-space:nowrap;
+    color:var(--muted);
+  }
+  .order-table td.sum{
+    text-align:right;
+    white-space:nowrap;
+    font-weight:600;
+  }
+
+  .order-totals{
+    display:flex;flex-direction:column;gap:6px;
+    margin-top:8px;
+    padding-top:10px;
+    border-top:1px solid var(--border);
+  }
+  .order-totals-row{
+    display:flex;justify-content:space-between;gap:14px;
+    font-size:13px;color:var(--muted);
+  }
+  .order-totals-row span:last-child{
+    color:var(--text);font-weight:600;
+  }
+  .order-totals-row.total{
+    font-size:17px;
+    padding-top:8px;
+    margin-top:4px;
+    border-top:1px solid var(--border);
+  }
+  .order-totals-row.total span:first-child{
+    color:var(--text);font-weight:600;
+  }
+  .order-totals-row.total span:last-child{
+    color:var(--accent-2);font-weight:800;font-size:20px;
+    text-shadow:0 0 20px rgba(49,208,170,.3);
+  }
+
+  .order-lead-row{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;
+    background:rgba(91,140,255,.08);
+    border:1px solid rgba(91,140,255,.25);
+    border-radius:10px;
+    font-size:13px;
+    color:var(--text);
+    font-weight:600;
+  }
+  .order-lead-row input[type="number"]{
+    width:70px;
+    -moz-appearance:textfield;
+  }
+  .order-lead-row input[type="number"]::-webkit-inner-spin-button,
+  .order-lead-row input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0;
+  }
+  .order-lead-row .unit{
+    color:var(--text);font-weight:600;
+  }
+
+  /* ═══ Кнопка-переключатель панели ═══ */
+  .panel-toggle{
+    position:fixed;top:14px;right:14px;width:44px;height:44px;
     display:none;align-items:center;justify-content:center;
     background:var(--panel);border:1px solid var(--border);
     border-radius:12px;color:var(--text);font-size:20px;
     cursor:pointer;z-index:21;
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     transition:transform .15s, background .15s;
-    -webkit-user-select:none;user-select:none;}
+    -webkit-user-select:none;user-select:none;
+  }
   .panel-toggle:hover{background:rgba(255,255,255,.1);}
   .panel-toggle:active{transform:scale(.94);}
   .panel-toggle.active{background:rgba(91,140,255,.25);
     border-color:rgba(91,140,255,.5);color:#b9cdff;}
 
-  /* ---------- Инфо-панель ---------- */
   .info{position:fixed;left:18px;bottom:18px;min-width:212px;padding:12px 14px;
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:20;font-size:12px;
@@ -217,9 +504,9 @@
   .info-row b{font-weight:600;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .info-head{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:2px;}
 
-  /* ---------- Загрузка / Прогресс / Toast ---------- */
   .loading{position:fixed;inset:0;z-index:55;display:grid;place-items:center;
-    background:rgba(10,12,18,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    background:rgba(10,12,18,.6);
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
     opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;}
   .loading.show{opacity:1;visibility:visible;}
   .spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.12);
@@ -239,10 +526,11 @@
   .progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:70;
     background:transparent;pointer-events:none;opacity:0;transition:opacity .3s;}
   .progress.show{opacity:1;}
-  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  .progress-bar{height:100%;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
     transition:width .15s ease;}
 
-    .mode-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
+  .mode-hint{position:fixed;left:50%;top:24px;transform:translateX(-50%);
     padding:10px 18px;color:#fff;border-radius:12px;font-size:13px;font-weight:600;
     z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;}
   .mode-hint.show{opacity:1;}
@@ -250,101 +538,6 @@
     box-shadow:0 8px 24px rgba(255,112,67,.4);}
   .mode-hint.human{background:linear-gradient(135deg,#31d0aa,#1e9e80);
     box-shadow:0 8px 24px rgba(49,208,170,.4);}
-  /* ═══ Карточки отделки ═══ */
-  .finish-row{
-    display:flex;
-    flex-direction:column;
-    gap:0;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--border);
-    border-radius:10px;
-    overflow:hidden;
-    margin-bottom:6px;
-  }
-  .finish-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:11px 12px;
-    cursor:pointer;
-    transition:background .15s;
-  }
-  .finish-header:hover{
-    background:rgba(255,255,255,.05);
-  }
-  .finish-header .label{
-    font-size:12px;
-    color:var(--muted);
-    font-weight:550;
-  }
-  .finish-header .value{
-    font-size:12px;
-    color:var(--text);
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  .finish-header .arrow{
-    font-size:10px;
-    color:var(--muted);
-    transition:transform .2s;
-  }
-  .finish-row.open .finish-header .arrow{
-    transform:rotate(180deg);
-  }
-  .finish-options{
-    display:none;
-    flex-direction:column;
-    gap:2px;
-    padding:6px;
-    max-height:260px;
-    overflow-y:auto;
-    background:rgba(0,0,0,.2);
-    border-top:1px solid var(--border);
-  }
-  .finish-row.open .finish-options{
-    display:flex;
-  }
-  .finish-options::-webkit-scrollbar{width:6px;}
-  .finish-options::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.15);
-    border-radius:3px;
-  }
-  .finish-option{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:8px 10px;
-    font-size:12px;
-    color:var(--text);
-    background:transparent;
-    border:none;
-    border-radius:7px;
-    cursor:pointer;
-    text-align:left;
-    font-family:inherit;
-    transition:background .15s;
-  }
-  .finish-option:hover{
-    background:rgba(255,255,255,.08);
-  }
-  .finish-option.selected{
-    background:rgba(91,140,255,.2);
-    color:#b9cdff;
-    font-weight:600;
-  }
-  .finish-option .swatch{
-    width:22px;
-    height:22px;
-    border-radius:6px;
-    background:#333;
-    border:1px solid rgba(255,255,255,.15);
-    flex-shrink:0;
-    background-size:cover;
-    background-position:center;
-  }
 
   @media (max-width:640px){
     .brand{padding:8px 12px 8px 8px;top:12px;left:12px;}
@@ -352,35 +545,43 @@
     .logo{width:28px;height:28px;font-size:14px;border-radius:8px;}
     .panel-toggle{display:flex;top:12px;right:12px;width:40px;height:40px;font-size:18px;}
     .panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;
-      flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;max-height:85vh;
+      max-height:75vh;
       transform:translateY(calc(100% + 30px));opacity:0;pointer-events:none;}
     .panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
     .panel .btn{font-size:11px;padding:8px 6px;flex:1 1 auto;min-width:80px;}
-    .panel .btn.big{flex:1 1 100%;}
     .panel .row{flex:1 1 100%;}
+    .acc-body .row{flex-wrap:wrap;}
+    .acc-body .btn{flex:1 1 45%;}
     .color-row{flex:1 1 100%;}
     .slider-row{flex:1 1 100%;}
+    .finish-row{flex:1 1 100%;}
     .info{display:none;}
     .mode-hint{top:auto;bottom:80px;font-size:12px;padding:8px 14px;}
-        .modal{
-      max-width:100%;max-height:65vh;
-      border-radius:18px 18px 0 0;
-      position:absolute;bottom:0;left:0;right:0;
-      transform:translateY(100%);
-    }
-    .modal-overlay.show .modal{transform:translateY(0);}
-    .modal-overlay{align-items:flex-end;}
+    .modal{max-width:100%;max-height:95vh;border-radius:14px;}
     .modal-header{padding:14px 16px;}
-    .modal-body{padding:14px 16px;gap:8px;}
+    .modal-body{padding:14px 16px;gap:10px;}
     .modal-footer{padding:12px 16px;}
+    .modal-footer .btn{flex:1 1 100%;}
     .price-cat{padding:9px 10px;}
     .price-cat-result{font-size:14px;}
     .price-totals-row.total{font-size:15px;}
     .price-totals-row.total span:last-child{font-size:18px;}
+    .order-table{font-size:11px;}
+    .order-table th{font-size:9px;padding:6px 4px;}
+    .order-table td{padding:7px 4px;}
+    .float-bar{
+      left:12px;right:12px;
+      transform:translateY(80px);
+      border-radius:12px;
+      padding:10px;
+      gap:8px;
+      bottom:12px;
+    }
+    .float-bar.show{transform:translateY(0);}
+    .float-bar .fb-slider input[type="range"].heightSlider{width:90px;}
   }
 </style>
-</head>
-<body>
+</head><body>
 
 <canvas id="canvas"></canvas>
 
@@ -400,22 +601,91 @@
     <span class="ico">💰</span> Расчёт стоимости
   </button>
 
-  <button class="btn big" id="btnShowView">
-    <span class="ico">👁</span> Настройки просмотра
+  <button class="btn big" id="btnOrder" style="display:none;">
+    <span class="ico">📄</span> Бланк заказа
   </button>
 
-  <button class="btn big" id="btnShowTools">
-    <span class="ico">📏</span> Измерить
-  </button>
+  <!-- ═══ Настройки просмотра ═══ -->
+  <div class="acc" id="accView">
+    <button class="acc-header" type="button">
+      <span><span class="ico">👁</span> Настройки просмотра</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="acc-body">
+      <div class="row">
+        <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
+        <button class="btn active" id="el_risers"><span class="ico">📐</span> Подступенки</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_stringers"><span class="ico">🏗</span> Тетивы</button>
+        <button class="btn active" id="el_kosour"><span class="ico">📏</span> Косоуры</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_welcome_steps"><span class="ico">🌀</span> Приглас. ступени</button>
+        <button class="btn active" id="el_welcome_risers"><span class="ico">🌀</span> Приглас. подступ.</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_handrail"><span class="ico">➖</span> Поручень</button>
+        <button class="btn active" id="el_baluster"><span class="ico">🪜</span> Балясины</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_posts"><span class="ico">🏛</span> Столбы</button>
+        <button class="btn active" id="el_covering"><span class="ico">📏</span> Панель</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_wall"><span class="ico">🧱</span> Стена</button>
+        <button class="btn active" id="el_opening"><span class="ico">🪟</span> Проём</button>
+      </div>
+      <div class="row">
+        <button class="btn active" id="el_floor"><span class="ico">🌳</span> Пол</button>
+        <button class="btn active" id="btnGlass"><span class="ico">◇</span> Стекло</button>
+      </div>
+    </div>
+  </div>
 
-  <button class="btn big" id="btnShowFinish">
-    <span class="ico">🎨</span> Текстуры
-  </button>
+  <!-- ═══ Измерить ═══ -->
+  <div class="acc" id="accTools">
+    <button class="acc-header" type="button">
+      <span><span class="ico">📏</span> Измерить</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="acc-body">
+      <div class="row">
+        <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
+        <button class="btn" id="btnRulerClear"><span class="ico">✕</span> Очистить</button>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnHuman"><span class="ico">🧍</span> Человечек</button>
+        <button class="btn" id="btnHumanRemove"><span class="ico">✕</span> Убрать</button>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Рост человека</span><b id="heightValue">185 см</b></div>
+        <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Поворот человека</span><b id="rotationValue">0°</b></div>
+        <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
+      </div>
+    </div>
+  </div>
 
+  <!-- ═══ Текстуры ═══ -->
+  <div class="acc" id="accFinish">
+    <button class="acc-header" type="button">
+      <span><span class="ico">🎨</span> Текстуры</span>
+      <span class="arrow">▶</span>
+    </button>
+    <div class="acc-body">
+      <div id="finishRows"></div>
+    </div>
+  </div>
+
+  <!-- ═══ Параметры лестницы ═══ -->
   <button class="btn big" id="btnParams">
     <span class="ico">📐</span> Параметры лестницы
   </button>
 
+  <!-- ═══ Сохранить позицию ═══ -->
   <button class="btn big" id="btnSavePos">
     <span class="ico">💾</span> Сохранить позицию
   </button>
@@ -441,6 +711,7 @@
 
 </aside>
 
+<!-- ═══ Инфо-панель ═══ -->
 <div class="info" id="info">
   <div class="info-head">Модель</div>
   <div class="info-row"><span>Файл</span><b id="iFile">—</b></div>
@@ -451,6 +722,7 @@
   <div class="info-row" id="animRow" style="display:none"><span>Анимаций</span><b id="iAnims">0</b></div>
 </div>
 
+<!-- ═══ Загрузка ═══ -->
 <div class="loading" id="loading">
   <div>
     <div class="spinner"></div>
@@ -459,11 +731,37 @@
 </div>
 
 <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- ═══ Подсказки ═══ -->
 <div class="mode-hint ruler" id="rulerHint">📏 Режим линейки: тапните по двум точкам модели</div>
 <div class="mode-hint human" id="humanHint">🧍 Тапните по ступени, чтобы поставить человечка</div>
+
+<!-- ═══ Плавающая плашка — Линейка ═══ -->
+<div class="float-bar" id="floatRuler">
+  <span class="fb-label">📏 Линейка активна</span>
+  <button class="btn fb-off" id="floatRulerOff">Отключить</button>
+</div>
+
+<!-- ═══ Плавающая плашка — Человечек ═══ -->
+<div class="float-bar" id="floatHuman">
+  <span class="fb-label">🧍 Человечек</span>
+  <div class="fb-slider">
+    <span>Рост</span>
+    <input type="range" id="floatHeightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
+    <b id="floatHeightValue">185 см</b>
+  </div>
+  <div class="fb-slider">
+    <span>Поворот</span>
+    <input type="range" id="floatRotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
+    <b id="floatRotationValue">0°</b>
+  </div>
+  <button class="btn fb-off" id="floatHumanOff">Отключить</button>
+</div>
+
+<!-- ═══ Toast ═══ -->
 <div class="toast" id="toast"></div>
 
-<!-- Окно сметы -->
+<!-- ═══ Модальное окно: Расчёт стоимости ═══ -->
 <div class="modal-overlay" id="priceModalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -480,7 +778,7 @@
   </div>
 </div>
 
-<!-- Окно параметров -->
+<!-- ═══ Модальное окно: Параметры лестницы ═══ -->
 <div class="modal-overlay" id="paramsModalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -497,98 +795,32 @@
   </div>
 </div>
 
-<!-- Окно: Настройки просмотра -->
-<div class="modal-overlay" id="viewModalOverlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div><span class="title">👁 Настройки просмотра</span></div>
-      <button class="modal-close" id="viewModalClose" aria-label="Закрыть">✕</button>
-    </div>
-    <div class="modal-body" id="viewModalBody">
-      <div class="row">
-        <button class="btn active" id="el_treads"><span class="ico">🪵</span> Ступени</button>
-        <button class="btn active" id="el_risers"><span class="ico">📐</span> Подступенки</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_stringers"><span class="ico">🏗</span> Тетивы</button>
-        <button class="btn active" id="el_kosour"><span class="ico">📏</span> Косоуры</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_welcome_steps"><span class="ico">🌀</span> Приглас. ступени</button>
-        <button class="btn active" id="el_welcome_risers"><span class="ico">🌀</span> Приглас. подступенки</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_handrail"><span class="ico">➖</span> Поручень</button>
-        <button class="btn active" id="el_baluster"><span class="ico">🪜</span> Балясины</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_posts"><span class="ico">🏛</span> Столбы</button>
-        <button class="btn active" id="el_covering"><span class="ico">📏</span> Панель</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_wall"><span class="ico">🧱</span> Стена</button>
-        <button class="btn active" id="el_opening"><span class="ico">🪟</span> Проём</button>
-      </div>
-      <div class="row">
-        <button class="btn active" id="el_floor"><span class="ico">🌳</span> Пол</button>
-        <button class="btn active" id="btnGlass"><span class="ico">◇</span> Стекло</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="viewModalCloseBtn">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<!-- Окно: Измерить -->
-<div class="modal-overlay" id="toolsModalOverlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div><span class="title">📏 Измерить</span></div>
-      <button class="modal-close" id="toolsModalClose" aria-label="Закрыть">✕</button>
-    </div>
-    <div class="modal-body" id="toolsModalBody">
-      <div class="row">
-        <button class="btn" id="btnRuler"><span class="ico">📏</span> Линейка</button>
-        <button class="btn" id="btnRulerClear"><span class="ico">✕</span> Очистить</button>
-      </div>
-      <div class="row">
-        <button class="btn" id="btnHuman"><span class="ico">🧍</span> Человечек</button>
-        <button class="btn" id="btnHumanRemove"><span class="ico">✕</span> Убрать</button>
-      </div>
-      <div class="slider-row">
-        <div class="slider-label"><span>Рост</span><b id="heightValue">185 см</b></div>
-        <input type="range" id="heightSlider" class="heightSlider" min="165" max="195" step="5" value="185">
-      </div>
-      <div class="slider-row">
-        <div class="slider-label"><span>Поворот</span><b id="rotationValue">0°</b></div>
-        <input type="range" id="rotationSlider" class="heightSlider" min="0" max="360" step="15" value="0">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="toolsModalCloseBtn">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<!-- Окно: Текстуры -->
-<div class="modal-overlay" id="finishModalOverlay">
+<!-- ═══ Модальное окно: Бланк заказа ═══ -->
+<div class="modal-overlay" id="orderModalOverlay">
   <div class="modal">
     <div class="modal-header">
       <div>
-        <span class="title">🎨 Текстуры</span>
-        <span class="subtitle" id="finishModalSubtitle">—</span>
+        <span class="title">📄 Бланк заказа</span>
+        <span class="subtitle" id="orderModalSubtitle">—</span>
       </div>
-      <button class="modal-close" id="finishModalClose" aria-label="Закрыть">✕</button>
+      <button class="modal-close" id="orderModalClose" aria-label="Закрыть">✕</button>
     </div>
-    <div class="modal-body" id="finishModalBody">
-      <div id="finishRows"></div>
-    </div>
+    <div class="modal-body" id="orderModalBody"></div>
     <div class="modal-footer">
-      <button class="btn" id="finishModalCloseBtn">Закрыть</button>
+      <button class="btn" id="orderDownload">📥 Скачать PDF</button>
+      <button class="btn primary" id="orderShare">🔗 Поделиться</button>
+      <button class="btn" id="orderModalCloseBtn">Закрыть</button>
     </div>
   </div>
 </div>
+
+<input type="file" id="fileInput" multiple
+       accept=".dae,.xml,image/*,.jpg,.jpeg,.png,.gif,.bmp,.tga,.webp"
+       style="display:none">
+
+<!-- Библиотеки для генерации PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="importmap">
 {
@@ -631,7 +863,9 @@ const FINISH_CATEGORIES = [
   { key: 'covering',        label: 'Панель перекрытия' }
 ];
 
-/* ---------- DOM ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   DOM-ССЫЛКИ
+   ═══════════════════════════════════════════════════════════════ */
 const canvas      = document.getElementById('canvas');
 const loadingEl   = document.getElementById('loading');
 const loadingTxt  = document.getElementById('loadingText');
@@ -639,13 +873,23 @@ const toastEl     = document.getElementById('toast');
 const infoEl      = document.getElementById('info');
 const panelEl     = document.getElementById('panel');
 const panelToggle = document.getElementById('panelToggle');
+const fileInput   = document.getElementById('fileInput');
 const progress    = document.getElementById('progress');
 const progressBar = document.getElementById('progressBar');
 const rulerHint   = document.getElementById('rulerHint');
 const humanHint   = document.getElementById('humanHint');
 const heightSlider= document.getElementById('heightSlider');
 const heightValue = document.getElementById('heightValue');
+const rotationSlider = document.getElementById('rotationSlider');
+const rotationValue  = document.getElementById('rotationValue');
 const finishRows  = document.getElementById('finishRows');
+
+const floatRuler         = document.getElementById('floatRuler');
+const floatHuman         = document.getElementById('floatHuman');
+const floatHeightSlider  = document.getElementById('floatHeightSlider');
+const floatHeightValue   = document.getElementById('floatHeightValue');
+const floatRotationSlider= document.getElementById('floatRotationSlider');
+const floatRotationValue = document.getElementById('floatRotationValue');
 
 const priceOverlay   = document.getElementById('priceModalOverlay');
 const priceBody      = document.getElementById('priceModalBody');
@@ -655,6 +899,10 @@ const priceBtn       = document.getElementById('btnPrice');
 const paramsOverlay  = document.getElementById('paramsModalOverlay');
 const paramsBody     = document.getElementById('paramsModalBody');
 const paramsSubtitle = document.getElementById('paramsModalSubtitle');
+
+const orderOverlay   = document.getElementById('orderModalOverlay');
+const orderBody      = document.getElementById('orderModalBody');
+const orderSubtitle  = document.getElementById('orderModalSubtitle');
 
 const ui = {
   file:   document.getElementById('iFile'),
@@ -668,8 +916,10 @@ const ui = {
 
 function isMobile() { return window.matchMedia('(max-width:640px)').matches; }
 
-/* ---------- Рендерер ---------- */
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+/* ═══════════════════════════════════════════════════════════════
+   РЕНДЕРЕР / СЦЕНА / СВЕТ
+   ═══════════════════════════════════════════════════════════════ */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;
@@ -735,7 +985,9 @@ function buildGrid(radius, yPos) {
   scene.add(gridHelper);
 }
 
-/* ---------- Состояние ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   СОСТОЯНИЕ
+   ═══════════════════════════════════════════════════════════════ */
 let currentModel = null;
 let currentMixer = null;
 let objectUrls   = [];
@@ -759,7 +1011,6 @@ let glassWalls = true;
 const WALL_OPACITY    = 0.15;
 const WINDOW_OPACITY  = 0.55;
 
-/* ---------- Кэш текстур ---------- */
 const textureCache = new Map();
 const texLoader = new THREE.TextureLoader();
 
@@ -783,143 +1034,24 @@ const currentFinish = {
 };
 
 /* ---------- Данные ---------- */
-let priceData = null;
-let bomData = null;
+let priceData = null;   // из price.json
+let bomData   = null;   // из XML (Staircon): { items, params }
 
-/* ---------- Линейка ---------- */
-let rulerMode = false;
-let rulerPoints = [];
-const rulerGroup = new THREE.Group();
-scene.add(rulerGroup);
-
-const rulerLineMat = new THREE.LineBasicMaterial({ color: 0xff7043 });
-const rulerDotMat  = new THREE.MeshBasicMaterial({ color: 0xff9f43 });
-const rulerDotGeo  = new THREE.SphereGeometry(0.03, 12, 12);
-
-const raycaster = new THREE.Raycaster();
-const pointer   = new THREE.Vector2();
-
+/* ---------- Точки для привязки линейки ---------- */
 const allVertices = [];
 
-const snapDotGeo = new THREE.SphereGeometry(0.05, 16, 16);
-const snapDotMat = new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.85 });
-const snapDot = new THREE.Mesh(snapDotGeo, snapDotMat);
-snapDot.visible = false;
-snapDot.renderOrder = 1000;
-scene.add(snapDot);
-
-const SNAP_RADIUS = 0.05;
-
-/* ---------- Человечек ---------- */
-let humanMode = false;
-let humanHeight = 185;
-let humanRotation = 0;
-const humanGroup = new THREE.Group();
-humanGroup.visible = false;
-scene.add(humanGroup);
-
-let humanTemplate = null;
-let humanTemplateHeight = 1.8;
-
-const humanLoader = new GLTFLoader();
-humanLoader.load(HUMAN_FILE, (gltf) => {
-  humanTemplate = gltf.scene;
-  const box = new THREE.Box3().setFromObject(humanTemplate);
-  const size = box.getSize(new THREE.Vector3());
-  humanTemplateHeight = size.y > 0.001 ? size.y : 1.8;
-
-  humanTemplate.traverse((obj) => {
-    if (obj.isMesh) {
-      obj.castShadow = true; obj.receiveShadow = true;
-      if (obj.material) {
-        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-        mats.forEach((m) => {
-          if (m.color) m.color.setHex(0xff9f43);
-          m.emissive = new THREE.Color(0x3d2408);
-          m.emissiveIntensity = 0.15;
-          m.needsUpdate = true;
-        });
-      }
-    }
-  });
-  console.log('%c✔ ' + HUMAN_FILE + ' загружен', 'color:#31d0aa;font-weight:bold');
-  if (humanGroup.visible) makeHumanFigure(humanHeight);
-}, undefined, (err) => { console.warn('Не загружен human.glb:', err); });
-
-function setHumanHeight(cm) {
-  humanHeight = cm;
-  heightValue.textContent = cm + ' см';
-  makeHumanFigure(cm);
-}
-
-function makeHumanFigure(heightCm) {
-  while (humanGroup.children.length) {
-    const c = humanGroup.children.pop();
-    if (c.geometry) c.geometry.dispose();
-  }
-  const targetH = (heightCm / 100) * UNIT_SCALE;
-  if (!humanTemplate) {
-    const tempMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.5 });
-    const tempGeo = new THREE.CylinderGeometry(targetH * 0.08, targetH * 0.08, targetH, 12);
-    const tempMesh = new THREE.Mesh(tempGeo, tempMat);
-    tempMesh.position.y = targetH / 2;
-    tempMesh.castShadow = true;
-    humanGroup.add(tempMesh);
-    humanGroup.userData.topY = targetH;
-    return;
-  }
-  const clone = humanTemplate.clone(true);
-  const scale = targetH / humanTemplateHeight;
-  clone.scale.setScalar(scale);
-  clone.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(clone);
-  clone.position.y = -box.min.y;
-  clone.traverse((obj) => {
-    if (obj.isMesh) { obj.castShadow = true; obj.receiveShadow = true; }
-  });
-  humanGroup.add(clone);
-  humanGroup.add(makeHeightLabel(heightCm, targetH));
-  humanGroup.userData.topY = targetH;
-  humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
-}
-
-function makeHeightLabel(text, yPos) {
-  const c = document.createElement('canvas');
-  const ctx = c.getContext('2d');
-  const dpr = 2, W = 200, H = 60;
-  c.width = W * dpr; c.height = H * dpr;
-  ctx.scale(dpr, dpr);
-  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
-  ctx.strokeStyle = '#31d0aa'; ctx.lineWidth = 2;
-  const r = 12;
-  ctx.beginPath();
-  ctx.moveTo(r, 0); ctx.lineTo(W - r, 0);
-  ctx.quadraticCurveTo(W, 0, W, r); ctx.lineTo(W, H - r);
-  ctx.quadraticCurveTo(W, H, W - r, H); ctx.lineTo(r, H);
-  ctx.quadraticCurveTo(0, H, 0, H - r); ctx.lineTo(0, r);
-  ctx.quadraticCurveTo(0, 0, r, 0); ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#4be0bc';
-  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(text + ' см', W / 2, H / 2 + 1);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const mat = new THREE.SpriteMaterial({ map: tex, depthTest: false, depthWrite: false, transparent: true });
-  const sprite = new THREE.Sprite(mat);
-  sprite.position.set(0, yPos + 0.15, 0);
-  sprite.scale.set(0.55, 0.165, 1);
-  return sprite;
-}
-
-/* ---------- Классификация ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   КЛАССИФИКАЦИЯ МАТЕРИАЛОВ (для 3D-визуализации)
+   ═══════════════════════════════════════════════════════════════ */
 function classifyMaterial(matName) {
   if (!matName) return null;
   const n = matName.toUpperCase();
   if (n.includes('TREAD'))         return 'treads';
   if (n.includes('RISER'))         return 'risers';
   if (n.includes('STRING'))        return 'stringers';
+  if (n.includes('KOSOUR'))        return 'kosour';
+  if (n.includes('WELCOME_STEP') || n.includes('BEGIN_STEP'))  return 'welcome_steps';
+  if (n.includes('WELCOME_RIS') || n.includes('BEGIN_RIS'))    return 'welcome_risers';
   if (n.includes('HANDRAIL'))      return 'handrail';
   if (n.includes('BOTTOMRAIL'))    return 'handrail';
   if (n.includes('BALUSTER'))      return 'baluster';
@@ -937,7 +1069,9 @@ function isWindowTexture(matName) {
   return matName.toLowerCase().includes('window');
 }
 
-/* ---------- LoadingManager ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   LoadingManager
+   ═══════════════════════════════════════════════════════════════ */
 const manager = new THREE.LoadingManager();
 manager.setURLModifier((url) => {
   if (url.startsWith('blob:') || url.startsWith('data:')) return url;
@@ -948,7 +1082,9 @@ manager.setURLModifier((url) => {
   return url;
 });
 
-/* ---------- Утилиты ---------- */
+/* ═══════════════════════════════════════════════════════════════
+   УТИЛИТЫ
+   ═══════════════════════════════════════════════════════════════ */
 function showProgress(v) {
   if (v <= 0 || v >= 100) { progress.classList.remove('show'); return; }
   progress.classList.add('show');
@@ -958,7 +1094,6 @@ function setLoading(show, text) {
   if (text) loadingTxt.textContent = text;
   loadingEl.classList.toggle('show', show);
 }
-
 let toastTimer = null;
 function showToast(msg, ok = false) {
   toastEl.textContent = msg;
@@ -967,7 +1102,6 @@ function showToast(msg, ok = false) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
 }
-
 const fmtInt = (n) => new Intl.NumberFormat('ru-RU').format(n);
 function fmtNum(v) {
   const a = Math.abs(v);
@@ -980,7 +1114,6 @@ function fmtNum(v) {
 function formatRub(n) {
   return new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
 }
-
 function disposeObject(root) {
   const textures = new Set();
   root.traverse((obj) => {
@@ -994,7 +1127,6 @@ function disposeObject(root) {
   });
   textures.forEach(t => t.dispose());
 }
-
 function findNearestVertex(point, radius) {
   let bestDist = radius;
   let bestVert = null;
@@ -1006,131 +1138,7 @@ function findNearestVertex(point, radius) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ПАРСЕР XML (BOM из Staircon)
-   ═══════════════════════════════════════════════════════════════ */
-function getAttr(node, name) {
-  if (!node) return '';
-  const attrs = node.querySelectorAll('attribute');
-  for (let i = 0; i < attrs.length; i++) {
-    if (attrs[i].getAttribute('name') === name) {
-      return attrs[i].getAttribute('value') || '';
-    }
-  }
-  return '';
-}
-
-function parseBOM(xmlText) {
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(xmlText, 'application/xml');
-
-  const result = { items: [], params: {} };
-
-  // ---- Параметры лестницы ----
-  const q = (tag) => xml.querySelector(tag);
-  result.params = {
-    ceiling:     q('ceiling')       ? parseFloat(q('ceiling').textContent) : null,
-    floorheight: q('floorheight')   ? parseFloat(q('floorheight').textContent) : null,
-    floorthick:  q('floorthickness')? parseFloat(q('floorthickness').textContent) : null,
-    headroom:    q('headroom')      ? parseFloat(q('headroom').textContent) : null,
-    rise:        q('rise')          ? parseFloat(q('rise').textContent) : null,
-    going:       q('going')         ? parseFloat(q('going').textContent) : null,
-    recalcGoing: q('recalculatedgoing') ? q('recalculatedgoing').textContent.trim() : null,
-    numRisers:   q('numberofrisers')? parseInt(q('numberofrisers').textContent, 10) : null,
-    widths:      q('widths')        ? parseFloat(q('widths').textContent) : null,
-    pitch:       q('pitch')         ? q('pitch').textContent.trim() : null,
-    railingHeight: q('railing > height') ? q('railing > height').textContent.trim() : null,
-    handrailDim:   q('handrail > dim') ? q('handrail > dim').textContent.trim() : null,
-    balusterDim:   q('baluster > dim') ? q('baluster > dim').textContent.trim() : null,
-    newelName:     q('newel > name')   ? q('newel > name').textContent.trim() : null
-  };
-
-  // ---- Детали ----
-  const details = xml.querySelectorAll('detail');
-  details.forEach((d) => {
-    const nameAttr = d.getAttribute('name') || '';
-    const typeNode = d.querySelector('type');
-    const typeId = typeNode ? typeNode.getAttribute('id') : '';
-    if (!typeId || typeId === 'Bolt') return;
-
-    const dim = d.querySelector('dim');
-    if (!dim) return;
-
-    const T = parseFloat(dim.querySelector('thickness')?.textContent) || 0;
-    const W = parseFloat(dim.querySelector('width')?.textContent) || 0;
-    const L = parseFloat(dim.querySelector('length')?.textContent) || 0;
-    if (!L) return;
-
-    const matNode = d.querySelector('material');
-    const mat = matNode ? (matNode.textContent || '').trim() : '';
-
-    // --- Атрибуты, критичные для классификации ---
-    const subtype     = getAttr(d, 'subtype');
-    const stringtype  = getAttr(d, 'stringtype');
-
-    result.items.push({
-      name: nameAttr,
-      type: typeId,
-      T, W, L, mat,
-      subtype,
-      stringtype
-    });
-  });
-
-  return result;
-}
-
-async function loadBOM() {
-  const bomFile = MODEL_FILE.replace(/\.(dae|xml)$/i, '.xml');
-  try {
-    const r = await fetch(bomFile, { cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const buf = await r.arrayBuffer();
-    const decoder = new TextDecoder('windows-1252');
-    const text = decoder.decode(buf);
-    bomData = parseBOM(text);
-    console.log('%c✔ BOM загружен: ' + bomData.items.length + ' деталей',
-                'color:#31d0aa;font-weight:bold');
-  } catch (err) {
-    console.log('BOM не найден (' + bomFile + '):', err.message);
-    bomData = null;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   АВТОПОИСК DAE
-   ═══════════════════════════════════════════════════════════════ */
-async function findModelFile() {
-  try {
-    const r = await fetch(MODEL_FILE_DEFAULT, { method: 'HEAD' });
-    if (r.ok) {
-      console.log('%c✔ Найден ' + MODEL_FILE_DEFAULT, 'color:#31d0aa;font-weight:bold');
-      return MODEL_FILE_DEFAULT;
-    }
-  } catch (e) { /* ignore */ }
-
-  try {
-    const parts = location.pathname.split('/').filter(x => x);
-    const owner = location.hostname.split('.')[0];
-    const repo = parts[0];
-    if (!owner || !repo) throw new Error('owner/repo не определены');
-
-    const r = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/');
-    if (!r.ok) throw new Error('GitHub API: HTTP ' + r.status);
-
-    const files = await r.json();
-    const dae = files.find(f => f.name && f.name.toLowerCase().endsWith('.dae'));
-    if (dae) {
-      console.log('%c✔ Найден в репозитории: ' + dae.name, 'color:#31d0aa;font-weight:bold');
-      return dae.name;
-    }
-  } catch (e) {
-    console.warn('Автопоиск через API не сработал:', e.message);
-  }
-
-  return null;
-}
-  /* ═══════════════════════════════════════════════════════════════
-   OBB / ПЛОЩАДЬ
+   OBB / ПЛОЩАДЬ ПОВЕРХНОСТИ
    ═══════════════════════════════════════════════════════════════ */
 function computeOBB(vs) {
   if (!vs || vs.length < 4) return null;
@@ -1245,449 +1253,122 @@ function getMeshAnalysis(obj) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   КАЛЬКУЛЯТОР — материал
+   ПАРСЕР XML (BOM + параметры)
    ═══════════════════════════════════════════════════════════════ */
-function getMaterialForKey(key) {
-  const chosen = currentFinish[key];
-  if (!chosen || !chosen.file) return 'pine';
-  const mats = priceData && priceData.materials ? priceData.materials : {};
-  for (const matKey in mats) {
-    const t = mats[matKey].textures || [];
-    if (t.indexOf(chosen.file) !== -1) return matKey;
+function getAttr(node, name) {
+  if (!node) return '';
+  const attrs = node.querySelectorAll('attribute');
+  for (let i = 0; i < attrs.length; i++) {
+    if (attrs[i].getAttribute('name') === name) {
+      return attrs[i].getAttribute('value') || '';
+    }
   }
-  return 'pine';
+  return '';
 }
 
-function getMaterialInfo(matKey) {
-  const mats = priceData && priceData.materials ? priceData.materials : {};
-  return mats[matKey] || mats.pine || { name: 'Сосна' };
-}
+function parseBOM(xmlText) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, 'application/xml');
 
-/* ═══════════════════════════════════════════════════════════════
-   КЛАССИФИКАЦИЯ BOM ITEMS
-   ═══════════════════════════════════════════════════════════════ */
-function classifyBOMItems() {
-  if (!bomData) return {};
-  const grouped = {};
+  const result = { items: [], params: {} };
 
-  // Найти пригласительные подступенки: первые 2 ризера по алфавитному порядку имён
-  const risers = bomData.items
-    .filter(d => d.type === 'Riser')
-    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-  const welcomeRiserNames = risers.slice(0, 2).map(r => r.name);
+  const q = (sel) => xml.querySelector(sel);
+  const txt = (sel) => { const n = q(sel); return n ? n.textContent.trim() : null; };
+  const num = (sel) => { const v = txt(sel); return v != null ? parseFloat(v) : null; };
 
-  bomData.items.forEach(d => {
-    let catKey = null;
+  result.params = {
+    ceiling:       num('ceiling'),
+    floorheight:   num('floorheight'),
+    floorthick:    num('floorthickness'),
+    headroom:      num('headroom'),
+    rise:          num('rise'),
+    going:         num('going'),
+    recalcGoing:   txt('recalculatedgoing'),
+    numRisers:     num('numberofrisers'),
+    widths:        num('widths'),
+    pitch:         txt('pitch'),
+    railingHeight: txt('railing > height'),
+    handrailDim:   txt('handrail > dim'),
+    balusterDim:   txt('baluster > dim'),
+    newelName:     txt('newel > name'),
+  };
 
-    if (d.type === 'Step') {
-      catKey = (d.subtype === 'bullnose') ? 'welcome_steps' : 'treads';
-    } else if (d.type === 'Riser') {
-      catKey = welcomeRiserNames.includes(d.name) ? 'welcome_risers' : 'risers';
-    } else if (d.type === 'String') {
-      catKey = (d.stringtype === 'cut') ? 'kosour' : 'stringers';
-    } else if (d.type === 'Newel')      catKey = 'posts';
-    else if (d.type === 'Handrail')     catKey = 'handrail';
-    else if (d.type === 'Baluster')     catKey = 'baluster';
-    else if (d.type === 'Covering')     catKey = 'covering';
-    else if (d.type === 'Bottomrail')   catKey = 'handrail';
+  const details = xml.querySelectorAll('detail');
+  details.forEach((d) => {
+    const nameAttr = d.getAttribute('name') || '';
+    const typeNode = d.querySelector('type');
+    const typeId = typeNode ? typeNode.getAttribute('id') : '';
+    if (!typeId || typeId === 'Bolt') return;
 
-    if (!catKey) return;
-    if (!grouped[catKey]) grouped[catKey] = [];
-    grouped[catKey].push(d);
+    const dim = d.querySelector('dim');
+    if (!dim) return;
+
+    const T = parseFloat(dim.querySelector('thickness')?.textContent) || 0;
+    const W = parseFloat(dim.querySelector('width')?.textContent) || 0;
+    const L = parseFloat(dim.querySelector('length')?.textContent) || 0;
+    if (!L) return;
+
+    const matNode = d.querySelector('material');
+    const mat = matNode ? (matNode.textContent || '').trim() : '';
+
+    const subtype    = getAttr(d, 'subtype');
+    const stringtype = getAttr(d, 'stringtype');
+
+    result.items.push({ name: nameAttr, type: typeId, T, W, L, mat, subtype, stringtype });
   });
 
-  return grouped;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   КАЛЬКУЛЯТОР — главный
-   ═══════════════════════════════════════════════════════════════ */
-function calculatePrice() {
-  const result = { categories: [], materialTotal: 0, paintTotal: 0,
-                   deliveryCost: 0, montageCost: 0, total: 0 };
-  if (!bomData || !priceData || !priceData.categories) return result;
-
-  const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
-  const grouped = classifyBOMItems();
-
-  // Идём в порядке из price.json, чтобы категории шли логично
-  for (const catKey in priceData.categories) {
-    const cat = priceData.categories[catKey];
-    const items = grouped[catKey];
-    if (!items || !items.length) continue;
-
-    const matKey = getMaterialForKey(catKey);
-    const matInfo = getMaterialInfo(matKey);
-    const unitPrice = (cat.prices && cat.prices[matKey]) || 0;
-
-    let qty = 0, paintArea = 0, formula = '';
-
-    if (cat.method === 'm2') {
-      items.forEach(d => {
-        qty += (d.W * d.L) / 1e6;
-        paintArea += (2 * (d.W + d.T) * d.L + 2 * d.W * d.T) / 1e6;
-      });
-      formula = qty.toFixed(3) + ' м² × ' + unitPrice;
-    } else if (cat.method === 'length') {
-      const extra = (cat.extra_mm || 0) / 1000;
-      items.forEach(d => {
-        const Lp = d.L / 1000 + extra;
-        qty += Lp;
-        paintArea += (2 * (d.W + d.T) * (Lp * 1000)) / 1e6;
-      });
-      formula = qty.toFixed(2) + ' м (' + items.length + ' шт) × ' + unitPrice;
-    } else if (cat.method === 'count') {
-      qty = items.length;
-      items.forEach(d => {
-        if (d.W && d.W < 50) paintArea += (Math.PI * d.W * d.L) / 1e6;
-        else paintArea += (2 * (d.W + d.T) * d.L) / 1e6;
-      });
-      formula = qty + ' шт × ' + unitPrice;
-    }
-
-    result.categories.push({
-      name: cat.name,
-      materialName: matInfo.name,
-      formula: formula,
-      materialCost: qty * unitPrice,
-      paintCost: paintArea * paintPrice
-    });
-
-    result.materialTotal += qty * unitPrice;
-    result.paintTotal += paintArea * paintPrice;
-  }
-
-  /* ---------- ДОСТАВКА: 60 ₽/км + 800 подача, минимум 4500 ---------- */
-  const km = parseFloat(document.getElementById('deliveryKm')?.value) || 0;
-  const base = 60 * km + 800;
-  result.deliveryCost = Math.max(4500, base);
-  result.deliveryKm = km;
-
-  /* ---------- МОНТАЖ ---------- */
-  const treadMatKey = getMaterialForKey('treads');
-  const baseMontage = (treadMatKey === 'pine') ? 25000 : 30000;
-  let coef = 1.0;
-
-  // +10% если есть подступенки (обычные)
-  if (grouped.risers && grouped.risers.length > 0) coef += 0.10;
-
-  // +5% если ограждение 2 этажа > 3000 мм (Bottomrail с префиксом "2_")
-  let rail2len = 0;
-  bomData.items.forEach(d => {
-    if (d.type === 'Bottomrail' && d.name && d.name.indexOf('2_') === 0) {
-      rail2len += d.L;
-    }
-  });
-  if (rail2len > 3000) coef += 0.05;
-
-  // +1200 ₽ за каждую Covering
-  const coveringCount = (grouped.covering || []).length;
-  result.montageCost = baseMontage * coef + 1200 * coveringCount;
-
-  result.total = result.materialTotal + result.paintTotal
-               + result.deliveryCost + result.montageCost;
   return result;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ОКНО СМЕТЫ
-   ═══════════════════════════════════════════════════════════════ */
-function buildPriceModal() {
-  if (!priceData) {
-    priceBody.innerHTML = '<div class="price-empty">Файл price.json не найден</div>';
-    return;
-  }
-  if (!bomData) {
-    priceBody.innerHTML = '<div class="price-empty">Файл XML из Staircon не найден.<br>Загрузите его рядом с .dae</div>';
-    return;
-  }
-
-  const result = calculatePrice();
-  priceBody.innerHTML = '';
-
-  // Поле ввода км
-  const kmRow = document.createElement('div');
-  kmRow.className = 'input-row';
-  kmRow.innerHTML = '<label>📍 Расстояние доставки:</label>' +
-    '<input type="number" id="deliveryKm" min="0" step="1" value="' +
-    (window._lastKm || 0) + '">' +
-    '<span class="unit">км</span>';
-  priceBody.appendChild(kmRow);
-
-  kmRow.querySelector('input').addEventListener('input', (e) => {
-    window._lastKm = parseInt(e.target.value, 10) || 0;
-    buildPriceModal();
-  });
-
-  // Категории
-  result.categories.forEach((cat) => {
-    const block = document.createElement('div');
-    block.className = 'price-cat';
-    block.innerHTML =
-      '<div class="price-cat-name">' +
-        '<span>' + cat.name + '</span>' +
-        '<span class="material">' + cat.materialName + '</span>' +
-      '</div>' +
-      '<div class="price-cat-formula">' + cat.formula + '</div>' +
-      '<div class="price-cat-result">' + formatRub(cat.materialCost) + '</div>';
-    priceBody.appendChild(block);
-  });
-
-  // Итоги
-  const totals = document.createElement('div');
-  totals.className = 'price-totals';
-  totals.innerHTML =
-    '<div class="price-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
-    '<div class="price-totals-row"><span>Покраска</span><span>' + formatRub(result.paintTotal) + '</span></div>' +
-    '<div class="price-totals-row"><span>Доставка (' + (result.deliveryKm || 0) + ' км)</span><span>' + formatRub(result.deliveryCost) + '</span></div>' +
-    '<div class="price-totals-row"><span>Монтаж</span><span>' + formatRub(result.montageCost) + '</span></div>' +
-    '<div class="price-totals-row total"><span>ИТОГО</span><span>' + formatRub(result.total) + '</span></div>';
-
-  priceBody.appendChild(totals);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ОКНО ПАРАМЕТРОВ
-   ═══════════════════════════════════════════════════════════════ */
-function buildParamsModal() {
-  if (!bomData || !bomData.params) {
-    paramsBody.innerHTML = '<div class="price-empty">Параметры недоступны. Загрузите XML.</div>';
-    return;
-  }
-  const p = bomData.params;
-  paramsBody.innerHTML = '';
-
-  function row(label, value, section = false) {
-    if (value === null || value === undefined || value === '') return;
-    const el = document.createElement('div');
-    el.className = 'param-row' + (section ? ' section' : '');
-    el.innerHTML = section
-      ? '<span>' + label + '</span>'
-      : '<span class="label">' + label + '</span><span class="value">' + value + '</span>';
-    paramsBody.appendChild(el);
-  }
-
-  function mm(v) { return v != null ? Math.round(v) + ' мм' : null; }
-
-  row('Этаж и перекрытие', null, true);
-  row('Высота этажа (пол-пол)', mm(p.floorheight));
-  row('Высота потолка 1 этажа', mm(p.ceiling));
-  row('Толщина перекрытия', mm(p.floorthick));
-  row('Просвет под перекрытием', mm(p.headroom));
-
-  row('Ступени', null, true);
-  row('Высота ступени (rise)', mm(p.rise));
-  row('Глубина ступени (going)', p.going ? p.going.toFixed(1) + ' мм' : null);
-  if (p.recalcGoing) row('Глубина (забежные)', p.recalcGoing + ' мм');
-  row('Количество подъёмов', p.numRisers);
-  row('Ширина марша', mm(p.widths));
-  row('Угол наклона', p.pitch);
-
-  row('Ограждение и элементы', null, true);
-  row('Высота ограждения', p.railingHeight);
-  row('Сечение поручня', p.handrailDim);
-  row('Диаметр балясины', p.balusterDim);
-  row('Сечение столба', p.newelName);
-
-  if (bomData.items) {
-    const cov = bomData.items.filter(d => d.type === 'Covering');
-    if (cov.length) {
-      row('Обшивка проёма', null, true);
-      let totalLen = 0;
-      cov.forEach(c => {
-        totalLen += c.L;
-        row('Панель ' + c.T + '×' + c.W + '×' + c.L, '—');
-      });
-      row('Итого длина', totalLen + ' мм');
-    }
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ОТДЕЛКА
-   ═══════════════════════════════════════════════════════════════ */
-function buildFinishPanel() {
-  finishRows.innerHTML = '';
-
-  FINISH_CATEGORIES.forEach((cat) => {
-    const row = document.createElement('div');
-    row.className = 'finish-row';
-    row.dataset.key = cat.key;
-
-    const header = document.createElement('div');
-    header.className = 'finish-header';
-    header.innerHTML =
-      '<span class="label">' + cat.label + '</span>' +
-      '<span class="value">' +
-        '<span class="finish-current">Как в проекте</span>' +
-        '<span class="arrow">▼</span>' +
-      '</span>';
-
-    const options = document.createElement('div');
-    options.className = 'finish-options';
-
-    // Кнопка «Как в проекте»
-    const optOriginal = document.createElement('button');
-    optOriginal.className = 'finish-option selected';
-    optOriginal.dataset.file = '';
-    optOriginal.dataset.name = 'Как в проекте';
-    optOriginal.innerHTML =
-      '<span class="swatch" style="background:#1a1d25;"></span>Как в проекте';
-    options.appendChild(optOriginal);
-
-    // Кнопки текстур
-    TEXTURE_LIST.forEach((t) => {
-      const opt = document.createElement('button');
-      opt.className = 'finish-option';
-      opt.dataset.file = t.file;
-      opt.dataset.name = t.name;
-      opt.innerHTML =
-        '<span class="swatch" style="background-image:url(' + t.file + ');"></span>' +
-        t.name;
-      options.appendChild(opt);
-    });
-
-    row.appendChild(header);
-    row.appendChild(options);
-
-    // Клик по заголовку — раскрыть/закрыть
-    header.addEventListener('click', () => {
-      const isOpen = row.classList.contains('open');
-      finishRows.querySelectorAll('.finish-row.open').forEach((r) => {
-        if (r !== row) r.classList.remove('open');
-      });
-      row.classList.toggle('open', !isOpen);
-    });
-
-    // Клик по опции
-    options.addEventListener('click', (e) => {
-      const btn = e.target.closest('.finish-option');
-      if (!btn) return;
-      const file = btn.dataset.file;
-      const name = btn.dataset.name;
-      currentFinish[cat.key] = file ? { file, name } : null;
-      options.querySelectorAll('.finish-option').forEach((o) => o.classList.remove('selected'));
-      btn.classList.add('selected');
-      row.querySelector('.finish-current').textContent = file ? name : 'Как в проекте';
-      row.classList.remove('open');
-      applyFinish(cat.key);
-      finishModal.closeFn();   // ← закрываем окно — видно результат на модели
-    });
-
-    finishRows.appendChild(row);
-  });
-}
-
-function applyFinish(categoryKey) {
-  const meshes = elementGroups[categoryKey] || [];
-  const choice = currentFinish[categoryKey];
-  meshes.forEach((obj) => {
-    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-    const orig = originalMaterialState.get(obj.uuid);
-    mats.forEach((m) => {
-      if (!m) return;
-      if (!choice) {
-        if (orig) {
-          m.map = orig.map;
-          if (m.color) m.color.setHex(orig.color);
-        }
-      } else {
-        m.map = getTexture(choice.file);
-        if (m.color) m.color.setHex(0xffffff);
-      }
-      m.needsUpdate = true;
-    });
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ВИДИМОСТЬ / СТЕКЛО
-   ═══════════════════════════════════════════════════════════════ */
-function applyElementVisibility() {
-  for (const key in elementGroups) {
-    const visible = elementVisible[key];
-    elementGroups[key].forEach((obj) => { obj.visible = visible; });
-  }
-}
-
-function applyGlassWalls() {
-  elementGroups.wall.forEach((obj) => {
-    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-    const isWin = obj.userData.isWindow;
-    mats.forEach((m) => {
-      if (!m) return;
-      if (glassWalls) {
-        m.transparent = true;
-        m.opacity = isWin ? WINDOW_OPACITY : WALL_OPACITY;
-        m.depthWrite = false;
-      } else {
-        m.transparent = false;
-        m.opacity = 1;
-        m.depthWrite = true;
-      }
-      m.needsUpdate = true;
-    });
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   КАМЕРА — модель ближе
-   ═══════════════════════════════════════════════════════════════ */
-function fitCamera() {
-  if (!currentModel) return;
-  const box = new THREE.Box3().setFromObject(currentModel);
-  const sphere = box.getBoundingSphere(new THREE.Sphere());
-  const radius = Math.max(sphere.radius, 0.0001);
-  const fovRad = THREE.MathUtils.degToRad(camera.fov);
-  // Модель занимает больше экрана: 0.85 ПК, 0.7 мобильный
-  const zoomFactor = isMobile() ? 0.70 : 0.85;
-  const dist = (radius / Math.sin(fovRad / 2)) * zoomFactor;
-  const dir = new THREE.Vector3(1, 0.62, 1).normalize();
-  camera.position.copy(sphere.center).addScaledVector(dir, dist);
-  camera.near = Math.max(radius / 500, 0.001);
-  camera.far = radius * 800;
-  camera.updateProjectionMatrix();
-  controls.target.copy(sphere.center);
-  controls.minDistance = radius * 0.05;
-  controls.maxDistance = radius * 60;
-  controls.update();
-}
-
-/* ---------- Восстановление камеры из URL ---------- */
-function applyCameraFromURL() {
-  const params = new URLSearchParams(location.search);
-  const camStr = params.get('cam');
-  const tgtStr = params.get('target');
-  if (!camStr) return false;
+async function loadBOM() {
+  const bomFile = MODEL_FILE.replace(/\.(dae|xml)$/i, '.xml');
   try {
-    const camParts = camStr.split(',').map(parseFloat);
-    const tgtParts = tgtStr ? tgtStr.split(',').map(parseFloat) : [0, 0, 0];
-    if (camParts.length === 3 && camParts.every(isFinite)) {
-      camera.position.set(camParts[0], camParts[1], camParts[2]);
-      controls.target.set(tgtParts[0] || 0, tgtParts[1] || 0, tgtParts[2] || 0);
-      camera.updateProjectionMatrix();
-      controls.update();
-      return true;
+    const r = await fetch(bomFile, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const buf = await r.arrayBuffer();
+    const decoder = new TextDecoder('windows-1252');
+    const text = decoder.decode(buf);
+    bomData = parseBOM(text);
+    console.log('%c✔ BOM загружен: ' + bomData.items.length + ' деталей',
+                'color:#31d0aa;font-weight:bold');
+  } catch (err) {
+    console.log('BOM не найден (' + bomFile + '):', err.message);
+    bomData = null;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   АВТОПОИСК DAE В РЕПОЗИТОРИИ
+   ═══════════════════════════════════════════════════════════════ */
+async function findModelFile() {
+  try {
+    const r = await fetch(MODEL_FILE_DEFAULT, { method: 'HEAD' });
+    if (r.ok) {
+      console.log('%c✔ Найден ' + MODEL_FILE_DEFAULT, 'color:#31d0aa;font-weight:bold');
+      return MODEL_FILE_DEFAULT;
     }
   } catch (e) { /* ignore */ }
-  return false;
-}
 
-/* ---------- Сохранение позиции в URL ---------- */
-function saveCameraPosition() {
-  const p = camera.position;
-  const t = controls.target;
-  const params = new URLSearchParams(location.search);
-  params.set('cam', p.x.toFixed(3) + ',' + p.y.toFixed(3) + ',' + p.z.toFixed(3));
-  params.set('target', t.x.toFixed(3) + ',' + t.y.toFixed(3) + ',' + t.z.toFixed(3));
-  const newUrl = location.origin + location.pathname + '?' + params.toString();
-  history.replaceState(null, '', newUrl);
+  try {
+    const parts = location.pathname.split('/').filter(x => x);
+    const owner = location.hostname.split('.')[0];
+    const repo = parts[0];
+    if (!owner || !repo) throw new Error('owner/repo не определены');
 
-  navigator.clipboard.writeText(newUrl).then(() => {
-    showToast('Ссылка с позицией скопирована', true);
-  }).catch(() => {
-    prompt('Скопируйте ссылку вручную:', newUrl);
-  });
+    const r = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/');
+    if (!r.ok) throw new Error('GitHub API: HTTP ' + r.status);
+
+    const files = await r.json();
+    const dae = files.find(f => f.name && f.name.toLowerCase().endsWith('.dae'));
+    if (dae) {
+      console.log('%c✔ Найден в репозитории: ' + dae.name, 'color:#31d0aa;font-weight:bold');
+      return dae.name;
+    }
+  } catch (e) {
+    console.warn('Автопоиск через API не сработал:', e.message);
+  }
+
+  return null;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1698,7 +1379,6 @@ function loadCollada(url, fileName) {
   showProgress(5);
 
   for (const k in elementGroups) elementGroups[k] = [];
-  clearRuler();
   allVertices.length = 0;
   originalMaterialState.clear();
 
@@ -1749,7 +1429,7 @@ function loadCollada(url, fileName) {
 
         const matName = mats[0] && mats[0].name ? mats[0].name : '';
         const group = classifyMaterial(matName);
-        if (group) {
+        if (group && elementGroups[group]) {
           elementGroups[group].push(obj);
           if (group === 'wall' && isWindowTexture(matName)) obj.userData.isWindow = true;
         }
@@ -1783,10 +1463,7 @@ function loadCollada(url, fileName) {
         for (let i = 0; i < pos.count; i++) {
           v.fromBufferAttribute(pos, i).applyMatrix4(obj.matrixWorld);
           const key = v.x.toFixed(3) + '|' + v.y.toFixed(3) + '|' + v.z.toFixed(3);
-          if (!seenPos.has(key)) {
-            seenPos.add(key);
-            allVertices.push(v.clone());
-          }
+          if (!seenPos.has(key)) { seenPos.add(key); allVertices.push(v.clone()); }
         }
       });
 
@@ -1827,8 +1504,7 @@ function loadCollada(url, fileName) {
         document.title = '3D Viewer — ' + modelName;
         priceSubtitle.textContent = modelName;
         paramsSubtitle.textContent = modelName;
-        const f = document.getElementById('finishModalSubtitle');
-        if (f) f.textContent = modelName;
+        orderSubtitle.textContent = modelName;
       }
 
       ui.file.textContent   = fileName;
@@ -1846,9 +1522,11 @@ function loadCollada(url, fileName) {
 
       infoEl.classList.add('show');
       panelEl.classList.remove('hidden');
+      fitCamera();
 
-      // Камера: URL > стандартный fit
-      if (!applyCameraFromURL()) fitCamera();
+      // показываем кнопки расчёта и бланка
+      priceBtn.style.display = 'inline-flex';
+      document.getElementById('btnOrder').style.display = 'inline-flex';
     },
     (evt) => {
       if (evt && evt.total) {
@@ -1867,13 +1545,79 @@ function loadCollada(url, fileName) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   РЕСАЙЗ И ЦИКЛ РЕНДЕРА
+   ═══════════════════════════════════════════════════════════════ */
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  if (currentMixer) currentMixer.update(dt);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+resize();
+animate();
+</script>/* ═══════════════════════════════════════════════════════════════
+   ФИТ КАМЕРЫ
+   ═══════════════════════════════════════════════════════════════ */
+function fitCamera() {
+  if (!currentModel) return;
+  const box = new THREE.Box3().setFromObject(currentModel);
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  const radius = Math.max(sphere.radius, 0.0001);
+  const fovRad = THREE.MathUtils.degToRad(camera.fov);
+  const zoomFactor = isMobile() ? 0.78 : 1.18;
+  const dist = (radius / Math.sin(fovRad / 2)) * zoomFactor;
+  const dir = new THREE.Vector3(1, 0.62, 1).normalize();
+  camera.position.copy(sphere.center).addScaledVector(dir, dist);
+  camera.near = Math.max(radius / 500, 0.001);
+  camera.far = radius * 800;
+  camera.updateProjectionMatrix();
+  controls.target.copy(sphere.center);
+  controls.minDistance = radius * 0.05;
+  controls.maxDistance = radius * 60;
+  controls.update();
+}
+
+/* ═══════════════════════════════════════════════════════════════
    ЛИНЕЙКА
    ═══════════════════════════════════════════════════════════════ */
+let rulerMode = false;
+let rulerPoints = [];
+const rulerGroup = new THREE.Group();
+scene.add(rulerGroup);
+
+const rulerLineMat = new THREE.LineBasicMaterial({ color: 0xff7043 });
+const rulerDotMat  = new THREE.MeshBasicMaterial({ color: 0xff9f43 });
+const rulerDotGeo  = new THREE.SphereGeometry(0.03, 12, 12);
+
+const raycaster = new THREE.Raycaster();
+const pointer   = new THREE.Vector2();
+
+const snapDotGeo = new THREE.SphereGeometry(0.05, 16, 16);
+const snapDotMat = new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.85 });
+const snapDot = new THREE.Mesh(snapDotGeo, snapDotMat);
+snapDot.visible = false;
+snapDot.renderOrder = 1000;
+scene.add(snapDot);
+
+const SNAP_RADIUS = 0.05;
+
 function setRulerMode(on) {
   rulerMode = on;
   document.getElementById('btnRuler').classList.toggle('ruler-on', on);
   canvas.classList.toggle('ruler-mode', on);
   rulerHint.classList.toggle('show', on);
+  floatRuler.classList.toggle('show', on);
   if (on && humanMode) setHumanMode(false);
   if (!on) {
     if (rulerPoints.length === 1) rulerPoints = [];
@@ -1937,8 +1681,7 @@ function addMeasureLine(p1, p2) {
 }
 
 function formatDistance(distance) {
-  const meters = distance * UNIT_SCALE;
-  return (meters * 1000).toFixed(0) + ' мм';
+  return (distance * UNIT_SCALE * 1000).toFixed(0) + ' мм';
 }
 
 function handleRulerTap(clientX, clientY) {
@@ -1992,12 +1735,117 @@ function handleRulerHover(clientX, clientY) {
 /* ═══════════════════════════════════════════════════════════════
    ЧЕЛОВЕЧЕК
    ═══════════════════════════════════════════════════════════════ */
+let humanMode = false;
+let humanHeight = 185;
+let humanRotation = 0;
+const humanGroup = new THREE.Group();
+humanGroup.visible = false;
+scene.add(humanGroup);
+
+let humanTemplate = null;
+let humanTemplateHeight = 1.8;
+
+const humanLoader = new GLTFLoader();
+humanLoader.load(HUMAN_FILE, (gltf) => {
+  humanTemplate = gltf.scene;
+  const box = new THREE.Box3().setFromObject(humanTemplate);
+  const size = box.getSize(new THREE.Vector3());
+  humanTemplateHeight = size.y > 0.001 ? size.y : 1.8;
+
+  humanTemplate.traverse((obj) => {
+    if (obj.isMesh) {
+      obj.castShadow = true; obj.receiveShadow = true;
+      if (obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach((m) => {
+          if (m.color) m.color.setHex(0xff9f43);
+          m.emissive = new THREE.Color(0x3d2408);
+          m.emissiveIntensity = 0.15;
+          m.needsUpdate = true;
+        });
+      }
+    }
+  });
+  console.log('%c✔ ' + HUMAN_FILE + ' загружен', 'color:#31d0aa;font-weight:bold');
+  if (humanGroup.visible) makeHumanFigure(humanHeight);
+}, undefined, (err) => { console.warn('human.glb не загружен:', err); });
+
+function setHumanHeight(cm) {
+  humanHeight = cm;
+  heightValue.textContent = cm + ' см';
+  if (floatHeightValue) floatHeightValue.textContent = cm + ' см';
+  makeHumanFigure(cm);
+}
+
+function makeHumanFigure(heightCm) {
+  while (humanGroup.children.length) {
+    const c = humanGroup.children.pop();
+    if (c.geometry) c.geometry.dispose();
+  }
+  const targetH = (heightCm / 100) * UNIT_SCALE;
+  if (!humanTemplate) {
+    const tempMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.5 });
+    const tempGeo = new THREE.CylinderGeometry(targetH * 0.08, targetH * 0.08, targetH, 12);
+    const tempMesh = new THREE.Mesh(tempGeo, tempMat);
+    tempMesh.position.y = targetH / 2;
+    tempMesh.castShadow = true;
+    humanGroup.add(tempMesh);
+    humanGroup.userData.topY = targetH;
+    return;
+  }
+  const clone = humanTemplate.clone(true);
+  const scale = targetH / humanTemplateHeight;
+  clone.scale.setScalar(scale);
+  clone.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(clone);
+  clone.position.y = -box.min.y;
+  clone.traverse((obj) => {
+    if (obj.isMesh) { obj.castShadow = true; obj.receiveShadow = true; }
+  });
+  humanGroup.add(clone);
+  humanGroup.add(makeHeightLabel(heightCm, targetH));
+  humanGroup.userData.topY = targetH;
+  humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
+}
+
+function makeHeightLabel(text, yPos) {
+  const c = document.createElement('canvas');
+  const ctx = c.getContext('2d');
+  const dpr = 2, W = 200, H = 60;
+  c.width = W * dpr; c.height = H * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#31d0aa'; ctx.lineWidth = 2;
+  const r = 12;
+  ctx.beginPath();
+  ctx.moveTo(r, 0); ctx.lineTo(W - r, 0);
+  ctx.quadraticCurveTo(W, 0, W, r); ctx.lineTo(W, H - r);
+  ctx.quadraticCurveTo(W, H, W - r, H); ctx.lineTo(r, H);
+  ctx.quadraticCurveTo(0, H, 0, H - r); ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#4be0bc';
+  ctx.font = '700 26px Inter, Segoe UI, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text + ' см', W / 2, H / 2 + 1);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const mat = new THREE.SpriteMaterial({ map: tex, depthTest: false, depthWrite: false, transparent: true });
+  const sprite = new THREE.Sprite(mat);
+  sprite.position.set(0, yPos + 0.15, 0);
+  sprite.scale.set(0.55, 0.165, 1);
+  return sprite;
+}
+
 function setHumanMode(on) {
   humanMode = on;
   document.getElementById('btnHuman').classList.toggle('human-on', on);
   canvas.classList.toggle('human-mode', on);
   humanHint.classList.toggle('show', on);
   if (on && rulerMode) setRulerMode(false);
+  // Плавающую плашку показываем только если человечек уже стоит
+  floatHuman.classList.toggle('show', on && humanGroup.visible);
 }
 
 function placeHuman(clientX, clientY) {
@@ -2010,6 +1858,7 @@ function placeHuman(clientX, clientY) {
   if (!hits.length) return;
   humanGroup.position.copy(hits[0].point.clone());
   humanGroup.visible = true;
+  floatHuman.classList.add('show');
 }
 
 /* ---------- Указатель ---------- */
@@ -2037,7 +1886,7 @@ canvas.addEventListener('pointermove', (e) => {
 canvas.addEventListener('pointerleave', () => { snapDot.visible = false; });
 
 /* ═══════════════════════════════════════════════════════════════
-   ИНИЦИАЛИЗАЦИЯ ПАНЕЛИ
+   ПАНЕЛЬ + АККОРДЕОНЫ
    ═══════════════════════════════════════════════════════════════ */
 if (isMobile()) {
   panelEl.classList.remove('hidden');
@@ -2051,14 +1900,37 @@ panelToggle.addEventListener('click', () => {
   panelToggle.classList.toggle('active', isOpen);
 });
 
-/* ---------- Кнопки общие ---------- */
-document.getElementById('btnFit').addEventListener('click', fitCamera);
-document.getElementById('btnSavePos').addEventListener('click', saveCameraPosition);
-
-document.getElementById('btnRotate').addEventListener('click', (e) => {
-  controls.autoRotate = !controls.autoRotate;
-  e.currentTarget.classList.toggle('active', controls.autoRotate);
+document.querySelectorAll('.acc-header').forEach((h) => {
+  h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
 });
+
+/* ---------- Видимость элементов ---------- */
+function applyElementVisibility() {
+  for (const key in elementGroups) {
+    const visible = elementVisible[key];
+    elementGroups[key].forEach((obj) => { obj.visible = visible; });
+  }
+}
+
+function applyGlassWalls() {
+  elementGroups.wall.forEach((obj) => {
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const isWin = obj.userData.isWindow;
+    mats.forEach((m) => {
+      if (!m) return;
+      if (glassWalls) {
+        m.transparent = true;
+        m.opacity = isWin ? WINDOW_OPACITY : WALL_OPACITY;
+        m.depthWrite = false;
+      } else {
+        m.transparent = false;
+        m.opacity = 1;
+        m.depthWrite = true;
+      }
+      m.needsUpdate = true;
+    });
+  });
+}
 
 function bindElementButton(id, key) {
   const btn = document.getElementById(id);
@@ -2079,7 +1951,7 @@ bindElementButton('el_handrail',        'handrail');
 bindElementButton('el_baluster',        'baluster');
 bindElementButton('el_posts',           'posts');
 bindElementButton('el_wall',            'wall');
-bindElementButton('el_opening',         'opening');
+bindElementButton('el_opening',         'covering');
 bindElementButton('el_covering',        'covering');
 bindElementButton('el_floor',           'floor');
 
@@ -2089,41 +1961,95 @@ document.getElementById('btnGlass').addEventListener('click', (e) => {
   applyGlassWalls();
 });
 
-document.getElementById('btnRuler').addEventListener('click', () => {
-  setRulerMode(!rulerMode);
-  toolsModal.closeFn();   // ← закрываем окно — модель видна, подсказка тоже
-});
-
+/* ---------- Линейка / человечек ---------- */
+document.getElementById('btnRuler').addEventListener('click', () => setRulerMode(!rulerMode));
 document.getElementById('btnRulerClear').addEventListener('click', () => {
   clearRuler();
   showToast('Замеры очищены', true);
-  toolsModal.closeFn();
 });
+document.getElementById('floatRulerOff').addEventListener('click', () => setRulerMode(false));
 
 document.getElementById('btnHuman').addEventListener('click', () => {
   setHumanMode(!humanMode);
   if (humanMode && !humanGroup.visible && currentModel) {
     showToast('Тапните по ступени, чтобы поставить человечка', true);
   }
-  toolsModal.closeFn();   // ← закрываем окно
 });
-
 document.getElementById('btnHumanRemove').addEventListener('click', () => {
   humanGroup.visible = false;
   setHumanMode(false);
   showToast('Человечек убран', true);
-  toolsModal.closeFn();
 });
-heightSlider.addEventListener('input', (e) => setHumanHeight(parseInt(e.target.value, 10)));
+document.getElementById('floatHumanOff').addEventListener('click', () => {
+  humanGroup.visible = false;
+  setHumanMode(false);
+});
 
-const rotationSlider = document.getElementById('rotationSlider');
-const rotationValue  = document.getElementById('rotationValue');
+/* ---------- Ползунки человечка (в аккордеоне + в плашке) ---------- */
+function syncHumanHeightUI(cm) {
+  heightSlider.value = cm;
+  floatHeightSlider.value = cm;
+  heightValue.textContent = cm + ' см';
+  floatHeightValue.textContent = cm + ' см';
+}
+function syncHumanRotationUI(deg) {
+  rotationSlider.value = deg;
+  floatRotationSlider.value = deg;
+  rotationValue.textContent = deg + '°';
+  floatRotationValue.textContent = deg + '°';
+  humanGroup.rotation.y = (deg * Math.PI) / 180;
+}
+
+heightSlider.addEventListener('input', (e) => {
+  const cm = parseInt(e.target.value, 10);
+  setHumanHeight(cm);
+  syncHumanHeightUI(cm);
+});
 rotationSlider.addEventListener('input', (e) => {
   humanRotation = parseInt(e.target.value, 10);
-  rotationValue.textContent = humanRotation + '°';
-  humanGroup.rotation.y = (humanRotation * Math.PI) / 180;
+  syncHumanRotationUI(humanRotation);
+});
+floatHeightSlider.addEventListener('input', (e) => {
+  const cm = parseInt(e.target.value, 10);
+  setHumanHeight(cm);
+  syncHumanHeightUI(cm);
+});
+floatRotationSlider.addEventListener('input', (e) => {
+  humanRotation = parseInt(e.target.value, 10);
+  syncHumanRotationUI(humanRotation);
 });
 
+/* ---------- Камера / прочее ---------- */
+document.getElementById('btnFit').addEventListener('click', fitCamera);
+document.getElementById('btnRotate').addEventListener('click', (e) => {
+  controls.autoRotate = !controls.autoRotate;
+  e.currentTarget.classList.toggle('active', controls.autoRotate);
+});
+document.getElementById('btnShot').addEventListener('click', () => {
+  renderer.render(scene, camera);
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'view-' + Date.now() + '.png';
+  a.click();
+  showToast('Снимок сохранён', true);
+});
+document.getElementById('btnShare').addEventListener('click', async () => {
+  const url = location.origin + location.pathname + location.search;
+  const title = document.title || '3D Viewer';
+  if (navigator.share) {
+    try { await navigator.share({ title, text: 'Посмотрите 3D-модель', url }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Ссылка скопирована в буфер обмена', true);
+  } catch { prompt('Скопируйте ссылку вручную:', url); }
+});
+document.getElementById('bgColor').addEventListener('input', (e) => {
+  scene.background.set(e.target.value);
+});
+
+/* ---------- Сброс ---------- */
 document.getElementById('btnReset').addEventListener('click', () => {
   for (const k in elementVisible) elementVisible[k] = true;
   for (const k in elementVisible) {
@@ -2140,82 +2066,48 @@ document.getElementById('btnReset').addEventListener('click', () => {
   if (humanMode) setHumanMode(false);
   humanGroup.visible = false;
   humanRotation = 0;
-  rotationSlider.value = 0;
-  rotationValue.textContent = '0°';
-  humanGroup.rotation.y = 0;
-  for (const k in currentFinish) {
-    currentFinish[k] = null;
-    applyFinish(k);
-  }
+  syncHumanRotationUI(0);
+  for (const k in currentFinish) { currentFinish[k] = null; applyFinish(k); }
   buildFinishPanel();
-  window._lastKm = 0;
   const bg = '#0f1116';
   document.getElementById('bgColor').value = bg;
   scene.background.set(bg);
   if (currentModel) fitCamera();
 });
 
-document.getElementById('btnShot').addEventListener('click', () => {
-  renderer.render(scene, camera);
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = 'view-' + Date.now() + '.png';
-  a.click();
-  showToast('Снимок сохранён', true);
+/* ---------- Сохранить позицию в URL ---------- */
+document.getElementById('btnSavePos').addEventListener('click', () => {
+  const p = camera.position;
+  const t = controls.target;
+  const params = new URLSearchParams(location.search);
+  params.set('cam', p.x.toFixed(3) + ',' + p.y.toFixed(3) + ',' + p.z.toFixed(3));
+  params.set('target', t.x.toFixed(3) + ',' + t.y.toFixed(3) + ',' + t.z.toFixed(3));
+  const newUrl = location.origin + location.pathname + '?' + params.toString();
+  history.replaceState(null, '', newUrl);
+  navigator.clipboard.writeText(newUrl).then(() => {
+    showToast('Ссылка с позицией скопирована', true);
+  }).catch(() => prompt('Скопируйте ссылку вручную:', newUrl));
 });
 
-document.getElementById('btnShare').addEventListener('click', async () => {
-  const url = location.origin + location.pathname + location.search;
-  const title = document.title || '3D Viewer';
-  if (navigator.share) {
-    try { await navigator.share({ title, text: 'Посмотрите 3D-модель', url }); return; }
-    catch (e) { if (e && e.name === 'AbortError') return; }
-  }
+/* ---------- Восстановить камеру из URL ---------- */
+function applyCameraFromURL() {
+  const params = new URLSearchParams(location.search);
+  const camStr = params.get('cam');
+  const tgtStr = params.get('target');
+  if (!camStr) return false;
   try {
-    await navigator.clipboard.writeText(url);
-    showToast('Ссылка скопирована в буфер обмена', true);
-  } catch { prompt('Скопируйте ссылку вручную:', url); }
-});
-
-document.getElementById('bgColor').addEventListener('input', (e) => {
-  scene.background.set(e.target.value);
-});
-
-/* ═══════════════════════════════════════════════════════════════
-   МОДАЛЬНЫЕ ОКНА
-   ═══════════════════════════════════════════════════════════════ */
-function makeModal(overlayId, closeBtnId, closeIconId, onOpen) {
-  const overlay = document.getElementById(overlayId);
-  const openFn = () => { if (onOpen) onOpen(); overlay.classList.add('show'); };
-  const closeFn = () => overlay.classList.remove('show');
-
-  if (closeBtnId) document.getElementById(closeBtnId).addEventListener('click', closeFn);
-  if (closeIconId) document.getElementById(closeIconId).addEventListener('click', closeFn);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeFn(); });
-  return { openFn, closeFn, overlay };
+    const c = camStr.split(',').map(parseFloat);
+    const t = tgtStr ? tgtStr.split(',').map(parseFloat) : [0, 0, 0];
+    if (c.length === 3 && c.every(isFinite)) {
+      camera.position.set(c[0], c[1], c[2]);
+      controls.target.set(t[0] || 0, t[1] || 0, t[2] || 0);
+      camera.updateProjectionMatrix();
+      controls.update();
+      return true;
+    }
+  } catch (e) { /* ignore */ }
+  return false;
 }
-
-const priceModal   = makeModal('priceModalOverlay',  'priceModalCloseBtn',  'priceModalClose',  buildPriceModal);
-const paramsModal  = makeModal('paramsModalOverlay', 'paramsModalCloseBtn', 'paramsModalClose', buildParamsModal);
-const viewModal    = makeModal('viewModalOverlay',   'viewModalCloseBtn',   'viewModalClose');
-const toolsModal   = makeModal('toolsModalOverlay',  'toolsModalCloseBtn',  'toolsModalClose');
-const finishModal  = makeModal('finishModalOverlay', 'finishModalCloseBtn', 'finishModalClose');
-
-priceBtn.addEventListener('click', priceModal.openFn);
-document.getElementById('btnParams').addEventListener('click', paramsModal.openFn);
-document.getElementById('btnShowView').addEventListener('click', viewModal.openFn);
-document.getElementById('btnShowTools').addEventListener('click', toolsModal.openFn);
-document.getElementById('btnShowFinish').addEventListener('click', finishModal.openFn);
-
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    if (priceModal.overlay.classList.contains('show')) priceModal.closeFn();
-    if (paramsModal.overlay.classList.contains('show')) paramsModal.closeFn();
-    if (viewModal.overlay.classList.contains('show')) viewModal.closeFn();
-    if (toolsModal.overlay.classList.contains('show')) toolsModal.closeFn();
-    if (finishModal.overlay.classList.contains('show')) finishModal.closeFn();
-  }
-});
 
 /* ---------- Горячие клавиши ---------- */
 window.addEventListener('keydown', (e) => {
@@ -2227,66 +2119,592 @@ window.addEventListener('keydown', (e) => {
     case 'm': document.getElementById('btnRuler').click(); break;
     case 'h': document.getElementById('btnHuman').click(); break;
   }
-});
+});/* ═══════════════════════════════════════════════════════════════
+   ОТДЕЛКА (панель текстур)
+   ═══════════════════════════════════════════════════════════════ */
+function buildFinishPanel() {
+  finishRows.innerHTML = '';
 
-/* ---------- Ресайз ---------- */
-function resize() {
-  const w = window.innerWidth, h = window.innerHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
+  FINISH_CATEGORIES.forEach((cat) => {
+    const row = document.createElement('div');
+    row.className = 'finish-row';
+    row.dataset.key = cat.key;
+
+    const header = document.createElement('div');
+    header.className = 'finish-header';
+    header.innerHTML =
+      '<span class="label">' + cat.label + '</span>' +
+      '<span class="value">' +
+        '<span class="finish-current">Как в проекте</span>' +
+        '<span class="arrow">▼</span>' +
+      '</span>';
+
+    const options = document.createElement('div');
+    options.className = 'finish-options';
+
+    const optOriginal = document.createElement('button');
+    optOriginal.className = 'finish-option selected';
+    optOriginal.dataset.file = '';
+    optOriginal.dataset.name = 'Как в проекте';
+    optOriginal.innerHTML = '<span class="swatch" style="background:#1a1d25;"></span>Как в проекте';
+    options.appendChild(optOriginal);
+
+    TEXTURE_LIST.forEach((t) => {
+      const opt = document.createElement('button');
+      opt.className = 'finish-option';
+      opt.dataset.file = t.file;
+      opt.dataset.name = t.name;
+      opt.innerHTML =
+        '<span class="swatch" style="background-image:url(' + t.file + ');"></span>' + t.name;
+      options.appendChild(opt);
+    });
+
+    row.appendChild(header);
+    row.appendChild(options);
+
+    header.addEventListener('click', () => {
+      const isOpen = row.classList.contains('open');
+      finishRows.querySelectorAll('.finish-row.open').forEach((r) => {
+        if (r !== row) r.classList.remove('open');
+      });
+      row.classList.toggle('open', !isOpen);
+    });
+
+    options.addEventListener('click', (e) => {
+      const btn = e.target.closest('.finish-option');
+      if (!btn) return;
+      const file = btn.dataset.file;
+      const name = btn.dataset.name;
+      currentFinish[cat.key] = file ? { file, name } : null;
+      options.querySelectorAll('.finish-option').forEach((o) => o.classList.remove('selected'));
+      btn.classList.add('selected');
+      row.querySelector('.finish-current').textContent = file ? name : 'Как в проекте';
+      row.classList.remove('open');
+      applyFinish(cat.key);
+    });
+
+    finishRows.appendChild(row);
+  });
 }
-window.addEventListener('resize', resize);
 
-/* ---------- Цикл ---------- */
-const clock = new THREE.Clock();
-function animate() {
-  requestAnimationFrame(animate);
-  const dt = clock.getDelta();
-  if (currentMixer) currentMixer.update(dt);
-  controls.update();
-  renderer.render(scene, camera);
+function applyFinish(categoryKey) {
+  const meshes = elementGroups[categoryKey] || [];
+  const choice = currentFinish[categoryKey];
+  meshes.forEach((obj) => {
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const orig = originalMaterialState.get(obj.uuid);
+    mats.forEach((m) => {
+      if (!m) return;
+      if (!choice) {
+        if (orig) {
+          m.map = orig.map;
+          if (m.color) m.color.setHex(orig.color);
+        }
+      } else {
+        m.map = getTexture(choice.file);
+        if (m.color) m.color.setHex(0xffffff);
+      }
+      m.needsUpdate = true;
+    });
+  });
 }
 
-/* ---------- price.json ---------- */
-fetch('price.json', { cache: 'no-store' })
-  .then((r) => {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then((data) => {
-    priceData = data;
-    priceBtn.style.display = 'inline-flex';
-    console.log('%c✔ price.json загружен', 'color:#31d0aa;font-weight:bold');
-  })
-  .catch((err) => { console.log('price.json не найден:', err.message); });
+/* ═══════════════════════════════════════════════════════════════
+   КЛАССИФИКАЦИЯ BOM-ЭЛЕМЕНТОВ
+   ═══════════════════════════════════════════════════════════════ */
+function classifyBOMItems() {
+  if (!bomData) return {};
+  const grouped = {};
 
-/* ---------- Старт ---------- */
-window._lastKm = 0;
-resize();
-animate();
+  const risers = bomData.items
+    .filter(d => d.type === 'Riser')
+    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const welcomeRiserNames = risers.slice(0, 2).map(r => r.name);
 
-(async () => {
-  MODEL_FILE = await findModelFile();
-  if (!MODEL_FILE) {
-    showToast('Файл .dae не найден. Загрузите его в репозиторий.');
+  bomData.items.forEach(d => {
+    let catKey = null;
+    if (d.type === 'Step') {
+      catKey = (d.subtype === 'bullnose') ? 'welcome_steps' : 'treads';
+    } else if (d.type === 'Riser') {
+      catKey = welcomeRiserNames.includes(d.name) ? 'welcome_risers' : 'risers';
+    } else if (d.type === 'String') {
+      catKey = (d.stringtype === 'cut') ? 'kosour' : 'stringers';
+    } else if (d.type === 'Newel')      catKey = 'posts';
+    else if (d.type === 'Handrail')     catKey = 'handrail';
+    else if (d.type === 'Baluster')     catKey = 'baluster';
+    else if (d.type === 'Covering')     catKey = 'covering';
+    else if (d.type === 'Bottomrail')   catKey = 'handrail';
+    if (!catKey) return;
+    if (!grouped[catKey]) grouped[catKey] = [];
+    grouped[catKey].push(d);
+  });
+
+  return grouped;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   КАЛЬКУЛЯТОР
+   ═══════════════════════════════════════════════════════════════ */
+function getMaterialForKey(key) {
+  const chosen = currentFinish[key];
+  if (!chosen || !chosen.file) return 'pine';
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  for (const matKey in mats) {
+    const t = mats[matKey].textures || [];
+    if (t.indexOf(chosen.file) !== -1) return matKey;
+  }
+  return 'pine';
+}
+
+function getMaterialInfo(matKey) {
+  const mats = priceData && priceData.materials ? priceData.materials : {};
+  return mats[matKey] || mats.pine || { name: 'Сосна' };
+}
+
+/* Площадь покраски для одной детали — полная поверхность коробки.
+   Красим ВСЕ грани, кроме примыкающих (упрощённо — все 6). */
+function paintAreaForBox(T, W, L) {
+  // в мм → м²
+  return (2 * (W * L + W * T + L * T)) / 1e6;
+}
+/* Боковая поверхность (для length-категорий, у которых торцы малы) */
+function paintAreaLateral(T, W, L) {
+  return (2 * (W + T) * L) / 1e6;
+}
+/* Цилиндр (для балясин) */
+function paintAreaCyl(W, L) {
+  return (Math.PI * W * L) / 1e6;
+}
+
+function calculatePrice(km) {
+  const result = {
+    categories: [], materialTotal: 0, paintTotal: 0,
+    deliveryCost: 0, deliveryKm: km || 0,
+    montageCost: 0, total: 0
+  };
+  if (!bomData || !priceData || !priceData.categories) return result;
+
+  const paintPrice = (priceData.paint && priceData.paint.price_m2) || 0;
+  const grouped = classifyBOMItems();
+
+  for (const catKey in priceData.categories) {
+    const cat = priceData.categories[catKey];
+    const items = grouped[catKey];
+    if (!items || !items.length) continue;
+
+    const matKey   = getMaterialForKey(catKey);
+    const matInfo  = getMaterialInfo(matKey);
+    const unitPrice = (cat.prices && cat.prices[matKey]) || 0;
+    const coef     = (cat.method === 'm2' && cat.coef) ? cat.coef : 1;
+
+    let qty = 0, paintArea = 0;
+
+    if (cat.method === 'm2') {
+      items.forEach(d => {
+        qty += (d.W * d.L) / 1e6;
+        paintArea += paintAreaForBox(d.T, d.W, d.L);
+      });
+      qty *= coef;
+    } else if (cat.method === 'length') {
+      const extra = (cat.extra_mm || 0) / 1000;
+      items.forEach(d => {
+        const Lp = d.L / 1000 + extra;
+        qty += Lp;
+        paintArea += paintAreaLateral(d.T, d.W, Lp * 1000);
+      });
+    } else if (cat.method === 'count') {
+      qty = items.length;
+      items.forEach(d => {
+        if (d.W && d.W < 50) paintArea += paintAreaCyl(d.W, d.L);
+        else                 paintArea += paintAreaForBox(d.T, d.W, d.L);
+      });
+    }
+
+    result.categories.push({
+      key: catKey,
+      name: cat.name,
+      materialName: matInfo.name,
+      count: items.length,
+      materialCost: qty * unitPrice,
+      paintCost: paintArea * paintPrice
+    });
+
+    result.materialTotal += qty * unitPrice;
+    result.paintTotal    += paintArea * paintPrice;
+  }
+
+  /* ---------- ДОСТАВКА: 60 ₽/км + 800 подача, минимум 4500 ---------- */
+  const base = 60 * (km || 0) + 800;
+  result.deliveryCost = Math.max(4500, base);
+
+  /* ---------- МОНТАЖ ---------- */
+  const treadMatKey = getMaterialForKey('treads');
+  const baseMontage = (treadMatKey === 'pine') ? 25000 : 30000;
+  let coef = 1.0;
+
+  if (grouped.risers && grouped.risers.length > 0) coef += 0.10;
+
+  let rail2len = 0;
+  bomData.items.forEach(d => {
+    if (d.type === 'Bottomrail' && d.name && d.name.indexOf('2_') === 0) {
+      rail2len += d.L;
+    }
+  });
+  if (rail2len > 3000) coef += 0.05;
+
+  const coveringCount = (grouped.covering || []).length;
+  result.montageCost = baseMontage * coef + 1200 * coveringCount;
+
+  result.total = result.materialTotal + result.paintTotal
+               + result.deliveryCost + result.montageCost;
+  return result;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   МОДАЛКА СМЕТЫ (БЕЗ формул)
+   ═══════════════════════════════════════════════════════════════ */
+let currentKm = 0;
+
+function buildPriceModal() {
+  if (!priceData) {
+    priceBody.innerHTML = '<div class="price-empty">Файл price.json не найден</div>';
     return;
   }
-  await loadBOM();
-  loadCollada(MODEL_FILE, MODEL_FILE);
-
-  const modelName = MODEL_FILE.replace(/\.(dae|xml)$/i, '');
-  if (modelName) {
-    document.title = '3D Viewer — ' + modelName;
-    priceSubtitle.textContent = modelName;
-    paramsSubtitle.textContent = modelName;
-    const f = document.getElementById('finishModalSubtitle');
-    if (f) f.textContent = modelName;
+  if (!bomData) {
+    priceBody.innerHTML = '<div class="price-empty">XML-файл из Staircon не найден.<br>Загрузите его рядом с .dae</div>';
+    return;
   }
+
+  const result = calculatePrice(currentKm);
+  priceBody.innerHTML = '';
+
+  /* --- Поле ввода км (не пересобираем всё окно при вводе) --- */
+  const kmRow = document.createElement('div');
+  kmRow.className = 'input-row';
+  kmRow.innerHTML =
+    '<label>📍 Расстояние доставки:</label>' +
+    '<input type="number" id="deliveryKmInput" min="0" step="1" value="' + currentKm + '">' +
+    '<span class="unit">км</span>';
+  priceBody.appendChild(kmRow);
+
+  const kmInput = kmRow.querySelector('input');
+  kmInput.addEventListener('input', (e) => {
+    const v = parseInt(e.target.value, 10);
+    currentKm = isFinite(v) && v >= 0 ? v : 0;
+    updatePriceTotals();
+  });
+
+  /* --- Категории (без формул) --- */
+  const cats = document.createElement('div');
+  cats.id = 'priceCatsBlock';
+  cats.style.display = 'flex';
+  cats.style.flexDirection = 'column';
+  cats.style.gap = '10px';
+  result.categories.forEach((cat) => {
+    const block = document.createElement('div');
+    block.className = 'price-cat';
+    block.innerHTML =
+      '<div class="price-cat-name">' +
+        '<span>' + cat.name + '</span>' +
+        '<span class="material">' + cat.materialName + '</span>' +
+      '</div>' +
+      '<div class="price-cat-result">' + formatRub(cat.materialCost) + '</div>';
+    cats.appendChild(block);
+  });
+  priceBody.appendChild(cats);
+
+  /* --- Итоги (обновляются динамически) --- */
+  const totals = document.createElement('div');
+  totals.className = 'price-totals';
+  totals.id = 'priceTotalsBlock';
+  priceBody.appendChild(totals);
+
+  updatePriceTotals();
+
+  function updatePriceTotals() {
+    const r = calculatePrice(currentKm);
+    totals.innerHTML =
+      '<div class="price-totals-row"><span>Материал</span><span>' + formatRub(r.materialTotal) + '</span></div>' +
+      '<div class="price-totals-row"><span>Покраска</span><span>' + formatRub(r.paintTotal) + '</span></div>' +
+      '<div class="price-totals-row"><span>Доставка (' + r.deliveryKm + ' км)</span><span>' + formatRub(r.deliveryCost) + '</span></div>' +
+      '<div class="price-totals-row"><span>Монтаж</span><span>' + formatRub(r.montageCost) + '</span></div>' +
+      '<div class="price-totals-row total"><span>ИТОГО</span><span>' + formatRub(r.total) + '</span></div>';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   МОДАЛКА ПАРАМЕТРОВ ЛЕСТНИЦЫ
+   ═══════════════════════════════════════════════════════════════ */
+function buildParamsModal() {
+  if (!bomData || !bomData.params) {
+    paramsBody.innerHTML = '<div class="price-empty">Параметры недоступны. Загрузите XML.</div>';
+    return;
+  }
+  const p = bomData.params;
+  paramsBody.innerHTML = '';
+
+  function row(label, value, section = false) {
+    if (value === null || value === undefined || value === '' || value === 0) return;
+    const el = document.createElement('div');
+    el.className = 'param-row' + (section ? ' section' : '');
+    el.innerHTML = section
+      ? '<span>' + label + '</span>'
+      : '<span class="label">' + label + '</span><span class="value">' + value + '</span>';
+    paramsBody.appendChild(el);
+  }
+
+  function mm(v) { return v != null ? Math.round(v) + ' мм' : null; }
+
+  row('Этаж и перекрытие', null, true);
+  row('Высота этажа (пол-пол)', mm(p.floorheight));
+  row('Высота потолка 1 этажа', mm(p.ceiling));
+  row('Толщина перекрытия', mm(p.floorthick));
+  row('Просвет под перекрытием', mm(p.headroom));
+
+  row('Ступени', null, true);
+  row('Высота ступени', mm(p.rise));
+  row('Глубина ступени', p.going ? p.going.toFixed(1) + ' мм' : null);
+  if (p.recalcGoing) row('Глубина (забежные)', p.recalcGoing + ' мм');
+  row('Количество подъёмов', p.numRisers);
+  row('Ширина марша', mm(p.widths));
+  row('Угол наклона', p.pitch);
+
+  row('Ограждение и элементы', null, true);
+  row('Высота ограждения', p.railingHeight);
+  row('Сечение поручня', p.handrailDim);
+  row('Диаметр балясины', p.balusterDim);
+  row('Сечение столба', p.newelName);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   БЛАНК ЗАКАЗА
+   ═══════════════════════════════════════════════════════════════ */
+const ORDER_PDF_FILE = 'Olyga Toksovo.pdf';
+
+function buildOrderModal() {
+  if (!bomData || !priceData) {
+    orderBody.innerHTML = '<div class="price-empty">Нет данных. Загрузите XML и price.json.</div>';
+    return;
+  }
+
+  const result = calculatePrice(currentKm);
+  orderBody.innerHTML = '';
+
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('ru-RU');
+  const modelName = (MODEL_FILE || '').replace(/\.(dae|xml)$/i, '');
+
+  /* --- Шапка --- */
+  const header = document.createElement('div');
+  header.className = 'order-section';
+  header.innerHTML =
+    '<div style="text-align:center;padding:6px 0 12px;">' +
+      '<div style="font-size:20px;font-weight:800;color:var(--text);">Бланк заказа</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-top:4px;">' +
+        (modelName || 'Лестница') + ' · ' + dateStr +
+      '</div>' +
+    '</div>';
+  orderBody.appendChild(header);
+
+  /* --- Вид сверху (PDF) --- */
+  const pdfSec = document.createElement('div');
+  pdfSec.className = 'order-section';
+  pdfSec.innerHTML =
+    '<div class="order-section-title">Вид сверху (чертёж)</div>' +
+    '<div class="order-image-frame">' +
+      '<iframe src="' + encodeURI(ORDER_PDF_FILE) + '#toolbar=0&navpanes=0&scrollbar=0"></iframe>' +
+    '</div>';
+  orderBody.appendChild(pdfSec);
+
+  /* --- 3D-вид --- */
+  let shotSrc = '';
+  try {
+    renderer.render(scene, camera);
+    shotSrc = canvas.toDataURL('image/png');
+  } catch (e) { console.warn('Не удалось сделать снимок:', e); }
+
+  if (shotSrc) {
+    const shotSec = document.createElement('div');
+    shotSec.className = 'order-section';
+    shotSec.innerHTML =
+      '<div class="order-section-title">3D-вид</div>' +
+      '<div class="order-image-frame"><img id="orderShotImg" src="' + shotSrc + '"></div>';
+    orderBody.appendChild(shotSec);
+  }
+
+  /* --- Параметры --- */
+  if (bomData.params) {
+    const p = bomData.params;
+    const rows = [];
+    const push = (label, val) => { if (val) rows.push('<div class="param-row"><span class="label">' + label + '</span><span class="value">' + val + '</span></div>'); };
+
+    if (p.floorheight)  push('Высота этажа',     Math.round(p.floorheight) + ' мм');
+    if (p.rise)         push('Высота ступени',   Math.round(p.rise) + ' мм');
+    if (p.going)        push('Глубина ступени',  p.going.toFixed(1) + ' мм');
+    if (p.widths)       push('Ширина марша',     Math.round(p.widths) + ' мм');
+    if (p.numRisers)    push('Количество подъёмов', p.numRisers);
+    if (p.pitch)        push('Угол наклона',     p.pitch);
+    if (p.railingHeight) push('Высота ограждения', p.railingHeight);
+
+    if (rows.length) {
+      const paramsSec = document.createElement('div');
+      paramsSec.className = 'order-section';
+      paramsSec.innerHTML =
+        '<div class="order-section-title">Параметры лестницы</div>' + rows.join('');
+      orderBody.appendChild(paramsSec);
+    }
+  }
+
+  /* --- Состав заказа --- */
+  const grouped = classifyBOMItems();
+
+  const tableRows = [];
+  let idx = 0;
+  for (const catKey in priceData.categories) {
+    const cat = priceData.categories[catKey];
+    const items = grouped[catKey];
+    if (!items || !items.length) continue;
+
+    const found = result.categories.find(c => c.key === catKey);
+    if (!found) continue;
+
+    idx++;
+    tableRows.push(
+      '<tr>' +
+        '<td class="num">' + idx + '</td>' +
+        '<td>' + cat.name + '</td>' +
+        '<td class="mat">' + found.materialName + '</td>' +
+        '<td class="qty">' + found.count + ' шт</td>' +
+        '<td class="sum">' + formatRub(found.materialCost) + '</td>' +
+      '</tr>'
+    );
+  }
+
+  const tableSec = document.createElement('div');
+  tableSec.className = 'order-section';
+  tableSec.innerHTML =
+    '<div class="order-section-title">Состав заказа</div>' +
+    '<table class="order-table">' +
+      '<thead><tr>' +
+        '<th>№</th><th>Наименование</th><th>Материал</th><th>Кол-во</th><th>Сумма</th>' +
+      '</tr></thead>' +
+      '<tbody>' + tableRows.join('') + '</tbody>' +
+    '</table>';
+  orderBody.appendChild(tableSec);
+
+  /* --- Итоги --- */
+  const totalsSec = document.createElement('div');
+  totalsSec.className = 'order-section';
+  totalsSec.innerHTML =
+    '<div class="order-section-title">Итоги</div>' +
+    '<div class="order-totals">' +
+      '<div class="order-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
+      '<div class="order-totals-row"><span>Покраска</span><span>' + formatRub(result.paintTotal) + '</span></div>' +
+      '<div class="order-totals-row"><span>Доставка (' + result.deliveryKm + ' км)</span><span>' + formatRub(result.deliveryCost) + '</span></div>' +
+      '<div class="order-totals-row"><span>Монтаж</span><span>' + formatRub(result.montageCost) + '</span></div>' +
+      '<div class="order-totals-row total"><span>ИТОГО</span><span>' + formatRub(result.total) + '</span></div>' +
+    '</div>';
+  orderBody.appendChild(totalsSec);
+
+  /* --- Срок изготовления --- */
+  const leadSec = document.createElement('div');
+  leadSec.className = 'order-section';
+  leadSec.innerHTML =
+    '<div class="order-lead-row">' +
+      '🕐 Срок изготовления:' +
+      '<input type="number" id="orderLead" min="1" step="1" value="30">' +
+      '<span class="unit">рабочих дней</span>' +
+    '</div>';
+  orderBody.appendChild(leadSec);
+}
+
+/* ---------- Скачать PDF ---------- */
+document.getElementById('orderDownload').addEventListener('click', () => {
+  // 1. Открываем оригинальный PDF-чертёж в новой вкладке — браузер позволит сохранить
+  const a = document.createElement('a');
+  a.href = encodeURI(ORDER_PDF_FILE);
+  a.download = ORDER_PDF_FILE;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('PDF открыт. Сохраните через Ctrl+S', true);
+});
+
+/* ---------- Поделиться ---------- */
+document.getElementById('orderShare').addEventListener('click', async () => {
+  const url = location.origin + location.pathname + location.search;
+  const title = 'Бланк заказа · ' + (document.title || '3D Viewer');
+  if (navigator.share) {
+    try { await navigator.share({ title, text: 'Бланк заказа лестницы', url }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Ссылка скопирована в буфер обмена', true);
+  } catch { prompt('Скопируйте ссылку вручную:', url); }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   МОДАЛЬНЫЕ ОКНА
+   ═══════════════════════════════════════════════════════════════ */
+function makeModal(overlayId, closeBtnId, closeIconId, onOpen) {
+  const overlay = document.getElementById(overlayId);
+  const openFn  = () => { if (onOpen) onOpen(); overlay.classList.add('show'); };
+  const closeFn = () => overlay.classList.remove('show');
+
+  if (closeBtnId)  document.getElementById(closeBtnId).addEventListener('click', closeFn);
+  if (closeIconId) document.getElementById(closeIconId).addEventListener('click', closeFn);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeFn(); });
+  return { openFn, closeFn, overlay };
+}
+
+const priceModal  = makeModal('priceModalOverlay',  'priceModalCloseBtn',  'priceModalClose',  buildPriceModal);
+const paramsModal = makeModal('paramsModalOverlay', 'paramsModalCloseBtn', 'paramsModalClose', buildParamsModal);
+const orderModal  = makeModal('orderModalOverlay',  'orderModalCloseBtn',  'orderModalClose',  buildOrderModal);
+
+priceBtn.addEventListener('click', priceModal.openFn);
+document.getElementById('btnParams').addEventListener('click', paramsModal.openFn);
+document.getElementById('btnOrder').addEventListener('click', orderModal.openFn);
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (priceModal.overlay.classList.contains('show'))  priceModal.closeFn();
+    if (paramsModal.overlay.classList.contains('show')) paramsModal.closeFn();
+    if (orderModal.overlay.classList.contains('show'))  orderModal.closeFn();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   СТАРТ
+   ═══════════════════════════════════════════════════════════════ */
+(async () => {
+  /* 1. price.json */
+  try {
+    const r = await fetch('price.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    priceData = await r.json();
+    console.log('%c✔ price.json загружен', 'color:#31d0aa;font-weight:bold');
+  } catch (err) {
+    console.log('price.json не найден:', err.message);
+  }
+
+  /* 2. Модель */
+  MODEL_FILE = await findModelFile();
+  if (!MODEL_FILE) {
+    showToast('Файл .dae не найден в репозитории.');
+    return;
+  }
+
+  /* 3. BOM (XML) */
+  await loadBOM();
+
+  /* 4. Загрузка модели */
+  loadCollada(MODEL_FILE, MODEL_FILE);
 })();
 
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Линейка — M. Человечек — H.');
-</script>
-</body>
-</html>
+</script>     ← закрытие <script type="module">
+</body>       ← закрытие <body>
+</html>       ← закрытие <html>          

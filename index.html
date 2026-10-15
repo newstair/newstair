@@ -2904,6 +2904,7 @@ function getDXFPaintArea(catKey) {
     items.forEach(d => { total += (4 * 80 * d.L) / 1e6; });
     return total;
   }
+
   /* Балясины — из XML: 4 × 45 × L */
   if (catKey === 'baluster') {
     const grouped = classifyBOMItems();
@@ -2913,7 +2914,7 @@ function getDXFPaintArea(catKey) {
     return total;
   }
 
-  /* Плоские — из DXF, с fallback на XML, если DXF не загружен */
+  /* Плоские — из DXF, с fallback на XML */
   const grouped = classifyBOMItems();
   const items = grouped[catKey] || [];
   let total = 0;
@@ -2924,20 +2925,11 @@ function getDXFPaintArea(catKey) {
       const T = d.T / 1000;
       total += (dxf.area / 1e6) * 2 + (dxf.perimeter / 1000) * T;
     } else {
-      /* Fallback: 2 × W × L из XML */
       total += 2 * (d.W * d.L) / 1e6;
     }
   });
   return total;
 }
-  /* Балясины — из XML: 4 × 45 × L */
-  if (catKey === 'baluster') {
-    const grouped = classifyBOMItems();
-    const items = grouped.baluster || [];
-    let total = 0;
-    items.forEach(d => { total += (4 * 45 * d.L) / 1e6; });
-    return total;
-  }
 
   /* Плоские — из DXF */
   const grouped = classifyBOMItems();

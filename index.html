@@ -2706,6 +2706,53 @@ window.addEventListener('keydown', (e) => {
 
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Линейка — M. Человечек — H.');
+  
+/* ═══════════════════════════════════════════════════════════════
+   ДИАГНОСТИКА ПОКРАСКИ: сравнить XML (заготовки) и DAE (поверхность)
+   ═══════════════════════════════════════════════════════════════ */
+window.paintDiagnostics = function () {
+  if (!bomData || !priceData) {
+    console.log('Нет данных: bomData или priceData не загружены');
+    return;
+  }
+  const grouped = classifyBOMItems();
+  const rows = [];
+  let totalXml = 0, totalDae = 0;
+  for (const catKey in priceData.categories) {
+    const cat = priceData.categories[catKey];
+    const items = grouped[catKey] || [];
+
+    let xmlArea2 = 0;
+    items.forEach(d => { xmlArea2 += 2 * (d.W * d.L) / 1e6; });
+
+    const daeArea = getDAEPaintArea(catKey);
+
+    totalXml += xmlArea2;
+    totalDae += daeArea;
+
+    rows.push({
+      'Категория': cat.name,
+      'key': catKey,
+      'Деталей': items.length,
+      'XML м² (2 стороны)': +xmlArea2.toFixed(3),
+      'DAE м² (поверхность)': +daeArea.toFixed(3),
+      'Разница': +(daeArea - xmlArea2).toFixed(3)
+    });
+  }
+  rows.push({
+    'Категория': '═══ ИТОГО ═══',
+    'key': '',
+    'Деталей': '',
+    'XML м² (2 стороны)': +totalXml.toFixed(3),
+    'DAE м² (поверхность)': +totalDae.toFixed(3),
+    'Разница': +(totalDae - totalXml).toFixed(3)
+  });
+  console.table(rows);
+  console.log('Цена за м²: ' + ((priceData.paint && priceData.paint.price_m2) || 0) + ' ₽');
+  console.log('По XML (×2 стороны): ' + Math.round(totalXml * 2400) + ' ₽');
+  console.log('По DAE:              ' + Math.round(totalDae * 2400) + ' ₽');
+  console.log('Ожидалось (Excel):   75 292 ₽  →  это ' + (75292 / 2400).toFixed(3) + ' м²');
+};
 </script>     
 </body>       
 </html>                 

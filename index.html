@@ -2809,7 +2809,7 @@ function polylineAreaAndPerimeter(vertices) {
 
 /* ---- Загрузить один DXF (с fallback на .dxf / .DXF) ---- */
 async function loadOneDXF(name) {
-  const urls = [name + '.dxf', name + '.DXF'];
+  const urls = [name + '.dxf', name + '.dxf'];
   for (const url of urls) {
     try {
       const r = await fetch(url, { cache: 'force-cache' });

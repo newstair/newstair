@@ -2706,7 +2706,11 @@ window.addEventListener('keydown', (e) => {
 
 console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-size:14px');
 console.log('Линейка — M. Человечек — H.');
-  
+  /* Экспорт в window для отладки из консоли */
+window.loadOneDXF   = loadOneDXF;
+window.loadAllDXF   = loadAllDXF;
+window.dxfCache     = dxfCache;
+window.getDXFPaintArea = getDXFPaintArea;
 /* ═══════════════════════════════════════════════════════════════
    DXF ПАРСЕР + ЗАГРУЗЧИК
    ═══════════════════════════════════════════════════════════════ */

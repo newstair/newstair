@@ -2931,19 +2931,6 @@ function getDXFPaintArea(catKey) {
   return total;
 }
 
-  /* Плоские — из DXF */
-  const grouped = classifyBOMItems();
-  const items = grouped[catKey] || [];
-  let total = 0;
-  items.forEach(d => {
-    if (d.name && d.name.endsWith('End')) return;
-    const dxf = d.name ? dxfCache[d.name] : null;
-    if (!dxf) return;
-    const T = d.T / 1000;                        // мм → м
-    total += (dxf.area / 1e6) * 2 + (dxf.perimeter / 1000) * T;
-  });
-  return total;
-}
   
 /* ═══════════════════════════════════════════════════════════════
    ЭКСПОРТ В WINDOW (для отладки из консоли)

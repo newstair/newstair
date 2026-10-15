@@ -42,6 +42,8 @@
     z-index:20;display:flex;flex-direction:column;gap:9px;
     max-height:calc(100vh - 28px);overflow-y:auto;
     transition:transform .25s ease, opacity .25s ease;}
+  /* Панель: запретить сжатие прямым детям */
+.panel > * { flex-shrink: 0; }
   .panel::-webkit-scrollbar{width:6px;}
   .panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
   .panel.hidden{transform:translateX(calc(100% + 30px));opacity:0;pointer-events:none;}

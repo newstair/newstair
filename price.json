@@ -8,19 +8,19 @@
   "categories": {
     "treads": {
       "name": "Ступени", "method": "m2", "coef": 1.06,
-      "prices": { "pine": 11161, "beech": 19492, "ash": 28960, "oak": 34626 }
+      "prices": { "pine": 10300, "beech": 19492, "ash": 28960, "oak": 34626 }
     },
     "risers": {
       "name": "Подступенки", "method": "m2", "coef": 1.25,
-      "prices": { "pine": 10650, "beech": 18544, "ash": 2946, "oak": 35000 }
+      "prices": { "pine": 10300, "beech": 18544, "ash": 2946, "oak": 35000 }
     },
     "stringers": {
       "name": "Тетивы", "method": "m2", "coef": 1.19,
-      "prices": { "pine": 8926, "beech": 18000, "ash": 26000, "oak": 35000 }
+      "prices": { "pine": 7800, "beech": 18000, "ash": 26000, "oak": 35000 }
     },
     "kosour": {
       "name": "Косоуры", "method": "m2", "coef": 1.19,
-      "prices": { "pine": 9926, "beech": 19000, "ash": 27000, "oak": 36000 }
+      "prices": { "pine": 8500, "beech": 19000, "ash": 27000, "oak": 36000 }
     },
     "welcome_steps": {
       "name": "Пригласительные ступени", "method": "count",
@@ -28,11 +28,11 @@
     },
     "welcome_risers": {
       "name": "Пригласительные подступенки", "method": "count",
-      "prices": { "pine": 5000, "beech": 5000, "ash": 5000, "oak": 5000 }
+      "prices": { "pine": 4000, "beech": 4000, "ash": 4000, "oak": 4000 }
     },
     "handrail": {
       "name": "Поручень", "method": "m2", "coef": 2.29,
-      "prices": { "pine": 7096, "beech": 18000, "ash": 26000, "oak": 35000 }
+      "prices": { "pine": 6500, "beech": 18000, "ash": 26000, "oak": 35000 }
     },
     "posts": {
       "name": "Столбы", "method": "length", "extra_mm": 100,

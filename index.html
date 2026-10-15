@@ -2599,15 +2599,7 @@ function buildOrderModal() {
   totalsSec.innerHTML =
     '<div class="order-section-title">Итоги</div>' +
     '<div class="order-totals">' +
-    
-/* ═══════════════════════════════════════════════════════════════
-   ЭКСПОРТ В WINDOW (для отладки из консоли)
-   ═══════════════════════════════════════════════════════════════ */
-window.loadOneDXF      = loadOneDXF;
-window.loadAllDXF      = loadAllDXF;
-window.dxfCache        = dxfCache;
-window.getDXFPaintArea = getDXFPaintArea;
-      '<div class="order-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
+        '<div class="order-totals-row"><span>Материал</span><span>' + formatRub(result.materialTotal) + '</span></div>' +
       '<div class="order-totals-row"><span>Покраска</span><span>' + formatRub(result.paintTotal) + '</span></div>' +
       '<div class="order-totals-row"><span>Доставка (' + result.deliveryKm + ' км)</span><span>' + formatRub(result.deliveryCost) + '</span></div>' +
       '<div class="order-totals-row"><span>Монтаж</span><span>' + formatRub(result.montageCost) + '</span></div>' +

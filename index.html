@@ -2260,6 +2260,15 @@ function getMaterialForKey(key) {
 function getMaterialInfo(matKey) {
   const mats = priceData && priceData.materials ? priceData.materials : {};
   return mats[matKey] || mats.pine || { name: 'Сосна' };
+}/* Площадь покраски для категории — берём из 3D-модели (DAE) */
+function getDAEPaintArea(catKey) {
+  const meshes = elementGroups[catKey] || [];
+  let total = 0;
+  meshes.forEach((obj) => {
+    const a = getMeshAnalysis(obj);
+    if (a) total += a.surface * UNIT_SCALE * UNIT_SCALE;
+  });
+  return total;
 }
 
 /* Площадь покраски для одной детали — полная поверхность коробки.
@@ -2298,28 +2307,24 @@ function calculatePrice(km) {
     const unitPrice = (cat.prices && cat.prices[matKey]) || 0;
     const coef     = (cat.method === 'm2' && cat.coef) ? cat.coef : 1;
 
-    let qty = 0, paintArea = 0;
+   let qty = 0;
 
-    if (cat.method === 'm2') {
-      items.forEach(d => {
-        qty += (d.W * d.L) / 1e6;
-        paintArea += paintAreaForBox(d.T, d.W, d.L);
-      });
-      qty *= coef;
-    } else if (cat.method === 'length') {
-      const extra = (cat.extra_mm || 0) / 1000;
-      items.forEach(d => {
-        const Lp = d.L / 1000 + extra;
-        qty += Lp;
-        paintArea += paintAreaLateral(d.T, d.W, Lp * 1000);
-      });
-    } else if (cat.method === 'count') {
-      qty = items.length;
-      items.forEach(d => {
-        if (d.W && d.W < 50) paintArea += paintAreaCyl(d.W, d.L);
-        else                 paintArea += paintAreaForBox(d.T, d.W, d.L);
-      });
-    }
+if (cat.method === 'm2') {
+  items.forEach(d => {
+    qty += (d.W * d.L) / 1e6;
+  });
+  qty *= coef;
+} else if (cat.method === 'length') {
+  const extra = (cat.extra_mm || 0) / 1000;
+  items.forEach(d => {
+    qty += d.L / 1000 + extra;
+  });
+} else if (cat.method === 'count') {
+  qty = items.length;
+}
+
+/* Покраска — из 3D-модели (DAE), а не из заготовок XML */
+const paintArea = getDAEPaintArea(catKey);
 
     result.categories.push({
       key: catKey,

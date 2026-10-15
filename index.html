@@ -2319,7 +2319,7 @@ if (cat.method === 'm2') {
 }
 
 /* Покраска — из 3D-модели (DAE), а не из заготовок XML */
-const paintArea = getDAEPaintArea(catKey);
+const paintArea = getDXFPaintArea(catKey);
 
     result.categories.push({
       key: catKey,
@@ -2373,6 +2373,21 @@ function buildPriceModal() {
   }
   if (!bomData) {
     priceBody.innerHTML = '<div class="price-empty">XML-файл из Staircon не найден.<br>Загрузите его рядом с .dae</div>';
+    return;
+  }
+
+  /* Автозагрузка DXF при первом открытии */
+  if (Object.keys(dxfCache).length < 46) {
+    priceBody.innerHTML = '<div class="price-empty">' +
+      '<div class="spinner" style="margin-bottom:14px;"></div>' +
+      '<div id="dxfProgress">Загрузка DXF… <b>0 / 46</b></div>' +
+      '</div>';
+    const prog = document.getElementById('dxfProgress');
+    loadAllDXF((done, total) => {
+      if (prog) prog.innerHTML = 'Загрузка DXF… <b>' + done + ' / ' + total + '</b>';
+    }).then(() => {
+      buildPriceModal();
+    });
     return;
   }
 
@@ -2889,6 +2904,32 @@ function getDXFPaintArea(catKey) {
     items.forEach(d => { total += (4 * 80 * d.L) / 1e6; });
     return total;
   }
+  /* Балясины — из XML: 4 × 45 × L */
+  if (catKey === 'baluster') {
+    const grouped = classifyBOMItems();
+    const items = grouped.baluster || [];
+    let total = 0;
+    items.forEach(d => { total += (4 * 45 * d.L) / 1e6; });
+    return total;
+  }
+
+  /* Плоские — из DXF, с fallback на XML, если DXF не загружен */
+  const grouped = classifyBOMItems();
+  const items = grouped[catKey] || [];
+  let total = 0;
+  items.forEach(d => {
+    if (d.name && d.name.endsWith('End')) return;
+    const dxf = d.name ? dxfCache[d.name] : null;
+    if (dxf) {
+      const T = d.T / 1000;
+      total += (dxf.area / 1e6) * 2 + (dxf.perimeter / 1000) * T;
+    } else {
+      /* Fallback: 2 × W × L из XML */
+      total += 2 * (d.W * d.L) / 1e6;
+    }
+  });
+  return total;
+}
   /* Балясины — из XML: 4 × 45 × L */
   if (catKey === 'baluster') {
     const grouped = classifyBOMItems();

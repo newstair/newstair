@@ -2257,13 +2257,13 @@ function getMaterialInfo(matKey) {
   return mats[matKey] || mats.pine || { name: 'Сосна' };
 }/* Площадь покраски для категории — берём из 3D-модели (DAE) */
 function getDAEPaintArea(catKey) {
-  const meshes = elementGroups[catKey] || [];
+  if (!bomData) return 0;
+  const grouped = classifyBOMItems();
+  const items = grouped[catKey] || [];
   let total = 0;
-  meshes.forEach((obj) => {
-    const a = getMeshAnalysis(obj);
-    if (a) total += a.surface * UNIT_SCALE * UNIT_SCALE;
-  });
+  items.forEach(d => { total += 2 * (d.W * d.L) / 1e6; });
   return total;
+}
 }
 
 /* Площадь покраски для одной детали — полная поверхность коробки.

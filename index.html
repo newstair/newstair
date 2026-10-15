@@ -2708,6 +2708,211 @@ console.log('%c◈ 3D Viewer готов', 'color:#5b8cff;font-weight:bold;font-s
 console.log('Линейка — M. Человечек — H.');
   
 /* ═══════════════════════════════════════════════════════════════
+   DXF ПАРСЕР + ЗАГРУЗЧИК
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Кэш: { "1_Tr3": {area, perimeter}, ... } в мм² и мм */
+const dxfCache = {};
+
+/* ---- Парсер DXF ---- */
+function parseDXF(text) {
+  const lines = text.split(/\r?\n/).map(s => s.trim());
+  const pairs = [];
+  for (let i = 0; i < lines.length - 1; i += 2) {
+    const code = parseInt(lines[i], 10);
+    if (!isNaN(code)) pairs.push([code, lines[i + 1]]);
+  }
+
+  const polylines = [];
+  let inEntities = false;
+  let current = null;
+  let i = 0;
+
+  while (i < pairs.length) {
+    const [code, value] = pairs[i];
+
+    if (code === 0 && value === 'SECTION') {
+      if (pairs[i+1] && pairs[i+1][0] === 2 && pairs[i+1][1] === 'ENTITIES') inEntities = true;
+    }
+    if (code === 0 && value === 'ENDSEC') inEntities = false;
+
+    if (!inEntities) { i++; continue; }
+
+    if (code === 0 && value === 'POLYLINE') {
+      current = { layer: '', vertices: [] };
+      i++;
+      while (i < pairs.length && pairs[i][0] !== 0) {
+        if (pairs[i][0] === 8) current.layer = pairs[i][1];
+        i++;
+      }
+      continue;
+    }
+
+    if (code === 0 && value === 'VERTEX' && current) {
+      const v = { x: 0, y: 0, bulge: 0 };
+      i++;
+      while (i < pairs.length && pairs[i][0] !== 0) {
+        const [c, val] = pairs[i];
+        if (c === 10) v.x = parseFloat(val);
+        if (c === 20) v.y = parseFloat(val);
+        if (c === 42) v.bulge = parseFloat(val);
+        i++;
+      }
+      current.vertices.push(v);
+      continue;
+    }
+
+    if (code === 0 && value === 'SEQEND' && current) {
+      if (current.vertices.length > 2) polylines.push(current);
+      current = null;
+      i++;
+      continue;
+    }
+
+    i++;
+  }
+
+  return { polylines };
+}
+
+/* ---- Площадь и периметр одной полилинии (с дугами) ---- */
+function polylineAreaAndPerimeter(vertices) {
+  const n = vertices.length;
+  if (n < 3) return { area: 0, perimeter: 0 };
+
+  let area = 0;
+  let perimeter = 0;
+
+  for (let i = 0; i < n; i++) {
+    const p1 = vertices[i];
+    const p2 = vertices[(i + 1) % n];
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const chord = Math.hypot(dx, dy);
+
+    area += 0.5 * (p1.x * p2.y - p2.x * p1.y);
+
+    const b = p1.bulge || 0;
+    if (Math.abs(b) < 1e-9) {
+      perimeter += chord;
+    } else {
+      const theta = 4 * Math.atan(b);
+      const r = chord / (2 * Math.sin(theta / 2));
+      area += 0.5 * r * r * (theta - Math.sin(theta));
+      perimeter += Math.abs(r * theta);
+    }
+  }
+
+  return { area: Math.abs(area), perimeter };
+}
+
+/* ---- Загрузить один DXF (с fallback на .dxf / .DXF) ---- */
+async function loadOneDXF(name) {
+  const urls = [name + '.dxf', name + '.DXF'];
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { cache: 'force-cache' });
+      if (!r.ok) continue;
+      const text = await r.text();
+      if (!text || text.length < 50) continue;
+      const dxf = parseDXF(text);
+      const contour = dxf.polylines.find(p => p.layer === 'CONTOUR');
+      if (!contour) continue;
+      const res = polylineAreaAndPerimeter(contour.vertices);
+      return res;
+    } catch (e) { /* пробуем следующий url */ }
+  }
+  return null;
+}
+
+/* ---- Загрузить все DXF для плоских категорий ---- */
+let dxfLoadPromise = null;
+
+async function loadAllDXF(progressCb) {
+  if (dxfLoadPromise) return dxfLoadPromise;
+  dxfLoadPromise = (async () => {
+    if (!bomData || !bomData.items) return;
+    const grouped = classifyBOMItems();
+
+    /* Категории, которые считаем из DXF */
+    const flatCats = ['treads', 'risers', 'stringers', 'kosour',
+                      'welcome_steps', 'welcome_risers',
+                      'handrail', 'covering'];
+
+    const toLoad = [];
+    const seen = new Set();
+    flatCats.forEach(catKey => {
+      (grouped[catKey] || []).forEach(d => {
+        if (!d.name) return;
+        if (d.name.endsWith('End')) return;
+        if (seen.has(d.name)) return;
+        seen.add(d.name);
+        toLoad.push(d.name);
+      });
+    });
+
+    console.log('%c→ Загрузка ' + toLoad.length + ' DXF...',
+                'color:#5b8cff;font-weight:bold');
+
+    let done = 0;
+    const concurrency = 8;
+    let idx = 0;
+
+    async function worker() {
+      while (idx < toLoad.length) {
+        const name = toLoad[idx++];
+        const res = await loadOneDXF(name);
+        if (res) dxfCache[name] = res;
+        done++;
+        if (progressCb) progressCb(done, toLoad.length);
+      }
+    }
+
+    await Promise.all(Array.from({ length: concurrency }, () => worker()));
+
+    const ok = Object.keys(dxfCache).length;
+    console.log('%c✔ DXF загружено: ' + ok + ' / ' + toLoad.length,
+                'color:#31d0aa;font-weight:bold');
+    return dxfCache;
+  })();
+  return dxfLoadPromise;
+}
+
+/* ---- Площадь покраски из DXF для одной категории ---- */
+function getDXFPaintArea(catKey) {
+  /* Столбы — из XML: 4 × 80 × L */
+  if (catKey === 'posts') {
+    const grouped = classifyBOMItems();
+    const items = grouped.posts || [];
+    let total = 0;
+    items.forEach(d => { total += (4 * 80 * d.L) / 1e6; });
+    return total;
+  }
+  /* Балясины — из XML: 4 × 45 × L */
+  if (catKey === 'baluster') {
+    const grouped = classifyBOMItems();
+    const items = grouped.baluster || [];
+    let total = 0;
+    items.forEach(d => { total += (4 * 45 * d.L) / 1e6; });
+    return total;
+  }
+
+  /* Плоские — из DXF */
+  const grouped = classifyBOMItems();
+  const items = grouped[catKey] || [];
+  let total = 0;
+  items.forEach(d => {
+    if (d.name && d.name.endsWith('End')) return;
+    const dxf = d.name ? dxfCache[d.name] : null;
+    if (!dxf) return;
+    const T = d.T / 1000;                        // мм → м
+    total += (dxf.area / 1e6) * 2 + (dxf.perimeter / 1000) * T;
+  });
+  return total;
+}
+  
+/* ═══════════════════════════════════════════════════════════════
    ДИАГНОСТИКА ПОКРАСКИ: сравнить XML (заготовки) и DAE (поверхность)
    ═══════════════════════════════════════════════════════════════ */
 window.paintDiagnostics = function () {
